@@ -4,12 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduProjects - Talaba Portali</title>
-  
-  <!-- PWA Manifest va Logotip sozlamalari -->
+
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366f1">
-  
-  <!-- iPhone (iOS) uchun maxsus sozlamalar va ikonka -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="EduProjects">
@@ -39,26 +36,39 @@
       </div>
     </div>
     
-    <!-- Ilovani o'rnatish tugmasi -->
     <button id="installBtn" onclick="installApp()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 shadow-md">
       <i class="fa-solid fa-download"></i> O'rnatish
     </button>
   </header>
 
-  <main class="max-w-md mx-auto px-4 mt-6">
-    <div class="relative mb-5">
+  <main class="max-w-md mx-auto px-4 mt-6 space-y-5">
+    <!-- Qidiruv -->
+    <div class="relative">
       <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
       <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha yoki fan nomini kiriting..." 
              class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
     </div>
 
-    <div class="flex space-x-2 overflow-x-auto pb-4 scrollbar-none" id="categoryFilters">
+    <!-- Kategoriyalar -->
+    <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none" id="categoryFilters">
       <button onclick="setCategory('all')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md">Barchasi</button>
       <button onclick="setCategory('Mustaqil ish')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Mustaqil ish</button>
       <button onclick="setCategory('Veb-sayt')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Veb-saytlar</button>
       <button onclick="setCategory('Kurs ishi')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Kurs ishi</button>
     </div>
 
+    <!-- Zakaz berish tugmasi / Banner -->
+    <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex justify-between items-center">
+      <div>
+        <h3 class="text-xs font-bold text-white mb-0.5">Kerakli mavzu yo'qmi?</h3>
+        <p class="text-[10px] text-indigo-300">Shaxsiy zakaz bering, tezda qilib beramiz!</p>
+      </div>
+      <button onclick="openOrderModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-md transition">
+        <i class="fa-solid fa-pen-to-square mr-1"></i> Zakaz berish
+      </button>
+    </div>
+
+    <!-- Loyihalar Ro'yxati -->
     <div id="projectsList" class="space-y-4">
       <div class="text-center py-12 text-slate-500 text-xs">
         <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i>
@@ -66,6 +76,37 @@
       </div>
     </div>
   </main>
+
+  <!-- Buyurtma (Zakaz) Modali -->
+  <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60">
+      <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-white mb-1"><i class="fa-solid fa-pen-nib text-indigo-400 mr-2"></i> Yangi Buyurtma Berish</h3>
+      <p class="text-xs text-slate-400 mb-4">Mavzu va fan nomini qoldiring, tez orada aloqaga chiqamiz</p>
+
+      <form onsubmit="submitOrder(event)" class="space-y-3">
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Ism Familiyangiz:</label>
+          <input type="text" id="orderStudentName" required placeholder="Ali Valiyev" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Telegram / Telefon raqam:</label>
+          <input type="text" id="orderStudentContact" required placeholder="@username yoki +99890..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Fan va Mavzu nomi:</label>
+          <textarea id="orderTopic" rows="3" required placeholder="Masalan: Fizika fanidan Chiziqli zanjirlar mavzusida 10 betlik mustaqil ish" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
+        </div>
+
+        <button type="submit" id="orderSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-indigo-600/30">
+          Buyurtmani Yuborish
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- To'lov Modali -->
   <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -113,7 +154,6 @@
   </div>
 
   <script>
-    // PWA O'rnatish (Install) mantiqi
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -216,7 +256,10 @@
           actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400/90 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin to'lovni tekshirmoqda...</button>`;
         } else if (myPurchase.status === 'approved') {
           statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
-          actionBtn = `<a href="${p.fileUrl}" download target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
+          
+          // Fayl bazada yuklangan bo'lsa yoki link bo'lsa
+          const downloadUrl = p.fileData || p.fileUrl;
+          actionBtn = `<a href="${downloadUrl}" download="${p.fileName || 'loyiha'}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
         }
 
         const demoBtn = (p.demoUrl && p.demoUrl.trim() !== "") ? `<a href="${p.demoUrl}" target="_blank" class="text-xs text-indigo-400 hover:underline flex items-center gap-1"><i class="fa-solid fa-eye"></i> Demo Ko'rish</a>` : '';
@@ -236,6 +279,30 @@
             ${actionBtn}
           </div>
         `;
+      });
+    }
+
+    function openOrderModal() { document.getElementById('orderModal').classList.remove('hidden'); }
+    function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
+
+    function submitOrder(e) {
+      e.preventDefault();
+      const btn = document.getElementById('orderSubmitBtn');
+      btn.disabled = true;
+      btn.innerText = "Yuborilmoqda...";
+
+      db.ref("orders").push().set({
+        studentName: document.getElementById('orderStudentName').value,
+        studentContact: document.getElementById('orderStudentContact').value,
+        topic: document.getElementById('orderTopic').value,
+        status: 'pending',
+        createdAt: Date.now()
+      }).then(() => {
+        alert("Buyurtmangiz admin ga yuborildi! Tez orada siz bilan bog'lanamiz.");
+        closeOrderModal();
+        e.target.reset();
+        btn.disabled = false;
+        btn.innerText = "Buyurtmani Yuborish";
       });
     }
 
