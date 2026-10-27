@@ -1,229 +1,376 @@
 <!DOCTYPE html>
-<html lang="uz" class="dark">
+<html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Talaba Portali - SocialGraph & AI Prezentatsiya</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduProjects - Talaba Portali</title>
 
-        const firebaseConfig = { databaseURL: "https://socialgraph-demo-default-rtdb.firebaseio.com" };
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        window.db = db; window.dbRef = ref; window.dbOnValue = onValue;
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EduProjects">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <style>
+    body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
+    .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
+<body class="pb-24">
 
-    <!-- Header -->
-    <header class="glass-panel sticky top-0 z-40 border-b border-slate-800/80 px-6 py-3.5 flex items-center justify-between shadow-2xl">
-        <div class="flex items-center space-x-3">
-            <div class="p-2.5 bg-cyan-600 rounded-xl text-white">
-                <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-            </div>
-            <div>
-                <h1 class="font-extrabold text-lg leading-tight text-white">TALABA PORTALI</h1>
-                <p class="text-xs text-slate-400 font-medium">Graf algoritmlari & AI Prezentatsiya xizmati</p>
-            </div>
+  <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <div>
+        <h1 class="text-base font-bold text-white leading-tight">EduProjects</h1>
+        <p class="text-[11px] text-indigo-400 font-medium">Tayyor ishlar & Veb-saytlar</p>
+      </div>
+    </div>
+    
+    <button id="installBtn" onclick="installApp()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 shadow-md">
+      <i class="fa-solid fa-download"></i> O'rnatish
+    </button>
+  </header>
+
+  <main class="max-w-md mx-auto px-4 mt-6 space-y-5">
+    <!-- Qidiruv -->
+    <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+      <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha yoki fan nomini kiriting..." 
+             class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
+    </div>
+
+    <!-- Kategoriyalar -->
+    <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none" id="categoryFilters">
+      <button onclick="setCategory('all')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md">Barchasi</button>
+      <button onclick="setCategory('Mustaqil ish')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Mustaqil ish</button>
+      <button onclick="setCategory('Veb-sayt')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Veb-saytlar</button>
+      <button onclick="setCategory('Kurs ishi')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Kurs ishi</button>
+    </div>
+
+    <!-- Zakaz berish tugmasi / Banner -->
+    <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex justify-between items-center">
+      <div>
+        <h3 class="text-xs font-bold text-white mb-0.5">Kerakli mavzu yo'qmi?</h3>
+        <p class="text-[10px] text-indigo-300">Shaxsiy zakaz bering, tezda qilib beramiz!</p>
+      </div>
+      <button onclick="openOrderModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-md transition">
+        <i class="fa-solid fa-pen-to-square mr-1"></i> Zakaz berish
+      </button>
+    </div>
+
+    <!-- Loyihalar Ro'yxati -->
+    <div id="projectsList" class="space-y-4">
+      <div class="text-center py-12 text-slate-500 text-xs">
+        <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i>
+        <p>Loyihalar yuklanmoqda...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Buyurtma (Zakaz) Modali -->
+  <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60">
+      <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-white mb-1"><i class="fa-solid fa-pen-nib text-indigo-400 mr-2"></i> Yangi Buyurtma Berish</h3>
+      <p class="text-xs text-slate-400 mb-4">Mavzu va fan nomini qoldiring, tez orada aloqaga chiqamiz</p>
+
+      <form onsubmit="submitOrder(event)" class="space-y-3">
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Ism Familiyangiz:</label>
+          <input type="text" id="orderStudentName" required placeholder="Ali Valiyev" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Telegram / Telefon raqam:</label>
+          <input type="text" id="orderStudentContact" required placeholder="@username yoki +99890..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Fan va Mavzu nomi:</label>
+          <textarea id="orderTopic" rows="3" required placeholder="Masalan: Fizika fanidan Chiziqli zanjirlar mavzusida 10 betlik mustaqil ish" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
         </div>
 
-        <div class="flex space-x-2 bg-slate-900 p-1 rounded-xl">
-            <button id="btn-tab-graph" onclick="switchTab('graph')" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-cyan-600 text-white">Graf Analizator</button>
-            <button id="btn-tab-ai" onclick="switchTab('ai')" class="px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400">AI Prezentatsiya</button>
+        <button type="submit" id="orderSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-indigo-600/30">
+          Buyurtmani Yuborish
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- To'lov Modali -->
+  <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[90vh] overflow-y-auto">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-white mb-1" id="modalTitle">Loyiha Nomi</h3>
+      <p class="text-xs text-slate-400 mb-4">Quyidagi kartalardan biriga pul o'tkazing va chekni yuboring</p>
+
+      <div id="cardsContainer" class="space-y-2 mb-4"></div>
+
+      <div class="bg-indigo-950/40 border border-indigo-500/20 p-3 rounded-2xl mb-4 text-center">
+        <div class="text-[10px] text-slate-400 uppercase">To'lanishi Kerak bo'lgan Summa:</div>
+        <div class="text-indigo-400 font-extrabold text-lg" id="modalPrice">0 UZS</div>
+      </div>
+
+      <form onsubmit="submitPayment(event)" class="space-y-3">
+        <input type="hidden" id="modalProjectId">
+        <input type="hidden" id="requiredPrice">
+        
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Ism Familiyangiz:</label>
+          <input type="text" id="studentName" required placeholder="Masalan: Ali Valiyev" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
         </div>
-    </header>
-
-    <!-- TAB 1: GRAF ANALIZATOR -->
-    <main id="tab-graph" class="flex-1 p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-[1700px] mx-auto w-full">
-        <aside class="lg:col-span-3 space-y-5">
-            <div class="glass-panel p-4 rounded-2xl border border-slate-800 space-y-4">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-400">Eng Qisqa Yo'lni Topish</h3>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Boshlang'ich Foydalanuvchi:</label>
-                    <select id="start-node" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Mo'ljallangan Foydalanuvchi:</label>
-                    <select id="end-node" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></select>
-                </div>
-                <button onclick="runDijkstra()" class="w-full bg-cyan-600 hover:bg-cyan-500 font-bold py-2.5 rounded-xl text-xs text-white">
-                    Optimal Yo'lni Hisoblash
-                </button>
-            </div>
-        </aside>
-
-        <section class="lg:col-span-9 flex flex-col">
-            <div class="glass-panel p-4 rounded-2xl border border-slate-800 flex-1 flex flex-col min-h-[500px] relative">
-                <div class="flex-1 relative w-full h-full min-h-[450px] bg-slate-950/60 rounded-xl overflow-hidden border border-slate-900" id="canvas-container">
-                    <canvas id="graphCanvas" class="w-full h-full block"></canvas>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- TAB 2: AI PREZENTATSIYA -->
-    <main id="tab-ai" class="hidden flex-1 p-6 max-w-4xl mx-auto w-full space-y-6">
-        <div class="glass-panel p-6 rounded-3xl border border-slate-800 space-y-5">
-            <h2 class="text-xl font-bold text-center text-white">AI Yordamida Prezentatsiya Yaratish</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-900 p-4 rounded-2xl">
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">Mavzu:</label>
-                    <input type="text" id="pres-topic" placeholder="Mavzuni kiriting..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">Tarif (Admin Belgilagan):</label>
-                    <select id="pres-plan" onchange="updatePriceDisplay()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-                        <option value="p1">Standart (5 Slayd)</option>
-                        <option value="p2" selected>Optimal (8 Slayd)</option>
-                        <option value="p3">Premium Pro (12 Slayd)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="p-4 bg-slate-900 rounded-2xl flex justify-between items-center">
-                <span class="text-xs text-slate-400">To'lov Summasi:</span>
-                <span id="final-price-tag" class="text-lg font-extrabold text-cyan-400">50,000 so'm</span>
-            </div>
-            <button onclick="paySuccess()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-3 rounded-xl text-xs">
-                To'lov Qilish va Yuklab Olish
-            </button>
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Telegram yoki Telefon:</label>
+          <input type="text" id="studentContact" required placeholder="@username yoki +99890..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
         </div>
-    </main>
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">O'tkazilgan Summa:</label>
+          <input type="number" id="paidAmount" required placeholder="Masalan: 20000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">To'lov Cheki (Skrinshot):</label>
+          <input type="file" id="receiptImg" accept="image/*" required onchange="encodeImageFileAsURL(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white">
+        </div>
 
-    <script>
-        let nodes = [], edges = [], activePath = [];
-        let prices = { plan1: "30000", plan2: "50000", plan3: "80000" };
-        const canvas = document.getElementById('graphCanvas');
-        const ctx = canvas.getContext('2d');
+        <button type="submit" id="submitBtn" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30">
+          <i class="fa-solid fa-paper-plane"></i> Chekni Yuborish
+        </button>
+      </form>
+    </div>
+  </div>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            resizeCanvas();
-            setTimeout(initFirebaseSync, 1000);
+  <script>
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installBtn').classList.remove('hidden');
+    });
+
+    function installApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            document.getElementById('installBtn').classList.add('hidden');
+          }
+          deferredPrompt = null;
         });
+      }
+    }
 
-        function resizeCanvas() {
-            const container = document.getElementById('canvas-container');
-            if (container) { canvas.width = container.clientWidth; canvas.height = container.clientHeight; drawGraph(); }
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMmB0tW-JGizWSOdlFJJd68p6sksrlS_8",
+      authDomain: "mustaqil-ish-63c2c.firebaseapp.com",
+      projectId: "mustaqil-ish-63c2c",
+      databaseURL: "https://mustaqil-ish-63c2c-default-rtdb.firebaseio.com",
+      storageBucket: "mustaqil-ish-63c2c.firebasestorage.app",
+      messagingSenderId: "577427329404",
+      appId: "1:577427329404:web:e3ac004474ff1c9d5454f9"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let allProjects = [];
+    let allPurchases = [];
+    let adminCards = [];
+    let selectedCategory = 'all';
+    let base64Receipt = '';
+
+    function getDeviceId() {
+      let devId = localStorage.getItem('app_device_id');
+      if (!devId) {
+        devId = 'dev_' + Math.random().toString(36).substring(2, 11);
+        localStorage.setItem('app_device_id', devId);
+      }
+      return devId;
+    }
+
+    db.ref("projects").on("value", snapshot => {
+      const data = snapshot.val();
+      allProjects = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+      renderProjects();
+    });
+
+    db.ref("purchases").on("value", snapshot => {
+      const data = snapshot.val();
+      allPurchases = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+      renderProjects();
+    });
+
+    db.ref("settings/cards").on("value", snapshot => {
+      const data = snapshot.val();
+      adminCards = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+    });
+
+    function setCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white');
+        btn.classList.add('bg-slate-900', 'text-slate-400');
+      });
+      event.target.classList.remove('bg-slate-900', 'text-slate-400');
+      event.target.classList.add('bg-indigo-600', 'text-white');
+      renderProjects();
+    }
+
+    function renderProjects() {
+      const list = document.getElementById('projectsList');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const myDeviceId = getDeviceId();
+      list.innerHTML = '';
+
+      const filtered = allProjects.filter(p => {
+        const matchesCat = selectedCategory === 'all' || p.category === selectedCategory;
+        const matchesSearch = p.title.toLowerCase().includes(search) || (p.description && p.description.toLowerCase().includes(search));
+        return matchesCat && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Hozircha mos loyihalar topilmadi.</div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.deviceId === myDeviceId);
+        let statusTag = '', actionBtn = '';
+
+        if (!myPurchase) {
+          actionBtn = `<button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${Number(p.price).toLocaleString()} UZS)</button>`;
+        } else if (myPurchase.status === 'pending') {
+          statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Kutilmoqda</span>`;
+          actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400/90 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin to'lovni tekshirmoqda...</button>`;
+        } else if (myPurchase.status === 'approved') {
+          statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
+          
+          // Fayl bazada yuklangan bo'lsa yoki link bo'lsa
+          const downloadUrl = p.fileData || p.fileUrl;
+          actionBtn = `<a href="${downloadUrl}" download="${p.fileName || 'loyiha'}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
         }
 
-        function initFirebaseSync() {
-            if (!window.db) return;
-            // Graph Data Realtime Sync
-            window.dbOnValue(window.dbRef(window.db, 'graphData'), (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    nodes = data.nodes || [];
-                    edges = data.edges || [];
-                    updateSelectDropdowns();
-                    drawGraph();
-                }
-            });
+        const demoBtn = (p.demoUrl && p.demoUrl.trim() !== "") ? `<a href="${p.demoUrl}" target="_blank" class="text-xs text-indigo-400 hover:underline flex items-center gap-1"><i class="fa-solid fa-eye"></i> Demo Ko'rish</a>` : '';
 
-            // Prices Realtime Sync
-            window.dbOnValue(window.dbRef(window.db, 'prices'), (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    prices = data;
-                    updatePriceDisplay();
-                }
-            });
-        }
+        list.innerHTML += `
+          <div class="glass-card p-5 rounded-2xl relative">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
+              ${statusTag}
+            </div>
+            <h3 class="text-sm font-bold text-white mb-1">${p.title}</h3>
+            <p class="text-xs text-slate-400 mb-4 leading-relaxed">${p.description || ''}</p>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              ${demoBtn}
+              <span class="text-xs font-bold text-slate-200">${Number(p.price).toLocaleString()} UZS</span>
+            </div>
+            ${actionBtn}
+          </div>
+        `;
+      });
+    }
 
-        function updateSelectDropdowns() {
-            const startSelect = document.getElementById('start-node');
-            const endSelect = document.getElementById('end-node');
-            startSelect.innerHTML = ''; endSelect.innerHTML = '';
-            nodes.forEach(n => {
-                startSelect.add(new Option(`${n.name} (#${n.id})`, n.id));
-                endSelect.add(new Option(`${n.name} (#${n.id})`, n.id));
-            });
-            if (nodes.length > 1) endSelect.selectedIndex = nodes.length - 1;
-        }
+    function openOrderModal() { document.getElementById('orderModal').classList.remove('hidden'); }
+    function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
 
-        function updatePriceDisplay() {
-            const val = document.getElementById('pres-plan').value;
-            let price = prices.plan2;
-            if (val === 'p1') price = prices.plan1;
-            if (val === 'p3') price = prices.plan3;
-            document.getElementById('final-price-tag').innerText = parseInt(price).toLocaleString('uz-UZ') + " so'm";
-        }
+    function submitOrder(e) {
+      e.preventDefault();
+      const btn = document.getElementById('orderSubmitBtn');
+      btn.disabled = true;
+      btn.innerText = "Yuborilmoqda...";
 
-        function drawGraph() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            edges.forEach(edge => {
-                const u = nodes.find(n => n.id === edge.from), v = nodes.find(n => n.id === edge.to);
-                if (!u || !v) return;
-                const isInPath = isEdgeInPath(edge.from, edge.to);
+      db.ref("orders").push().set({
+        studentName: document.getElementById('orderStudentName').value,
+        studentContact: document.getElementById('orderStudentContact').value,
+        topic: document.getElementById('orderTopic').value,
+        status: 'pending',
+        createdAt: Date.now()
+      }).then(() => {
+        alert("Buyurtmangiz admin ga yuborildi! Tez orada siz bilan bog'lanamiz.");
+        closeOrderModal();
+        e.target.reset();
+        btn.disabled = false;
+        btn.innerText = "Buyurtmani Yuborish";
+      });
+    }
 
-                ctx.beginPath(); ctx.moveTo(u.x, u.y); ctx.lineTo(v.x, v.y);
-                ctx.strokeStyle = isInPath ? '#06b6d4' : 'rgba(71, 85, 105, 0.6)';
-                ctx.lineWidth = isInPath ? 4 : 2; ctx.stroke();
+    function encodeImageFileAsURL(element) {
+      let file = element.files[0];
+      let reader = new FileReader();
+      reader.onloadend = function() { base64Receipt = reader.result; }
+      reader.readAsDataURL(file);
+    }
 
-                const midX = (u.x + v.x) / 2, midY = (u.y + v.y) / 2;
-                ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.arc(midX, midY, 10, 0, 2 * Math.PI); ctx.fill();
-                ctx.fillStyle = isInPath ? '#38bdf8' : '#cbd5e1'; ctx.font = '600 11px "Plus Jakarta Sans"';
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(edge.weight, midX, midY);
-            });
+    function openPayment(id, title, price) {
+      document.getElementById('modalProjectId').value = id;
+      document.getElementById('requiredPrice').value = price;
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalPrice').innerText = Number(price).toLocaleString() + " UZS";
+      
+      const cContainer = document.getElementById('cardsContainer');
+      cContainer.innerHTML = '';
+      if(adminCards.length === 0) {
+        cContainer.innerHTML = `<div class="text-xs text-rose-400 text-center">Admin hali karta qo'shmagan!</div>`;
+      } else {
+        adminCards.forEach(c => {
+          cContainer.innerHTML += `
+            <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between items-center text-xs">
+              <div>
+                <div class="font-mono font-bold text-white tracking-wider">${c.number}</div>
+                <div class="text-[10px] text-slate-400">${c.holder} (${c.bank})</div>
+              </div>
+              <button type="button" onclick="navigator.clipboard.writeText('${c.number}'); alert('Karta nusxalandi!')" class="bg-indigo-600 px-2.5 py-1 rounded-lg text-white"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          `;
+        });
+      }
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
 
-            nodes.forEach(node => {
-                const isInPath = activePath.includes(node.id);
-                ctx.beginPath(); ctx.arc(node.x, node.y, 22, 0, 2 * Math.PI);
-                ctx.fillStyle = isInPath ? '#0284c7' : '#1e293b'; ctx.fill();
-                ctx.lineWidth = isInPath ? 3 : 2; ctx.strokeStyle = isInPath ? '#38bdf8' : '#475569'; ctx.stroke();
-                ctx.fillStyle = '#ffffff'; ctx.font = '600 11px "Plus Jakarta Sans"';
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(node.name, node.x, node.y);
-            });
-        }
+    function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
 
-        function isEdgeInPath(u, v) {
-            for (let i = 0; i < activePath.length - 1; i++) {
-                if ((activePath[i] === u && activePath[i+1] === v) || (activePath[i] === v && activePath[i+1] === u)) return true;
-            }
-            return false;
-        }
+    function submitPayment(e) {
+      e.preventDefault();
+      const requiredPrice = Number(document.getElementById('requiredPrice').value);
+      const paidAmount = Number(document.getElementById('paidAmount').value);
 
-        function runDijkstra() {
-            const startId = parseInt(document.getElementById('start-node').value, 10);
-            const endId = parseInt(document.getElementById('end-node').value, 10);
-            if (!startId || !endId || startId === endId) return;
+      if(paidAmount < requiredPrice) {
+        alert("Xatolik! Kiritilgan to'lov summasi loyiha narxidan kam. Iltimos, to'g'ri summani kiriting.");
+        return;
+      }
 
-            const dist = {}, prev = {};
-            nodes.forEach(n => { dist[n.id] = Infinity; prev[n.id] = null; });
-            dist[startId] = 0;
-            let unvisited = [...nodes];
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerText = "Yuborilmoqda...";
 
-            while (unvisited.length > 0) {
-                unvisited.sort((a, b) => dist[a.id] - dist[b.id]);
-                const u = unvisited.shift();
-                if (dist[u.id] === Infinity) break;
-                edges.filter(e => e.from === u.id || e.to === u.id).forEach(edge => {
-                    const neighborId = (edge.from === u.id) ? edge.to : edge.from;
-                    const alt = dist[u.id] + edge.weight;
-                    if (alt < dist[neighborId]) { dist[neighborId] = alt; prev[neighborId] = u.id; }
-                });
-            }
-            const path = []; let curr = endId;
-            if (dist[curr] !== Infinity) { while (curr !== null) { path.unshift(curr); curr = prev[curr]; } }
-            activePath = path; drawGraph();
-        }
-
-        function switchTab(t) {
-            document.getElementById('tab-graph').classList.toggle('hidden', t !== 'graph');
-            document.getElementById('tab-ai').classList.toggle('hidden', t !== 'ai');
-            document.getElementById('btn-tab-graph').className = t === 'graph' ? 'px-4 py-1.5 rounded-lg text-xs font-bold bg-cyan-600 text-white' : 'px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400';
-            document.getElementById('btn-tab-ai').className = t === 'ai' ? 'px-4 py-1.5 rounded-lg text-xs font-bold bg-cyan-600 text-white' : 'px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400';
-        }
-
-        function paySuccess() { alert("To'lov muvaffaqiyatli! Prezentatsiya yuklanmoqda..."); }
-    </script>
+      db.ref("purchases").push().set({
+        projectId: document.getElementById('modalProjectId').value,
+        studentName: document.getElementById('studentName').value,
+        studentContact: document.getElementById('studentContact').value,
+        paidAmount: paidAmount,
+        receiptImage: base64Receipt,
+        deviceId: getDeviceId(),
+        status: 'pending',
+        createdAt: Date.now()
+      }).then(() => {
+        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan yuklab olish tugmasi ochiladi.");
+        closeModal();
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Chekni Yuborish`;
+      });
+    }
+  </script>
 </body>
 </html>
