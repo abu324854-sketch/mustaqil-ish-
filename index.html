@@ -3,74 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduProjects - Talabalar Uchun</title>
+  <title>EduProjects - Talaba Portali</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   
-  <!-- Firebase SDK (Cloud Database) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
   <style>
-    body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
-    .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    body { background-color: #0b0f19; color: #f8fafc; font-family: 'Inter', sans-serif; }
+    .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glow-purple { box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.3); }
   </style>
 </head>
+<body class="pb-24">
 
-<body class="pb-20">
-  <header class="sticky top-0 z-40 glass px-4 py-4 flex justify-between items-center shadow-lg">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
     <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-xl font-bold shadow-indigo-500/50 shadow-md">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">
         <i class="fa-solid fa-graduation-cap"></i>
       </div>
       <div>
-        <h1 class="text-lg font-bold text-white leading-none">EduProjects</h1>
-        <span class="text-xs text-indigo-400 font-medium">Global Talaba Platformasi</span>
+        <h1 class="text-base font-bold text-white leading-tight">EduProjects</h1>
+        <p class="text-[11px] text-indigo-400 font-medium">Tayyor ishlar & Veb-saytlar</p>
       </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span class="text-xs text-slate-400 font-medium">Onlayn</span>
     </div>
   </header>
 
   <main class="max-w-md mx-auto px-4 mt-6">
-    <div class="relative mb-6">
+    <!-- Qidiruv -->
+    <div class="relative mb-5">
       <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-      <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha nomini qidiring..." 
-             class="w-full bg-slate-800/80 border border-slate-700 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-white placeholder-slate-400">
+      <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha yoki fan nomini kiriting..." 
+             class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500 transition">
+    </div>
+
+    <!-- Kategoriya Filterlari -->
+    <div class="flex space-x-2 overflow-x-auto pb-4 scrollbar-none" id="categoryFilters">
+      <button onclick="setCategory('all')" class="cat-pill active-pill px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md transition">Barchasi</button>
+      <button onclick="setCategory('Mustaqil ish')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400 transition">Mustaqil ish</button>
+      <button onclick="setCategory('Veb-sayt')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400 transition">Veb-saytlar</button>
+      <button onclick="setCategory('Kurs ishi')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400 transition">Kurs ishi</button>
     </div>
 
     <!-- Loyihalar Ro'yxati -->
     <div id="projectsList" class="space-y-4">
-      <div class="text-center py-10 text-slate-500 text-sm">Yuklanmoqda...</div>
+      <div class="text-center py-12 text-slate-500 text-xs">
+        <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i>
+        <p>Loyihalar yuklanmoqda...</p>
+      </div>
     </div>
   </main>
 
-  <!-- To'lov Modali -->
-  <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="glass w-full max-w-sm rounded-3xl p-6 relative border border-slate-700">
-      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-      <h3 class="text-lg font-bold text-white mb-2" id="modalTitle">Loyiha</h3>
-      
-      <div class="bg-gradient-to-br from-indigo-900/60 to-slate-900 border border-indigo-500/30 p-4 rounded-2xl mb-4">
-        <div class="text-xs text-indigo-300 mb-1">Karta raqami:</div>
-        <div class="font-mono text-base font-bold text-white mb-2">8600 1234 5678 9012</div>
-        <div class="text-xs text-slate-400">Ega: <span class="text-slate-200 font-semibold">Fattoxov Abdulloh</span></div>
-        <div class="mt-2 text-right text-indigo-400 font-bold text-lg" id="modalPrice">0 UZS</div>
+  <!-- Checkout / To'lov Modali -->
+  <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 animate-fadeIn">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-white mb-1" id="modalTitle">Loyiha Nomi</h3>
+      <p class="text-xs text-slate-400 mb-4">To'lovni amalga oshirib, chek skrinshotini yuklang</p>
+
+      <!-- Karta Vizuali -->
+      <div class="bg-gradient-to-br from-indigo-900/90 via-slate-900 to-slate-950 border border-indigo-500/30 p-4 rounded-2xl mb-4 relative overflow-hidden">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl"></div>
+        <div class="text-[10px] text-indigo-300 uppercase tracking-widest font-semibold mb-1">Karta Raqami</div>
+        <div class="flex justify-between items-center mb-3">
+          <span class="font-mono text-sm tracking-wider font-bold text-white" id="cardNumber">8600 1234 5678 9012</span>
+          <button onclick="copyCard()" class="text-[11px] bg-indigo-600/80 hover:bg-indigo-500 px-2.5 py-1 rounded-lg text-white font-medium transition">
+            <i class="fa-regular fa-copy"></i>
+          </button>
+        </div>
+        <div class="flex justify-between items-end">
+          <div>
+            <div class="text-[9px] text-slate-400 uppercase">Ega</div>
+            <div class="text-xs text-slate-200 font-semibold" id="cardHolder">Fattoxov Abdulloh</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[9px] text-slate-400 uppercase">Summa</div>
+            <div class="text-indigo-400 font-extrabold text-base" id="modalPrice">0 UZS</div>
+          </div>
+        </div>
       </div>
 
-      <form onsubmit="submitPayment(event)">
+      <!-- Forma -->
+      <form onsubmit="submitPayment(event)" class="space-y-3">
         <input type="hidden" id="modalProjectId">
-        <div class="mb-4">
-          <label class="block text-xs font-semibold text-slate-300 mb-2">Ism Familiyangiz:</label>
-          <input type="text" id="studentName" required placeholder="Ali Valiyev" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none">
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Ism Familiyangiz:</label>
+          <input type="text" id="studentName" required placeholder="Masalan: Ali Valiyev" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
         </div>
-        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-2xl text-sm transition">
-          To'lov qildim, yuborish
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Telegram yoki Telefon:</label>
+          <input type="text" id="studentContact" required placeholder="@username yoki +99890..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">To'lov Cheki (Skrinshot):</label>
+          <input type="file" id="receiptImg" accept="image/*" required onchange="encodeImageFileAsURL(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500">
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> Chekni Yuborish
         </button>
       </form>
     </div>
   </div>
 
   <script>
-    // --- FIREBASE CONFIG (O'zingizning Firebase ma'lumotlaringizni yozasiz) ---
     const firebaseConfig = {
       apiKey: "SIZNING_API_KEY",
       authDomain: "SIZNING_DOMAIN.firebaseapp.com",
@@ -84,61 +129,113 @@
 
     let allProjects = [];
     let allPurchases = [];
+    let selectedCategory = 'all';
+    let base64Receipt = '';
 
-    // Ma'lumotlarni Real-Time (Jonli) o'qish
-    db.collection("projects").onSnapshot((snapshot) => {
-      allProjects = [];
-      snapshot.forEach((doc) => {
-        allProjects.push({ id: doc.id, ...doc.data() });
-      });
+    function getDeviceId() {
+      let devId = localStorage.getItem('app_device_id');
+      if (!devId) {
+        devId = 'dev_' + Math.random().toString(36).substring(2, 11);
+        localStorage.setItem('app_device_id', devId);
+      }
+      return devId;
+    }
+
+    // Real-Time Listener
+    db.collection("projects").onSnapshot(snapshot => {
+      allProjects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderProjects();
     });
 
-    db.collection("purchases").onSnapshot((snapshot) => {
-      allPurchases = [];
-      snapshot.forEach((doc) => {
-        allPurchases.push({ id: doc.id, ...doc.data() });
-      });
+    db.collection("purchases").onSnapshot(snapshot => {
+      allPurchases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderProjects();
     });
+
+    function setCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white');
+        btn.classList.add('bg-slate-900', 'text-slate-400');
+      });
+      event.target.classList.remove('bg-slate-900', 'text-slate-400');
+      event.target.classList.add('bg-indigo-600', 'text-white');
+      renderProjects();
+    }
 
     function renderProjects() {
       const list = document.getElementById('projectsList');
       const search = document.getElementById('searchInput').value.toLowerCase();
+      const myDeviceId = getDeviceId();
+
       list.innerHTML = '';
 
-      const filtered = allProjects.filter(p => p.title.toLowerCase().includes(search));
+      const filtered = allProjects.filter(p => {
+        const matchesCat = selectedCategory === 'all' || p.category === selectedCategory;
+        const matchesSearch = p.title.toLowerCase().includes(search) || (p.description && p.description.toLowerCase().includes(search));
+        return matchesCat && matchesSearch;
+      });
 
       if (filtered.length === 0) {
-        list.innerHTML = `<div class="text-center py-10 text-slate-500 text-sm">Hozircha loyihalar yo'q.</div>`;
+        list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Hozircha mos loyihalar topilmadi.</div>`;
         return;
       }
 
       filtered.forEach(p => {
-        // Brauzerda saqlangan o'z ID raqamimiz orqali tekshiramiz
-        let myId = localStorage.getItem('my_device_id');
-        if(!myId) { myId = 'user_' + Math.random().toString(36.substring(2)); localStorage.setItem('my_device_id', myId); }
-
-        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.userId === myId);
+        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.deviceId === myDeviceId);
+        
+        let statusTag = '';
         let actionBtn = '';
 
         if (!myPurchase) {
-          actionBtn = `<button onclick="openPayment('${p.id}', '${p.title}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition">Sotib olish (${Number(p.price).toLocaleString()} UZS)</button>`;
+          actionBtn = `
+            <button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-cart-shopping"></i> Sotib olish (${Number(p.price).toLocaleString()} UZS)
+            </button>
+          `;
         } else if (myPurchase.status === 'pending') {
-          actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400 py-2.5 rounded-xl text-xs">⏳ Admin tekshirmoqda...</button>`;
+          statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Kutilmoqda</span>`;
+          actionBtn = `
+            <button disabled class="w-full bg-slate-800 text-amber-400/90 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">
+              <i class="fa-solid fa-hourglass-half mr-1"></i> Admin to'lovni tekshirmoqda...
+            </button>
+          `;
         } else if (myPurchase.status === 'approved') {
-          actionBtn = `<a href="${p.fileUrl}" download target="_blank" class="w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Yuklab olish</a>`;
+          statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
+          actionBtn = `
+            <a href="${p.fileUrl}" download target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30">
+              <i class="fa-solid fa-download"></i> Faylni Yuklab Olish
+            </a>
+          `;
         }
 
+        const demoBtn = p.demoUrl ? `<a href="${p.demoUrl}" target="_blank" class="text-xs text-indigo-400 hover:underline flex items-center gap-1"><i class="fa-solid fa-eye"></i> Demo Ko'rish</a>` : '';
+
         list.innerHTML += `
-          <div class="glass p-5 rounded-2xl border border-slate-800">
-            <span class="bg-slate-800 text-indigo-400 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
-            <h2 class="text-base font-bold text-white mt-2 mb-1">${p.title}</h2>
-            <p class="text-xs text-slate-400 mb-4">${p.description || ''}</p>
+          <div class="glass-card p-5 rounded-2xl relative">
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
+              ${statusTag}
+            </div>
+            <h3 class="text-sm font-bold text-white mb-1">${p.title}</h3>
+            <p class="text-xs text-slate-400 mb-4 leading-relaxed">${p.description || ''}</p>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              ${demoBtn}
+              <span class="text-xs font-bold text-slate-200">${Number(p.price).toLocaleString()} UZS</span>
+            </div>
             ${actionBtn}
           </div>
         `;
       });
+    }
+
+    function encodeImageFileAsURL(element) {
+      let file = element.files[0];
+      let reader = new FileReader();
+      reader.onloadend = function() {
+        base64Receipt = reader.result;
+      }
+      reader.readAsDataURL(file);
     }
 
     function openPayment(id, title, price) {
@@ -148,23 +245,34 @@
       document.getElementById('paymentModal').classList.remove('hidden');
     }
 
-    function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
+    function closeModal() {
+      document.getElementById('paymentModal').classList.add('hidden');
+    }
+
+    function copyCard() {
+      navigator.clipboard.writeText("8600123456789012");
+      alert("Karta raqami nusxalandi!");
+    }
 
     function submitPayment(e) {
       e.preventDefault();
-      const pId = document.getElementById('modalProjectId').value;
-      const sName = document.getElementById('studentName').value;
-      const myId = localStorage.getItem('my_device_id');
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerText = "Yuborilmoqda...";
 
       db.collection("purchases").add({
-        projectId: pId,
-        studentName: sName,
-        userId: myId,
+        projectId: document.getElementById('modalProjectId').value,
+        studentName: document.getElementById('studentName').value,
+        studentContact: document.getElementById('studentContact').value,
+        receiptImage: base64Receipt,
+        deviceId: getDeviceId(),
         status: 'pending',
-        date: new Date().toISOString()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
-        alert("To'lov so'rovi yuborildi!");
+        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan yuklab olish tugmasi ochiladi.");
         closeModal();
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Chekni Yuborish`;
       });
     }
   </script>
