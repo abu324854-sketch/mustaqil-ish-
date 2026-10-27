@@ -1,112 +1,172 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O'qituvchi Kabineti | Ekotizim</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduProjects - Talabalar Uchun</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Firebase SDK (Cloud Database) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
+    .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans">
 
-    <div class="max-w-4xl mx-auto p-6">
-        <!-- Header -->
-        <header class="bg-white shadow-md rounded-xl p-6 mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">👨‍🏫 O'qituvchi Kabineti</h1>
-            <p class="text-gray-600">Guruhlarga mustaqil ish berish va talabalar natijalarini tekshirish.</p>
-        </header>
+<body class="pb-20">
+  <header class="sticky top-0 z-40 glass px-4 py-4 flex justify-between items-center shadow-lg">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-xl font-bold shadow-indigo-500/50 shadow-md">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-white leading-none">EduProjects</h1>
+        <span class="text-xs text-indigo-400 font-medium">Global Talaba Platformasi</span>
+      </div>
+    </div>
+  </header>
 
-        <!-- Guruhni tanlash -->
-        <div class="bg-white shadow-md rounded-xl p-6 mb-6">
-            <label class="block text-gray-700 font-semibold mb-2">O'qitish guruhini tanlang:</label>
-            <select id="groupSelect" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="renderStudents()">
-                <option value="F-KI-101-25">F-KI-101-25</option>
-                <option value="F-KI-102-25">F-KI-102-25</option>
-            </select>
-        </div>
-
-        <!-- Talabalar ro'yxati -->
-        <div class="bg-white shadow-md rounded-xl p-6 mb-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">👥 Talabalar ro'yxati va ishlari</h2>
-            <div id="studentList" class="divide-y divide-gray-200">
-                <!-- JavaScript orqali to'ldiriladi -->
-            </div>
-        </div>
-
-        <!-- Yangi topshiriq berish -->
-        <div class="bg-white shadow-md rounded-xl p-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">📝 Guruhga Yangi Mustaqil Ish Berish</h2>
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">Topshiriq mavzusi:</label>
-                <input type="text" id="taskTitle" placeholder="Masalan: Web dasturlash asoslari mustaqil ishi" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">Topshirish muddati:</label>
-                <input type="date" id="taskDeadline" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <button onclick="assignTask()" class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition">Topshiriqni yuborish</button>
-            <p id="successMsg" class="text-green-600 mt-3 hidden">Topshiriq guruhga muvaffaqiyatli yuborildi!</p>
-        </div>
+  <main class="max-w-md mx-auto px-4 mt-6">
+    <div class="relative mb-6">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+      <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha nomini qidiring..." 
+             class="w-full bg-slate-800/80 border border-slate-700 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-white placeholder-slate-400">
     </div>
 
-    <script>
-        // Simulyatsiya qilingan baza
-        const studentsData = [
-            { id: 1, name: "Alisherov B.", group: "F-KI-101-25", status: "Topshirilmagan" },
-            { id: 2, name: "Karimova Z.", group: "F-KI-101-25", status: "Topshirilgan" },
-            { id: 3, name: "Tohirov M.", group: "F-KI-102-25", status: "Topshirilmagan" }
-        ];
+    <!-- Loyihalar Ro'yxati -->
+    <div id="projectsList" class="space-y-4">
+      <div class="text-center py-10 text-slate-500 text-sm">Yuklanmoqda...</div>
+    </div>
+  </main>
 
-        function renderStudents() {
-            const selectedGroup = document.getElementById('groupSelect').value;
-            const container = document.getElementById('studentList');
-            container.innerHTML = '';
+  <!-- To'lov Modali -->
+  <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass w-full max-w-sm rounded-3xl p-6 relative border border-slate-700">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+      <h3 class="text-lg font-bold text-white mb-2" id="modalTitle">Loyiha</h3>
+      
+      <div class="bg-gradient-to-br from-indigo-900/60 to-slate-900 border border-indigo-500/30 p-4 rounded-2xl mb-4">
+        <div class="text-xs text-indigo-300 mb-1">Karta raqami:</div>
+        <div class="font-mono text-base font-bold text-white mb-2">8600 1234 5678 9012</div>
+        <div class="text-xs text-slate-400">Ega: <span class="text-slate-200 font-semibold">Fattoxov Abdulloh</span></div>
+        <div class="mt-2 text-right text-indigo-400 font-bold text-lg" id="modalPrice">0 UZS</div>
+      </div>
 
-            const filtered = studentsData.filter(s => s.group === selectedGroup);
+      <form onsubmit="submitPayment(event)">
+        <input type="hidden" id="modalProjectId">
+        <div class="mb-4">
+          <label class="block text-xs font-semibold text-slate-300 mb-2">Ism Familiyangiz:</label>
+          <input type="text" id="studentName" required placeholder="Ali Valiyev" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none">
+        </div>
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-2xl text-sm transition">
+          To'lov qildim, yuborish
+        </button>
+      </form>
+    </div>
+  </div>
 
-            if (filtered.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 py-3">Bu guruhda talabalar yo\'q.</p>';
-                return;
-            }
+  <script>
+    // --- FIREBASE CONFIG (O'zingizning Firebase ma'lumotlaringizni yozasiz) ---
+    const firebaseConfig = {
+      apiKey: "SIZNING_API_KEY",
+      authDomain: "SIZNING_DOMAIN.firebaseapp.com",
+      projectId: "SIZNING_PROJECT_ID",
+      storageBucket: "SIZNING_BUCKET.appspot.com",
+      messagingSenderId: "ID",
+      appId: "APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-            filtered.forEach(student => {
-                const row = document.createElement('div');
-                row.className = 'py-3 flex justify-between items-center';
-                row.innerHTML = `
-                    <div>
-                        <span class="font-medium text-gray-800">${student.name}</span>
-                        <span class="ml-4 text-sm px-2 py-1 rounded ${student.status === 'Topshirilgan' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${student.status}</span>
-                    </div>
-                    <button onclick="evaluateStudent(${student.id})" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition">Baholash</button>
-                `;
-                container.appendChild(row);
-            });
+    let allProjects = [];
+    let allPurchases = [];
+
+    // Ma'lumotlarni Real-Time (Jonli) o'qish
+    db.collection("projects").onSnapshot((snapshot) => {
+      allProjects = [];
+      snapshot.forEach((doc) => {
+        allProjects.push({ id: doc.id, ...doc.data() });
+      });
+      renderProjects();
+    });
+
+    db.collection("purchases").onSnapshot((snapshot) => {
+      allPurchases = [];
+      snapshot.forEach((doc) => {
+        allPurchases.push({ id: doc.id, ...doc.data() });
+      });
+      renderProjects();
+    });
+
+    function renderProjects() {
+      const list = document.getElementById('projectsList');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      list.innerHTML = '';
+
+      const filtered = allProjects.filter(p => p.title.toLowerCase().includes(search));
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="text-center py-10 text-slate-500 text-sm">Hozircha loyihalar yo'q.</div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        // Brauzerda saqlangan o'z ID raqamimiz orqali tekshiramiz
+        let myId = localStorage.getItem('my_device_id');
+        if(!myId) { myId = 'user_' + Math.random().toString(36.substring(2)); localStorage.setItem('my_device_id', myId); }
+
+        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.userId === myId);
+        let actionBtn = '';
+
+        if (!myPurchase) {
+          actionBtn = `<button onclick="openPayment('${p.id}', '${p.title}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition">Sotib olish (${Number(p.price).toLocaleString()} UZS)</button>`;
+        } else if (myPurchase.status === 'pending') {
+          actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400 py-2.5 rounded-xl text-xs">⏳ Admin tekshirmoqda...</button>`;
+        } else if (myPurchase.status === 'approved') {
+          actionBtn = `<a href="${p.fileUrl}" download target="_blank" class="w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Yuklab olish</a>`;
         }
 
-        function evaluateStudent(id) {
-            const student = studentsData.find(s => s.id === id);
-            if (student) {
-                student.status = "Baholandi";
-                alert(`${student.name} ning ishi qabul qilindi va baho qo'yildi!`);
-                renderStudents();
-            }
-        }
+        list.innerHTML += `
+          <div class="glass p-5 rounded-2xl border border-slate-800">
+            <span class="bg-slate-800 text-indigo-400 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
+            <h2 class="text-base font-bold text-white mt-2 mb-1">${p.title}</h2>
+            <p class="text-xs text-slate-400 mb-4">${p.description || ''}</p>
+            ${actionBtn}
+          </div>
+        `;
+      });
+    }
 
-        function assignTask() {
-            const title = document.getElementById('taskTitle').value;
-            const deadline = document.getElementById('taskDeadline').value;
-            if (title && deadline) {
-                const msg = document.getElementById('successMsg');
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 3000);
-                document.getElementById('taskTitle').value = '';
-            } else {
-                alert("Iltimos, barcha maydonlarni to'ldiring!");
-            }
-        }
+    function openPayment(id, title, price) {
+      document.getElementById('modalProjectId').value = id;
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalPrice').innerText = Number(price).toLocaleString() + " UZS";
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
 
-        // Boshlang'ich yuklash
-        renderStudents();
-    </script>
+    function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
+
+    function submitPayment(e) {
+      e.preventDefault();
+      const pId = document.getElementById('modalProjectId').value;
+      const sName = document.getElementById('studentName').value;
+      const myId = localStorage.getItem('my_device_id');
+
+      db.collection("purchases").add({
+        projectId: pId,
+        studentName: sName,
+        userId: myId,
+        status: 'pending',
+        date: new Date().toISOString()
+      }).then(() => {
+        alert("To'lov so'rovi yuborildi!");
+        closeModal();
+      });
+    }
+  </script>
 </body>
 </html>
