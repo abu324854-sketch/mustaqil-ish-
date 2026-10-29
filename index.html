@@ -19,7 +19,6 @@ body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
 </style>
 </head>
 <body class="pb-24">
-
 <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
   <div class="flex items-center space-x-3">
     <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">
@@ -27,30 +26,26 @@ body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
     </div>
     <div>
       <h1 class="text-base font-bold text-white leading-tight">EduProjects</h1>
-      <p class="text-[11px] text-indigo-400 font-medium">Tayyor ishlar & Veb-saytlar</p>
+      <p class="text-[11px] text-indigo-400 font-medium">Tayyor ishlar & Referatlar</p>
     </div>
   </div>
   <button id="installBtn" onclick="installApp()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 shadow-md">
     <i class="fa-solid fa-download"></i> O'rnatish
   </button>
 </header>
-
 <div id="toast" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-sm glass-card rounded-2xl px-4 py-3 text-xs text-center"></div>
-
 <main class="max-w-md mx-auto px-4 mt-6 space-y-5">
   <div class="relative">
     <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-    <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha yoki fan nomini kiriting..."
+    <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha, referat yoki fan nomini kiriting..."
       class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
   </div>
-
   <div class="flex space-x-2 overflow-x-auto pb-1" id="categoryFilters">
     <button onclick="setCategory('all', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md">Barchasi</button>
     <button onclick="setCategory('Mustaqil ish', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Mustaqil ish</button>
-    <button onclick="setCategory('Veb-sayt', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Veb-saytlar</button>
+    <button onclick="setCategory('Referat', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Referat</button>
     <button onclick="setCategory('Kurs ishi', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Kurs ishi</button>
   </div>
-
   <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex justify-between items-center">
     <div>
       <h3 class="text-xs font-bold text-white mb-0.5">Kerakli mavzu yo'qmi?</h3>
@@ -60,7 +55,6 @@ body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
       <i class="fa-solid fa-pen-to-square mr-1"></i> Zakaz berish
     </button>
   </div>
-
   <div id="projectsList" class="space-y-4">
     <div class="text-center py-12 text-slate-500 text-xs">
       <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i>
@@ -86,7 +80,7 @@ body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
       </div>
       <div>
         <label class="block text-[11px] text-slate-300 font-medium mb-1">Fan va Mavzu nomi:</label>
-        <textarea id="orderTopic" rows="3" required maxlength="500" placeholder="Masalan: Fizika fanidan Chiziqli zanjirlar mavzusida 10 betlik mustaqil ish" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
+        <textarea id="orderTopic" rows="3" required maxlength="500" placeholder="Masalan: Tarix fanidan Amir Temur davri mavzusida referat" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
       </div>
       <button type="submit" id="orderSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-indigo-600/30">Buyurtmani Yuborish</button>
     </form>
@@ -112,11 +106,14 @@ body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
         <label class="block text-[11px] text-slate-300 font-medium mb-1">Telegram yoki Telefon:</label>
         <input type="text" id="studentContact" required maxlength="80" placeholder="@username yoki +99890..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
       </div>
-      <p class="text-[11px] text-slate-400 pt-1">To'lov usulini tanlang. To'lov tasdiqlangach fayl avtomatik ochiladi:</p>
+      <p class="text-[11px] text-slate-400 pt-1">To'lov usulini tanlang:</p>
       <div class="grid grid-cols-2 gap-2">
-        <button type="button" onclick="pay('click')" class="payBtn bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-2xl text-xs transition">Click orqali</button>
-        <button type="button" onclick="pay('payme')" class="payBtn bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-2xl text-xs transition">Payme orqali</button>
+        <button type="button" onclick="payWithProvider('click')" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-2xl text-xs transition">Click orqali</button>
+        <button type="button" onclick="payWithProvider('payme')" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-2xl text-xs transition">Payme orqali</button>
       </div>
+      <button type="button" onclick="payCash()" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-2xl text-xs transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-money-bill-wave"></i> Naqd pul orqali to'lash (Admin ochadi)
+      </button>
       <p id="payError" class="text-[11px] text-rose-400 text-center hidden"></p>
     </form>
   </div>
@@ -133,7 +130,6 @@ function installApp() {
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(r => { if (r.outcome === 'accepted') document.getElementById('installBtn').classList.add('hidden'); deferredPrompt = null; });
 }
-
 const firebaseConfig = {
   apiKey: "AIzaSyDMmB0tW-JGizWSOdlFJJd68p6sksrlS_8",
   authDomain: "mustaqil-ish-63c2c.firebaseapp.com",
@@ -145,18 +141,15 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let allProjects = [];
 let selectedCategory = 'all';
-let myOrders = {};   // { orderId: { token, projectId, status, title } }
+let myOrders = {};
 
-// ---- Qurilmadagi xaridlar (localStorage) ----
 function loadOrders() { try { myOrders = JSON.parse(localStorage.getItem('edu_orders') || '{}'); } catch { myOrders = {}; } }
 function saveOrders() { try { localStorage.setItem('edu_orders', JSON.stringify(myOrders)); } catch {} }
 loadOrders();
 
-// Havoladan kelgan buyurtma (to'lovdan qaytish yoki admin yuborgan tiklash havolasi)
 const params = new URLSearchParams(location.search);
 const returnOrder = params.get('order'), returnToken = params.get('token');
 if (returnOrder && returnToken) {
@@ -167,6 +160,7 @@ if (returnOrder && returnToken) {
 
 async function refreshOrder(id) {
   const o = myOrders[id];
+  if (!o || !o.token) return;
   try {
     const r = await fetch(`/api/order-status?id=${encodeURIComponent(id)}&token=${encodeURIComponent(o.token)}`);
     if (r.status === 404) { delete myOrders[id]; saveOrders(); return; }
@@ -176,6 +170,7 @@ async function refreshOrder(id) {
     saveOrders();
   } catch {}
 }
+
 async function refreshAll() {
   await Promise.all(Object.keys(myOrders).map(refreshOrder));
   renderProjects();
@@ -187,7 +182,6 @@ function toast(msg, ms = 0) {
   if (ms) setTimeout(() => t.classList.add('hidden'), ms);
 }
 
-// To'lovdan qaytganda tasdiqni kutish (Click/Payme webhook'i bir necha soniyada keladi)
 async function waitForPayment(id) {
   toast('<i class="fa-solid fa-spinner fa-spin"></i> To\'lov tekshirilmoqda...');
   for (let i = 0; i < 40; i++) {
@@ -209,6 +203,23 @@ db.ref("projects").on("value", snap => {
   renderProjects();
 });
 
+// Realtime orders listener for local storage sync (Naqd pul uchun ham statusni kuzatib boradi)
+db.ref("orders").on("value", snap => {
+  const ordersData = snap.val() || {};
+  let updated = false;
+  Object.keys(myOrders).forEach(oid => {
+    if (ordersData[oid]) {
+      const remoteOrder = ordersData[oid];
+      if (myOrders[oid].status !== remoteOrder.status) {
+        myOrders[oid].status = remoteOrder.status;
+        myOrders[oid].token = remoteOrder.token;
+        updated = true;
+      }
+    }
+  });
+  if (updated) { saveOrders(); renderProjects(); }
+});
+
 function setCategory(cat, btn) {
   selectedCategory = cat;
   document.querySelectorAll('.cat-pill').forEach(b => { b.classList.remove('bg-indigo-600', 'text-white'); b.classList.add('bg-slate-900', 'text-slate-400'); });
@@ -224,21 +235,26 @@ function renderProjects() {
     const okSearch = (p.title || '').toLowerCase().includes(search) || (p.description || '').toLowerCase().includes(search);
     return okCat && okSearch;
   });
-  if (!filtered.length) { list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Hozircha mos loyihalar topilmadi.</div>`; return; }
-
+  if (!filtered.length) { list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Hozircha mos loyihalar yoki referatlar topilmadi.</div>`; return; }
+  
   list.innerHTML = filtered.map(p => {
     const paidEntry = Object.entries(myOrders).find(([, o]) => o.projectId === p.id && o.status === 'paid');
+    const pendingEntry = Object.entries(myOrders).find(([, o]) => o.projectId === p.id && o.status === 'new');
     let statusTag = '', actionBtn;
+    
     if (paidEntry) {
       const [oid, o] = paidEntry;
       statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">To'langan</span>`;
       actionBtn = (o.left === 0)
         ? `<button disabled class="w-full bg-slate-800 text-slate-400 font-medium py-2.5 rounded-xl text-xs">Yuklab olish limiti tugagan. Admin bilan bog'laning</button>`
         : `<a href="/api/download?order=${encodeURIComponent(oid)}&token=${encodeURIComponent(o.token)}" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
+    } else if (pendingEntry) {
+      statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiq kutilmoqda</span>`;
+      actionBtn = `<button disabled class="w-full bg-amber-600/40 text-amber-200 font-medium py-2.5 rounded-xl text-xs">Naqd to'lov kutilmoqda (Admin ochadi)</button>`;
     } else {
       actionBtn = `<button onclick="openPayment('${esc(p.id)}')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${Number(p.price).toLocaleString()} UZS)</button>`;
     }
-    const demo = (p.demoUrl && /^https?:\/\//.test(p.demoUrl)) ? `<a href="${esc(p.demoUrl)}" target="_blank" rel="noopener" class="text-xs text-indigo-400 hover:underline flex items-center gap-1"><i class="fa-solid fa-eye"></i> Demo Ko'rish</a>` : '<span></span>';
+    const demo = (p.demoUrl && /^https?:\/\//.test(p.demoUrl)) ? `<a href="${esc(p.demoUrl)}" target="_blank" rel="noopener" class="text-xs text-indigo-400 hover:underline flex items-center gap-1"><i class="fa-solid fa-eye"></i> Namuna Ko'rish</a>` : '<span></span>';
     return `
     <div class="glass-card p-5 rounded-2xl relative">
       <div class="flex justify-between items-center mb-2">
@@ -256,7 +272,6 @@ function renderProjects() {
   }).join('');
 }
 
-// ---- Zakaz ----
 function openOrderModal() { document.getElementById('orderModal').classList.remove('hidden'); }
 function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
 function submitOrder(e) {
@@ -275,7 +290,6 @@ function submitOrder(e) {
     .finally(() => { btn.disabled = false; btn.innerText = 'Buyurtmani Yuborish'; });
 }
 
-// ---- To'lov ----
 function openPayment(id) {
   const p = allProjects.find(x => x.id === id); if (!p) return;
   document.getElementById('modalProjectId').value = id;
@@ -290,42 +304,71 @@ function openPayment(id) {
 }
 function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
 
+// Onlayn to'lov (Click / Payme)
 async function payWithProvider(provider) {
-    const contact = document.getElementById('studentContact').value.trim();
-    const name = document.getElementById('studentName').value.trim();
-    if (!name || !contact) { alert('Ism va telefon raqamni kiriting'); return; }
-    
-    try {
-      const response = await fetch('/api/payme', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectId: window._payProjId, name, contact, amount: window._payAmount, provider })
-      });
-
-      const responseText = await response.text();
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error("Serverdan noto'g'ri javob:", responseText);
-        alert("Serverda xatolik yuz berdi (JSON emas). Iltimos, server qismini tekshiring.");
-        return;
-      }
-
-      if (data && data.url) {
-        location.href = data.url;
-      } else {
-        alert("Xatolik: " + (data.message || "Havola olinmadi"));
-      }
-    } catch (err) {
-      console.error("Tarmoq xatosi:", err);
-      alert("Tarmoq xatosi yuz berdi.");
+  const contact = document.getElementById('studentContact').value.trim();
+  const name = document.getElementById('studentName').value.trim();
+  const projectId = document.getElementById('modalProjectId').value;
+  const p = allProjects.find(x => x.id === projectId);
+  if (!name || !contact) { alert('Ism va telefon raqamni kiriting'); return; }
+  
+  try {
+    const response = await fetch('/api/payme', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ projectId, name, contact, amount: p.price, provider })
+    });
+    const responseText = await response.text();
+    let data;
+    try { data = JSON.parse(responseText); } catch (e) {
+      alert("Serverda xatolik yuz berdi.");
+      return;
     }
+    if (data && data.url) {
+      location.href = data.url;
+    } else {
+      alert("Xatolik: " + (data.message || "Havola olinmadi"));
+    }
+  } catch (err) {
+    alert("Tarmoq xatosi yuz berdi.");
   }
+}
 
-// Ishga tushirish
+// Naqd pul orqali zakaz qilish (Admin ochib berishi uchun)
+async function payCash() {
+  const contact = document.getElementById('studentContact').value.trim();
+  const name = document.getElementById('studentName').value.trim();
+  const projectId = document.getElementById('modalProjectId').value;
+  const p = allProjects.find(x => x.id === projectId);
+  if (!name || !contact) { alert('Ism va telefon raqamni kiriting'); return; }
+
+  try {
+    const orderRef = db.ref('orders').push();
+    const orderId = orderRef.key;
+    const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+    
+    await orderRef.set({
+      projectId,
+      name,
+      contact,
+      amount: p.price,
+      provider: 'Naqd pul',
+      status: 'new',
+      token,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    myOrders[orderId] = { projectId, status: 'new', token, title: p.title };
+    saveOrders();
+    closeModal();
+    renderProjects();
+    toast("Buyurtma yaratildi! Naqd pulni to'lagach, admin faylingizni ochib beradi.", 7000);
+  } catch (err) {
+    alert("Xatolik yuz berdi: " + err.message);
+  }
+}
+
 refreshAll().then(() => { if (returnOrder && myOrders[returnOrder]) waitForPayment(returnOrder); });
-// Boshqa tabdan qaytganda ham yangilash
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshAll(); });
 </script>
 </body>
