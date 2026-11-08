@@ -24,6 +24,9 @@
         <p class="text-[11px] text-indigo-400 font-medium">Tayyor ishlar & Veb-saytlar</p>
       </div>
     </div>
+    <button onclick="toggleCabinet()" class="bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+      <i class="fa-solid fa-user text-indigo-400"></i> Kabinetim
+    </button>
   </header>
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-5">
@@ -61,6 +64,29 @@
       </div>
     </div>
   </main>
+
+  <!-- SHAXSIY KABINET MODALI -->
+  <div id="cabinetModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700 max-h-[85vh] overflow-y-auto">
+      <button onclick="toggleCabinet()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <h3 class="text-base font-bold text-white mb-1"><i class="fa-solid fa-user-gear text-indigo-400 mr-2"></i> Shaxsiy Kabinetim</h3>
+      <p class="text-xs text-slate-400 mb-4">Sotib olingan ishlar va yuborilgan so'rovlar</p>
+      
+      <div class="space-y-4">
+        <div>
+          <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">Mening Xaridlarim</h4>
+          <div id="myPurchasesList" class="space-y-2"></div>
+        </div>
+        
+        <div>
+          <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">Mening Buyurtmalarim</h4>
+          <div id="myOrdersList" class="space-y-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Buyurtma Modali -->
   <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -142,6 +168,7 @@
 
     let allProjects = [];
     let allPurchases = [];
+    let allOrders = [];
     let adminCards = [];
     let selectedCategory = 'all';
     let base64Receipt = '';
@@ -159,12 +186,20 @@
       const data = snapshot.val();
       allProjects = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
       renderProjects();
+      renderCabinet();
     });
 
     db.ref("purchases").on("value", snapshot => {
       const data = snapshot.val();
       allPurchases = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
       renderProjects();
+      renderCabinet();
+    });
+
+    db.ref("orders").on("value", snapshot => {
+      const data = snapshot.val();
+      allOrders = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+      renderCabinet();
     });
 
     db.ref("settings/cards").on("value", snapshot => {
@@ -231,6 +266,52 @@
       });
     }
 
+    function toggleCabinet() {
+      document.getElementById('cabinetModal').classList.toggle('hidden');
+    }
+
+    function renderCabinet() {
+      const myDeviceId = getDeviceId();
+      const purchasesContainer = document.getElementById('myPurchasesList');
+      const ordersContainer = document.getElementById('myOrdersList');
+      
+      const myPurchases = allPurchases.filter(req => req.deviceId === myDeviceId);
+      const myOrders = allOrders.filter(ord => ord.deviceId === myDeviceId);
+
+      purchasesContainer.innerHTML = '';
+      if(myPurchases.length === 0) {
+        purchasesContainer.innerHTML = `<div class="text-[11px] text-slate-500 italic">Hali xaridlar yo'q</div>`;
+      } else {
+        myPurchases.forEach(req => {
+          const p = allProjects.find(item => item.id === req.projectId) || { title: 'Loyiha' };
+          let badge = req.status === 'approved' 
+            ? `<a href="${p.fileData}" download="${p.fileName || 'loyiha'}" class="text-emerald-400 font-bold hover:underline"><i class="fa-solid fa-download"></i> Yuklab olish</a>` 
+            : `<span class="text-amber-400">Tekshirilmoqda</span>`;
+            
+          purchasesContainer.innerHTML += `
+            <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl text-xs flex justify-between items-center">
+              <span class="font-medium text-white truncate max-w-[170px]">${p.title}</span>
+              ${badge}
+            </div>
+          `;
+        });
+      }
+
+      ordersContainer.innerHTML = '';
+      if(myOrders.length === 0) {
+        ordersContainer.innerHTML = `<div class="text-[11px] text-slate-500 italic">Hali zakazlar yo'q</div>`;
+      } else {
+        myOrders.forEach(ord => {
+          ordersContainer.innerHTML += `
+            <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl text-xs space-y-1">
+              <div class="text-slate-300 font-medium">${ord.topic}</div>
+              <div class="text-[10px] text-indigo-400 font-bold">Status: Qabul qilindi</div>
+            </div>
+          `;
+        });
+      }
+    }
+
     function openOrderModal() { document.getElementById('orderModal').classList.remove('hidden'); }
     function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
 
@@ -243,6 +324,7 @@
         studentName: document.getElementById('orderStudentName').value,
         studentContact: document.getElementById('orderStudentContact').value,
         topic: document.getElementById('orderTopic').value,
+        deviceId: getDeviceId(),
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
@@ -303,7 +385,7 @@
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan faylni yuklab olish ochiladi.");
+        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan yuklab olish ochiladi.");
         closeModal();
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Chekni Yuborish`;
