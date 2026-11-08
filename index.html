@@ -4,27 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduProjects - Talaba Portali</title>
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#6366f1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="EduProjects">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
-
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
   <style>
     body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
-    .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
   </style>
 </head>
 <body class="pb-24">
-
   <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">
@@ -35,10 +24,6 @@
         <p class="text-[11px] text-indigo-400 font-medium">Tayyor ishlar & Veb-saytlar</p>
       </div>
     </div>
-    
-    <button id="installBtn" onclick="installApp()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 shadow-md">
-      <i class="fa-solid fa-download"></i> O'rnatish
-    </button>
   </header>
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-5">
@@ -49,22 +34,22 @@
              class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
     </div>
 
-    <!-- Kategoriyalar -->
+    <!-- Kategoriya Filter -->
     <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none" id="categoryFilters">
-      <button onclick="setCategory('all')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md">Barchasi</button>
-      <button onclick="setCategory('Mustaqil ish')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Mustaqil ish</button>
-      <button onclick="setCategory('Veb-sayt')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Veb-saytlar</button>
-      <button onclick="setCategory('Kurs ishi')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Kurs ishi</button>
+      <button onclick="setCategory('all', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md">Barchasi</button>
+      <button onclick="setCategory('Mustaqil ish', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Mustaqil ish</button>
+      <button onclick="setCategory('Veb-sayt', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Veb-saytlar</button>
+      <button onclick="setCategory('Kurs ishi', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Kurs ishi</button>
     </div>
 
-    <!-- Zakaz berish tugmasi / Banner -->
+    <!-- Zakaz Berish Banneri -->
     <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex justify-between items-center">
       <div>
         <h3 class="text-xs font-bold text-white mb-0.5">Kerakli mavzu yo'qmi?</h3>
-        <p class="text-[10px] text-indigo-300">Shaxsiy zakaz bering, tezda qilib beramiz!</p>
+        <p class="text-[10px] text-indigo-300">Shaxsiy zakaz bering, tezda tayyorlaymiz!</p>
       </div>
       <button onclick="openOrderModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-md transition">
-        <i class="fa-solid fa-pen-to-square mr-1"></i> Zakaz berish
+        <i class="fa-solid fa-pen-to-square mr-1"></i> Buyurtma berish
       </button>
     </div>
 
@@ -77,20 +62,18 @@
     </div>
   </main>
 
-  <!-- Buyurtma (Zakaz) Modali -->
+  <!-- Buyurtma Modali -->
   <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700">
       <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
-
       <h3 class="text-base font-bold text-white mb-1"><i class="fa-solid fa-pen-nib text-indigo-400 mr-2"></i> Yangi Buyurtma Berish</h3>
-      <p class="text-xs text-slate-400 mb-4">Mavzu va fan nomini qoldiring, tez orada aloqaga chiqamiz</p>
-
+      <p class="text-xs text-slate-400 mb-4">Mavzuni qoldiring, admin siz bilan bog'lanadi</p>
       <form onsubmit="submitOrder(event)" class="space-y-3">
         <div>
           <label class="block text-[11px] text-slate-300 font-medium mb-1">Ism Familiyangiz:</label>
-          <input type="text" id="orderStudentName" required placeholder="Ali Valiyev" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+          <input type="text" id="orderStudentName" required placeholder="Masalan: Ali Valiyev" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
         </div>
         <div>
           <label class="block text-[11px] text-slate-300 font-medium mb-1">Telegram / Telefon raqam:</label>
@@ -98,9 +81,8 @@
         </div>
         <div>
           <label class="block text-[11px] text-slate-300 font-medium mb-1">Fan va Mavzu nomi:</label>
-          <textarea id="orderTopic" rows="3" required placeholder="Masalan: Fizika fanidan Chiziqli zanjirlar mavzusida 10 betlik mustaqil ish" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
+          <textarea id="orderTopic" rows="3" required placeholder="Mavzu va hajm haqida yozing..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
         </div>
-
         <button type="submit" id="orderSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg shadow-indigo-600/30">
           Buyurtmani Yuborish
         </button>
@@ -110,42 +92,34 @@
 
   <!-- To'lov Modali -->
   <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[90vh] overflow-y-auto">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700 max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
-
       <h3 class="text-base font-bold text-white mb-1" id="modalTitle">Loyiha Nomi</h3>
-      <p class="text-xs text-slate-400 mb-4">Quyidagi kartalardan biriga pul o'tkazing va chekni yuboring</p>
-
+      <p class="text-xs text-slate-400 mb-4">Kartaga pul o'tkazing va chek skrinshotini yuboring</p>
+      
       <div id="cardsContainer" class="space-y-2 mb-4"></div>
-
+      
       <div class="bg-indigo-950/40 border border-indigo-500/20 p-3 rounded-2xl mb-4 text-center">
-        <div class="text-[10px] text-slate-400 uppercase">To'lanishi Kerak bo'lgan Summa:</div>
+        <div class="text-[10px] text-slate-400 uppercase">To'lov Summasi:</div>
         <div class="text-indigo-400 font-extrabold text-lg" id="modalPrice">0 UZS</div>
       </div>
 
       <form onsubmit="submitPayment(event)" class="space-y-3">
         <input type="hidden" id="modalProjectId">
-        <input type="hidden" id="requiredPrice">
-        
         <div>
-          <label class="block text-[11px] text-slate-300 font-medium mb-1">Ism Familiyangiz:</label>
-          <input type="text" id="studentName" required placeholder="Masalan: Ali Valiyev" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">Ismingiz:</label>
+          <input type="text" id="studentName" required placeholder="Ali Valiyev" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
         </div>
         <div>
           <label class="block text-[11px] text-slate-300 font-medium mb-1">Telegram yoki Telefon:</label>
           <input type="text" id="studentContact" required placeholder="@username yoki +99890..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
         </div>
         <div>
-          <label class="block text-[11px] text-slate-300 font-medium mb-1">O'tkazilgan Summa:</label>
-          <input type="number" id="paidAmount" required placeholder="Masalan: 20000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-        </div>
-        <div>
-          <label class="block text-[11px] text-slate-300 font-medium mb-1">To'lov Cheki (Skrinshot):</label>
+          <label class="block text-[11px] text-slate-300 font-medium mb-1">To'lov Cheki (Rasm):</label>
           <input type="file" id="receiptImg" accept="image/*" required onchange="encodeImageFileAsURL(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white">
         </div>
-
         <button type="submit" id="submitBtn" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30">
           <i class="fa-solid fa-paper-plane"></i> Chekni Yuborish
         </button>
@@ -154,25 +128,6 @@
   </div>
 
   <script>
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('installBtn').classList.remove('hidden');
-    });
-
-    function installApp() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            document.getElementById('installBtn').classList.add('hidden');
-          }
-          deferredPrompt = null;
-        });
-      }
-    }
-
     const firebaseConfig = {
       apiKey: "AIzaSyDMmB0tW-JGizWSOdlFJJd68p6sksrlS_8",
       authDomain: "mustaqil-ish-63c2c.firebaseapp.com",
@@ -217,14 +172,14 @@
       adminCards = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
     });
 
-    function setCategory(cat) {
+    function setCategory(cat, btn) {
       selectedCategory = cat;
-      document.querySelectorAll('.cat-pill').forEach(btn => {
-        btn.classList.remove('bg-indigo-600', 'text-white');
-        btn.classList.add('bg-slate-900', 'text-slate-400');
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.classList.remove('bg-indigo-600', 'text-white');
+        b.classList.add('bg-slate-900', 'text-slate-400');
       });
-      event.target.classList.remove('bg-slate-900', 'text-slate-400');
-      event.target.classList.add('bg-indigo-600', 'text-white');
+      btn.classList.remove('bg-slate-900', 'text-slate-400');
+      btn.classList.add('bg-indigo-600', 'text-white');
       renderProjects();
     }
 
@@ -241,7 +196,7 @@
       });
 
       if (filtered.length === 0) {
-        list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Hozircha mos loyihalar topilmadi.</div>`;
+        list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Mos keladigan loyihalar topilmadi.</div>`;
         return;
       }
 
@@ -253,16 +208,11 @@
           actionBtn = `<button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${Number(p.price).toLocaleString()} UZS)</button>`;
         } else if (myPurchase.status === 'pending') {
           statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Kutilmoqda</span>`;
-          actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400/90 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin to'lovni tekshirmoqda...</button>`;
+          actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400/90 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin tekshirmoqda...</button>`;
         } else if (myPurchase.status === 'approved') {
           statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
-          
-          // Fayl bazada yuklangan bo'lsa yoki link bo'lsa
-          const downloadUrl = p.fileData || p.fileUrl;
-          actionBtn = `<a href="${downloadUrl}" download="${p.fileName || 'loyiha'}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
+          actionBtn = `<a href="${p.fileData}" download="${p.fileName || 'loyiha'}" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
         }
-
-        const demoBtn = (p.demoUrl && p.demoUrl.trim() !== "") ? `<a href="${p.demoUrl}" target="_blank" class="text-xs text-indigo-400 hover:underline flex items-center gap-1"><i class="fa-solid fa-eye"></i> Demo Ko'rish</a>` : '';
 
         list.innerHTML += `
           <div class="glass-card p-5 rounded-2xl relative">
@@ -273,7 +223,6 @@
             <h3 class="text-sm font-bold text-white mb-1">${p.title}</h3>
             <p class="text-xs text-slate-400 mb-4 leading-relaxed">${p.description || ''}</p>
             <div class="flex items-center justify-between gap-2 mb-3">
-              ${demoBtn}
               <span class="text-xs font-bold text-slate-200">${Number(p.price).toLocaleString()} UZS</span>
             </div>
             ${actionBtn}
@@ -290,7 +239,6 @@
       const btn = document.getElementById('orderSubmitBtn');
       btn.disabled = true;
       btn.innerText = "Yuborilmoqda...";
-
       db.ref("orders").push().set({
         studentName: document.getElementById('orderStudentName').value,
         studentContact: document.getElementById('orderStudentContact').value,
@@ -298,7 +246,7 @@
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("Buyurtmangiz admin ga yuborildi! Tez orada siz bilan bog'lanamiz.");
+        alert("Buyurtmangiz yuborildi! Admin siz bilan bog'lanadi.");
         closeOrderModal();
         e.target.reset();
         btn.disabled = false;
@@ -315,7 +263,6 @@
 
     function openPayment(id, title, price) {
       document.getElementById('modalProjectId').value = id;
-      document.getElementById('requiredPrice').value = price;
       document.getElementById('modalTitle').innerText = title;
       document.getElementById('modalPrice').innerText = Number(price).toLocaleString() + " UZS";
       
@@ -331,7 +278,7 @@
                 <div class="font-mono font-bold text-white tracking-wider">${c.number}</div>
                 <div class="text-[10px] text-slate-400">${c.holder} (${c.bank})</div>
               </div>
-              <button type="button" onclick="navigator.clipboard.writeText('${c.number}'); alert('Karta nusxalandi!')" class="bg-indigo-600 px-2.5 py-1 rounded-lg text-white"><i class="fa-regular fa-copy"></i></button>
+              <button type="button" onclick="navigator.clipboard.writeText('${c.number}'); alert('Karta nusxalandi!')" class="bg-indigo-600 px-2.5 py-1 rounded-lg text-white"><i class="fa-regular fa-copy"></i> Nusxa</button>
             </div>
           `;
         });
@@ -343,14 +290,6 @@
 
     function submitPayment(e) {
       e.preventDefault();
-      const requiredPrice = Number(document.getElementById('requiredPrice').value);
-      const paidAmount = Number(document.getElementById('paidAmount').value);
-
-      if(paidAmount < requiredPrice) {
-        alert("Xatolik! Kiritilgan to'lov summasi loyiha narxidan kam. Iltimos, to'g'ri summani kiriting.");
-        return;
-      }
-
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
       btn.innerText = "Yuborilmoqda...";
@@ -359,13 +298,12 @@
         projectId: document.getElementById('modalProjectId').value,
         studentName: document.getElementById('studentName').value,
         studentContact: document.getElementById('studentContact').value,
-        paidAmount: paidAmount,
         receiptImage: base64Receipt,
         deviceId: getDeviceId(),
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan yuklab olish tugmasi ochiladi.");
+        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan faylni yuklab olish ochiladi.");
         closeModal();
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Chekni Yuborish`;
