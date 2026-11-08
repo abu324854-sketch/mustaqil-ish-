@@ -11,9 +11,14 @@
   <style>
     body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
     .glass-card { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    .toast { background: rgba(30, 41, 59, 0.95); border-left: 4px solid #6366f1; color: white; padding: 12px 16px; border-radius: 12px; font-size: 12px; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
   </style>
 </head>
 <body class="pb-24">
+  <div id="toastContainer"></div>
+
   <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">
@@ -30,11 +35,23 @@
   </header>
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-5">
-    <!-- Qidiruv -->
-    <div class="relative">
-      <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-      <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha yoki fan nomini kiriting..." 
-             class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
+    <!-- Qidiruv va Narx bo'yicha Saralash (Filtrlar) -->
+    <div class="space-y-2">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+        <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha yoki fan nomini kiriting..." 
+               class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
+      </div>
+      
+      <!-- Narx va sana bo'yicha saralash tanlovi -->
+      <div class="flex justify-between items-center text-xs">
+        <span class="text-slate-400 text-[11px]">Saralash:</span>
+        <select id="sortSelect" onchange="renderProjects()" class="bg-slate-900 border border-slate-800 text-indigo-300 rounded-xl px-2 py-1.5 text-xs focus:outline-none">
+          <option value="newest">Eng yangilari</option>
+          <option value="price_asc">Arzondan qimmatga</option>
+          <option value="price_desc">Qimmatdan arzonga</option>
+        </select>
+      </div>
     </div>
 
     <!-- Kategoriya Filter -->
@@ -116,7 +133,7 @@
     </div>
   </div>
 
-  <!-- To'lov Modali -->
+  <!-- To'lov va PROMO-KOD Modali -->
   <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700 max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
@@ -126,7 +143,13 @@
       <p class="text-xs text-slate-400 mb-4">Kartaga pul o'tkazing va chek skrinshotini yuboring</p>
       
       <div id="cardsContainer" class="space-y-2 mb-4"></div>
-      
+
+      <!-- PROMO KOD KIRITISH -->
+      <div class="flex gap-2 mb-4">
+        <input type="text" id="promoInput" placeholder="Promo-kod (bo'lsa)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white uppercase focus:outline-none">
+        <button type="button" onclick="applyPromo()" class="bg-indigo-600 px-3 py-2 rounded-xl text-xs text-white font-bold">Qo'llash</button>
+      </div>
+
       <div class="bg-indigo-950/40 border border-indigo-500/20 p-3 rounded-2xl mb-4 text-center">
         <div class="text-[10px] text-slate-400 uppercase">To'lov Summasi:</div>
         <div class="text-indigo-400 font-extrabold text-lg" id="modalPrice">0 UZS</div>
@@ -169,9 +192,22 @@
     let allProjects = [];
     let allPurchases = [];
     let allOrders = [];
+    let allReviews = [];
     let adminCards = [];
+    let promoCodes = {};
     let selectedCategory = 'all';
     let base64Receipt = '';
+    let currentOriginalPrice = 0;
+    let currentCalculatedPrice = 0;
+
+    function showToast(message, type = 'indigo') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast border-l-4 border-${type}-500`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-check mr-2 text-${type}-400"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
 
     function getDeviceId() {
       let devId = localStorage.getItem('app_device_id');
@@ -202,9 +238,19 @@
       renderCabinet();
     });
 
+    db.ref("reviews").on("value", snapshot => {
+      const data = snapshot.val();
+      allReviews = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+      renderProjects();
+    });
+
     db.ref("settings/cards").on("value", snapshot => {
       const data = snapshot.val();
       adminCards = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+    });
+
+    db.ref("promos").on("value", snapshot => {
+      promoCodes = snapshot.val() || {};
     });
 
     function setCategory(cat, btn) {
@@ -221,14 +267,24 @@
     function renderProjects() {
       const list = document.getElementById('projectsList');
       const search = document.getElementById('searchInput').value.toLowerCase();
+      const sortType = document.getElementById('sortSelect').value;
       const myDeviceId = getDeviceId();
       list.innerHTML = '';
 
-      const filtered = allProjects.filter(p => {
+      let filtered = allProjects.filter(p => {
         const matchesCat = selectedCategory === 'all' || p.category === selectedCategory;
         const matchesSearch = p.title.toLowerCase().includes(search) || (p.description && p.description.toLowerCase().includes(search));
         return matchesCat && matchesSearch;
       });
+
+      // SARALASH (PRICE ASC, DESC, NEWEST)
+      if (sortType === 'price_asc') {
+        filtered.sort((a, b) => Number(a.price) - Number(b.price));
+      } else if (sortType === 'price_desc') {
+        filtered.sort((a, b) => Number(b.price) - Number(a.price));
+      } else {
+        filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      }
 
       if (filtered.length === 0) {
         list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Mos keladigan loyihalar topilmadi.</div>`;
@@ -239,6 +295,10 @@
         const myPurchase = allPurchases.find(req => req.projectId === p.id && req.deviceId === myDeviceId);
         let statusTag = '', actionBtn = '';
 
+        // REYTING VA SHARHLARNI HISOBLASH
+        const projReviews = allReviews.filter(r => r.projectId === p.id);
+        const avgRating = projReviews.length ? (projReviews.reduce((acc, curr) => acc + curr.stars, 0) / projReviews.length).toFixed(1) : 5.0;
+
         if (!myPurchase) {
           actionBtn = `<button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${Number(p.price).toLocaleString()} UZS)</button>`;
         } else if (myPurchase.status === 'pending') {
@@ -246,18 +306,26 @@
           actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400/90 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin tekshirmoqda...</button>`;
         } else if (myPurchase.status === 'approved') {
           statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
-          actionBtn = `<a href="${p.fileData}" download="${p.fileName || 'loyiha'}" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
+          actionBtn = `
+            <a href="${p.fileData}" download="${p.fileName || 'loyiha'}" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 mb-2"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>
+            <button onclick="addReview('${p.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 font-semibold py-1.5 rounded-xl text-[11px]"><i class="fa-solid fa-star"></i> Sharh va Baho Qoldirish</button>
+          `;
         }
 
         list.innerHTML += `
-          <div class="glass-card p-5 rounded-2xl relative">
-            <div class="flex justify-between items-center mb-2">
+          <div class="glass-card p-5 rounded-2xl relative space-y-3">
+            <div class="flex justify-between items-center">
               <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
-              ${statusTag}
+              <div class="flex items-center gap-1">
+                <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                <span class="text-xs font-bold text-amber-400">${avgRating}</span>
+                <span class="text-[10px] text-slate-500">(${projReviews.length})</span>
+                ${statusTag}
+              </div>
             </div>
-            <h3 class="text-sm font-bold text-white mb-1">${p.title}</h3>
-            <p class="text-xs text-slate-400 mb-4 leading-relaxed">${p.description || ''}</p>
-            <div class="flex items-center justify-between gap-2 mb-3">
+            <h3 class="text-sm font-bold text-white">${p.title}</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">${p.description || ''}</p>
+            <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-bold text-slate-200">${Number(p.price).toLocaleString()} UZS</span>
             </div>
             ${actionBtn}
@@ -266,9 +334,36 @@
       });
     }
 
-    function toggleCabinet() {
-      document.getElementById('cabinetModal').classList.toggle('hidden');
+    // PROMO KOD QO'LLASH
+    function applyPromo() {
+      const code = document.getElementById('promoInput').value.toUpperCase().trim();
+      if (promoCodes[code]) {
+        const percent = promoCodes[code].percent;
+        currentCalculatedPrice = currentOriginalPrice - (currentOriginalPrice * (percent / 100));
+        document.getElementById('modalPrice').innerHTML = `<span class="line-through text-slate-500 text-xs">${currentOriginalPrice.toLocaleString()} UZS</span> ${currentCalculatedPrice.toLocaleString()} UZS (-${percent}%)`;
+        showToast(`Promo-kod qo'llandi: ${percent}% chegirma!`, 'emerald');
+      } else {
+        showToast("Noto'g'ri promo-kod!", "rose");
+      }
     }
+
+    // SHARH VA BAHO QOLDIRISH
+    function addReview(projectId) {
+      const stars = prompt("Loyihaga 1 dan 5 gacha baho bering:");
+      if (!stars || isNaN(stars) || stars < 1 || stars > 5) return;
+      const comment = prompt("Fikringizni yozib qoldiring:");
+      db.ref("reviews").push().set({
+        projectId: projectId,
+        stars: Number(stars),
+        comment: comment || '',
+        deviceId: getDeviceId(),
+        createdAt: Date.now()
+      }).then(() => {
+        showToast("Baho va fikringiz uchun rahmat!", "emerald");
+      });
+    }
+
+    function toggleCabinet() { document.getElementById('cabinetModal').classList.toggle('hidden'); }
 
     function renderCabinet() {
       const myDeviceId = getDeviceId();
@@ -328,7 +423,7 @@
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("Buyurtmangiz yuborildi! Admin siz bilan bog'lanadi.");
+        showToast("Buyurtmangiz yuborildi!", "emerald");
         closeOrderModal();
         e.target.reset();
         btn.disabled = false;
@@ -346,6 +441,8 @@
     function openPayment(id, title, price) {
       document.getElementById('modalProjectId').value = id;
       document.getElementById('modalTitle').innerText = title;
+      currentOriginalPrice = Number(price);
+      currentCalculatedPrice = Number(price);
       document.getElementById('modalPrice').innerText = Number(price).toLocaleString() + " UZS";
       
       const cContainer = document.getElementById('cardsContainer');
@@ -360,7 +457,7 @@
                 <div class="font-mono font-bold text-white tracking-wider">${c.number}</div>
                 <div class="text-[10px] text-slate-400">${c.holder} (${c.bank})</div>
               </div>
-              <button type="button" onclick="navigator.clipboard.writeText('${c.number}'); alert('Karta nusxalandi!')" class="bg-indigo-600 px-2.5 py-1 rounded-lg text-white"><i class="fa-regular fa-copy"></i> Nusxa</button>
+              <button type="button" onclick="navigator.clipboard.writeText('${c.number}'); showToast('Karta nusxalandi!', 'indigo')" class="bg-indigo-600 px-2.5 py-1 rounded-lg text-white"><i class="fa-regular fa-copy"></i> Nusxa</button>
             </div>
           `;
         });
@@ -381,11 +478,12 @@
         studentName: document.getElementById('studentName').value,
         studentContact: document.getElementById('studentContact').value,
         receiptImage: base64Receipt,
+        finalPrice: currentCalculatedPrice,
         deviceId: getDeviceId(),
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan yuklab olish ochiladi.");
+        showToast("To'lov cheki yuborildi!", "emerald");
         closeModal();
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Chekni Yuborish`;
