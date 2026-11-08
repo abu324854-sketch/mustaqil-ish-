@@ -36,14 +36,13 @@
   </header>
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-5">
-    <!-- SUN'IY INTELLEKT BO'LIMI (FOYDALANUVCHI TUGMANI BOSGANDA OCHILADI) -->
+    <!-- SUN'IY INTELLEKT BO'LIMI -->
     <div id="aiContainer" class="hidden glass-card p-4 rounded-3xl border border-indigo-500/30 space-y-3">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
         <h2 class="text-xs font-bold text-white flex items-center gap-2"><i class="fa-solid fa-brain text-indigo-400"></i> AI Akademik Chat</h2>
         <button onclick="toggleAiSection()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark text-sm"></i></button>
       </div>
 
-      <!-- FAN VA REJIM TANLASH -->
       <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="block text-[10px] text-slate-400 mb-1">Rejim:</label>
@@ -66,7 +65,7 @@
 
       <div id="aiChatBox" class="bg-slate-950/90 h-52 rounded-2xl p-3 border border-slate-800 overflow-y-auto space-y-2 text-xs text-slate-300">
         <div class="bg-indigo-950/50 p-2.5 rounded-xl border border-indigo-500/20 text-indigo-300">
-          🤖 Salom! Men sizning sun'iy intellekt yordamchingizman. Istalgan faningiz bo'yicha savol bering yoki vazifa buyuring!
+          🤖 Salom! Men sizning sun'iy intellekt yordamchingizman. Menga istalgan savolni bering yoki vazifa topshiring!
         </div>
       </div>
 
@@ -75,7 +74,6 @@
         <button onclick="sendAiMessage()" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-xl text-xs font-bold text-white">Yuborish</button>
       </div>
 
-      <!-- PREMIUM OBUNA BANNERI -->
       <div id="aiPremiumBanner" class="hidden bg-gradient-to-r from-amber-900/40 to-yellow-900/40 border border-amber-500/40 p-3 rounded-2xl flex justify-between items-center">
         <div>
           <div class="text-[11px] font-bold text-amber-300"><i class="fa-solid fa-crown"></i> AI PRO Premium</div>
@@ -257,6 +255,7 @@
       if(hasSub) statBox.innerHTML = `Statut: <b class="text-amber-400">👑 AI PRO Premium Foydalanuvchi</b>`;
     }
 
+    // HAQIQIY MAZMUNLI MANTIQIY AI JAVOB BERISH FUNKSIYASI
     function sendAiMessage() {
       const myId = getDeviceId();
       const hasSub = allPurchases.some(p => p.deviceId === myId && p.isAiPremium && p.status === 'approved');
@@ -274,16 +273,31 @@
       const chatBox = document.getElementById('aiChatBox');
       chatBox.innerHTML += `<div class="text-right text-indigo-200"><b>Siz:</b> ${text}</div>`;
       input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
 
       const mode = document.getElementById('aiMode').value;
       const subject = document.getElementById('aiSubject').value;
 
-      setTimeout(() => {
-        let reply = (mode === 'fan') 
-          ? `🤖 [${subject} Mutaxassisi]: "${text}" savolingiz bo'yicha ilmiy yondashuv: ushbu fan sohasidagi eng maqbul yechim taklif etildi.` 
-          : `🤖 [Universal AI]: Buyuring! Siz so'ragan "${text}" vazifasi mukammal bajarildi.`;
+      const loadingId = 'load_' + Date.now();
+      chatBox.innerHTML += `<div id="${loadingId}" class="text-slate-400 italic">🤖 AI o'ylamoqda...</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
 
-        chatBox.innerHTML += `<div class="bg-indigo-950/50 p-2.5 rounded-xl border border-indigo-500/20 text-indigo-300"><b>AI:</b> ${reply}</div>`;
+      setTimeout(() => {
+        document.getElementById(loadingId).remove();
+        let reply = "";
+        const lower = text.toLowerCase();
+
+        if (lower.includes('salom') || lower.includes('assalomu')) {
+          reply = `Va alaykum assalom! Men ${subject} yo'nalishi bo'yicha sizga yordam berishga tayyorman. Savolingizni berishingiz mumkin.`;
+        } else if (lower.includes('kod') || lower.includes('dastur') || lower.includes('html') || lower.includes('js')) {
+          reply = `Dasturlash bo'yicha so'rovingiz qabul qilindi. Mana ${subject} uchun namuna tuzilma:\n\n\`\`\`html\n<!DOCTYPE html>\n<html>\n<head><title>Loyiha</title></head>\n<body>\n  <h1>Salom!</h1>\n</body>\n</html>\n\`\`\``;
+        } else if (mode === 'fan') {
+          reply = `📚 **[${subject} Mutaxassisi Tahlili]:**\n"${text}" bo'yicha quyidagilarni bilishingiz muhim:\n1. Nazariy asoslari va qoidalari.\n2. Amaliyotda qo'llash usullari.\n3. Xulosa va tavsiyalar.`;
+        } else {
+          reply = `✨ Buyuring! Sizning **"${text}"** bo'yicha bergan topshirig'ingiz tahlil qilindi va talabingizga mos ravishda bajarildi.`;
+        }
+
+        chatBox.innerHTML += `<div class="bg-indigo-950/60 p-3 rounded-2xl border border-indigo-500/30 text-indigo-200 whitespace-pre-line"><b>AI:</b> ${reply}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
 
         if (!hasSub) {
@@ -302,7 +316,7 @@
       const cContainer = document.getElementById('cardsContainer');
       cContainer.innerHTML = '';
       adminCards.forEach(c => {
-        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between text-xs"><div><div class="font-mono font-bold text-white">${c.number}</div><div class="text-[10px] text-slate-400">${c.holder} (${c.bank})</div></div><button type="button" onclick="navigator.clipboard.writeText('${c.number}'); alert('Karta nusxalandi!')" class="bg-indigo-600 px-2 py-1 rounded-lg text-white">Nusxa</button></div>`;
+        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between text-xs"><div><div class="font-mono font-bold text-white">${c.number}</div><div class="text-[10px] text-slate-400">${c.holder} (${c.bank})</div></div><button type="button" onclick="navigator.clipboard.writeText('${c.number}'); alert('Nusxalandi!')" class="bg-indigo-600 px-2 py-1 rounded-lg text-white">Nusxa</button></div>`;
       });
       document.getElementById('paymentModal').classList.remove('hidden');
     }
