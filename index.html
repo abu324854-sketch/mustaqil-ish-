@@ -1,123 +1,131 @@
 <!DOCTYPE html>
-<html lang="uz" id="htmlRoot">
+<html lang="uz">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduProjects - Talaba Portali</title>
+  <title>EduProjects - Talaba Portali & AI Yordamchi</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <style>
-    .theme-dark { background-color: #0b0f19; color: #f8fafc; }
-    .theme-light { background-color: #f8fafc; color: #0b0f19; }
-    .glass-card-dark { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    .glass-card-light { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(0, 0, 0, 0.08); }
-    #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-    .toast { background: rgba(30, 41, 59, 0.95); border-left: 4px solid #6366f1; color: white; padding: 12px 16px; border-radius: 12px; font-size: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    body { background-color: #0b0f19; color: #f8fafc; font-family: sans-serif; }
+    .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
   </style>
 </head>
-<body class="theme-dark pb-24" id="bodyTheme">
-  <div id="toastContainer"></div>
-
-  <header class="sticky top-0 z-40 px-4 py-4 flex justify-between items-center border-b border-slate-800 transition" id="headerTheme">
+<body class="pb-24">
+  <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">
         <i class="fa-solid fa-graduation-cap"></i>
       </div>
       <div>
-        <h1 class="text-base font-bold leading-tight">EduProjects</h1>
-        <p class="text-[11px] text-indigo-400 font-medium">Tayyor ishlar & Veb-saytlar</p>
+        <h1 class="text-base font-bold text-white leading-tight">EduProjects</h1>
+        <p class="text-[11px] text-indigo-400 font-medium">Tayyor ishlar & AI Yordamchi</p>
       </div>
     </div>
+    
     <div class="flex items-center gap-2">
-      <button onclick="toggleTheme()" class="bg-indigo-600/20 text-indigo-400 p-2.5 rounded-xl text-xs" title="Rejimni o'zgartirish">
-        <i id="themeIcon" class="fa-solid fa-sun"></i>
+      <button onclick="toggleAiSection()" class="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center gap-1.5">
+        <i class="fa-solid fa-robot"></i> AI Yordamchi
       </button>
       <button onclick="toggleCabinet()" class="bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
-        <i class="fa-solid fa-user text-indigo-400"></i> Kabinet
+        <i class="fa-solid fa-user text-indigo-400"></i> Kabinetim
       </button>
     </div>
   </header>
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-5">
-    <!-- Qidiruv va Saralash -->
-    <div class="space-y-2">
+    <!-- SUN'IY INTELLEKT BO'LIMI (FOYDALANUVCHI TUGMANI BOSGANDA OCHILADI) -->
+    <div id="aiContainer" class="hidden glass-card p-4 rounded-3xl border border-indigo-500/30 space-y-3">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <h2 class="text-xs font-bold text-white flex items-center gap-2"><i class="fa-solid fa-brain text-indigo-400"></i> AI Akademik Chat</h2>
+        <button onclick="toggleAiSection()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <!-- FAN VA REJIM TANLASH -->
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">Rejim:</label>
+          <select id="aiMode" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-white focus:outline-none">
+            <option value="universal">Universal (Nima desa qiladi)</option>
+            <option value="fan">Fan bo'yicha javob</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">O'quv Faningiz:</label>
+          <select id="aiSubject" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-white focus:outline-none">
+            <option value="Kompyuter injiniringi">Kompyuter injiniringi</option>
+            <option value="Dasturlash (HTML/JS/Python)">Dasturlash</option>
+            <option value="Matematika">Matematika</option>
+            <option value="Fizika">Fizika</option>
+            <option value="Iqtisodiyot">Iqtisodiyot</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="aiChatBox" class="bg-slate-950/90 h-52 rounded-2xl p-3 border border-slate-800 overflow-y-auto space-y-2 text-xs text-slate-300">
+        <div class="bg-indigo-950/50 p-2.5 rounded-xl border border-indigo-500/20 text-indigo-300">
+          🤖 Salom! Men sizning sun'iy intellekt yordamchingizman. Istalgan faningiz bo'yicha savol bering yoki vazifa buyuring!
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <input type="text" id="aiPrompt" placeholder="Savolingizni yozing..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        <button onclick="sendAiMessage()" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-xl text-xs font-bold text-white">Yuborish</button>
+      </div>
+
+      <!-- PREMIUM OBUNA BANNERI -->
+      <div id="aiPremiumBanner" class="hidden bg-gradient-to-r from-amber-900/40 to-yellow-900/40 border border-amber-500/40 p-3 rounded-2xl flex justify-between items-center">
+        <div>
+          <div class="text-[11px] font-bold text-amber-300"><i class="fa-solid fa-crown"></i> AI PRO Premium</div>
+          <div class="text-[9px] text-slate-300">Cheksiz foydalanish uchun obuna bo'ling</div>
+        </div>
+        <button onclick="openAiPayment()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-1.5 rounded-xl text-[10px]">Obuna bo'lish</button>
+      </div>
+    </div>
+
+    <!-- ASOSIY BO'LIM: LOYIHALAR -->
+    <div id="mainContent" class="space-y-5">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
         <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha yoki fan nomini kiriting..." 
                class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
       </div>
-      <div class="flex justify-between items-center text-xs">
-        <span class="text-slate-400 text-[11px]">Saralash:</span>
-        <select id="sortSelect" onchange="renderProjects()" class="bg-slate-900 border border-slate-800 text-indigo-300 rounded-xl px-2 py-1.5 text-xs focus:outline-none">
-          <option value="newest">Eng yangilari</option>
-          <option value="price_asc">Arzondan qimmatga</option>
-          <option value="price_desc">Qimmatdan arzonga</option>
-        </select>
+      <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none" id="categoryFilters">
+        <button onclick="setCategory('all')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md">Barchasi</button>
+        <button onclick="setCategory('Mustaqil ish')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Mustaqil ish</button>
+        <button onclick="setCategory('Veb-sayt')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Veb-saytlar</button>
+        <button onclick="setCategory('Kurs ishi')" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Kurs ishi</button>
       </div>
-    </div>
-
-    <!-- Kategoriya Filter -->
-    <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none" id="categoryFilters">
-      <button onclick="setCategory('all', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md">Barchasi</button>
-      <button onclick="setCategory('Mustaqil ish', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Mustaqil ish</button>
-      <button onclick="setCategory('Veb-sayt', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Veb-saytlar</button>
-      <button onclick="setCategory('Kurs ishi', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">Kurs ishi</button>
-    </div>
-
-    <!-- AI MAVZU VA REJA GENERATORI -->
-    <div class="bg-gradient-to-r from-violet-900/70 to-indigo-900/70 border border-indigo-500/30 p-4 rounded-2xl space-y-2">
-      <div class="flex justify-between items-center">
-        <h3 class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> AI Mavzu & Reja Yaratuvchi</h3>
+      <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex justify-between items-center">
+        <div>
+          <h3 class="text-xs font-bold text-white mb-0.5">Kerakli mavzu yo'qmi?</h3>
+          <p class="text-[10px] text-indigo-300">Shaxsiy zakaz bering, tezda qilib beramiz!</p>
+        </div>
+        <button onclick="openOrderModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-md transition">
+          <i class="fa-solid fa-pen-to-square mr-1"></i> Zakaz berish
+        </button>
       </div>
-      <input type="text" id="aiFanInput" placeholder="Fan nomini kiriting (Masalan: Fizika)" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-      <button onclick="generateAiTopic()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs transition">
-        Sun'iy Intelekt Orqali Mavzu Topish
-      </button>
-      <div id="aiResultBox" class="hidden bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-300 space-y-1"></div>
-    </div>
-
-    <!-- Zakaz Berish Banneri -->
-    <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex justify-between items-center">
-      <div>
-        <h3 class="text-xs font-bold text-white mb-0.5">Kerakli mavzu yo'qmi?</h3>
-        <p class="text-[10px] text-indigo-300">Shaxsiy zakaz bering, tezda tayyorlaymiz!</p>
-      </div>
-      <button onclick="openOrderModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-md transition">
-        <i class="fa-solid fa-pen-to-square mr-1"></i> Buyurtma berish
-      </button>
-    </div>
-
-    <!-- Loyihalar Ro'yxati -->
-    <div id="projectsList" class="space-y-4">
-      <div class="text-center py-12 text-slate-500 text-xs">
-        <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i>
-        <p>Loyihalar yuklanmoqda...</p>
+      <div id="projectsList" class="space-y-4">
+        <div class="text-center py-12 text-slate-500 text-xs">
+          <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-500"></i>
+          <p>Loyihalar yuklanmoqda...</p>
+        </div>
       </div>
     </div>
   </main>
 
   <!-- SHAXSIY KABINET MODALI -->
   <div id="cabinetModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card-dark w-full max-w-sm rounded-3xl p-6 relative border border-slate-700 max-h-[85vh] overflow-y-auto">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[85vh] overflow-y-auto">
       <button onclick="toggleCabinet()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
       <h3 class="text-base font-bold text-white mb-1"><i class="fa-solid fa-user-gear text-indigo-400 mr-2"></i> Shaxsiy Kabinetim</h3>
-      <p class="text-xs text-slate-400 mb-4">Sotib olingan ishlar va referal havolangiz</p>
+      <div id="aiStatusBadge" class="text-[11px] text-indigo-300 mb-4">Statut: Oddiy Foydalanuvchi</div>
       
       <div class="space-y-4">
-        <!-- Referal bo'limi -->
-        <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 space-y-1">
-          <div class="text-[11px] text-indigo-300 font-bold"><i class="fa-solid fa-share-nodes"></i> Referal Havolangiz:</div>
-          <div class="flex gap-2">
-            <input type="text" id="referralLink" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-1 text-[10px] text-slate-300" />
-            <button onclick="copyRefLink()" class="bg-indigo-600 px-3 py-1 rounded-xl text-[10px] text-white font-bold">Nusxa</button>
-          </div>
-          <div class="text-[10px] text-emerald-400">Taklif qilingan do'stlar: <span id="refCount">0</span> ta</div>
-        </div>
-
         <div>
           <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">Mening Xaridlarim</h4>
           <div id="myPurchasesList" class="space-y-2"></div>
@@ -132,47 +140,39 @@
 
   <!-- Buyurtma Modali -->
   <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card-dark w-full max-w-sm rounded-3xl p-6 relative border border-slate-700">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60">
       <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
       <h3 class="text-base font-bold text-white mb-1"><i class="fa-solid fa-pen-nib text-indigo-400 mr-2"></i> Yangi Buyurtma Berish</h3>
       <form onsubmit="submitOrder(event)" class="space-y-3 mt-3">
         <input type="text" id="orderStudentName" required placeholder="Ism Familiyangiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-        <input type="text" id="orderStudentContact" required placeholder="Telegram / Telefon (@username)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        <input type="text" id="orderStudentContact" required placeholder="Telegram / Telefon" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
         <textarea id="orderTopic" rows="3" required placeholder="Fan va mavzu nomi..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></textarea>
-        <button type="submit" id="orderSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg">
-          Buyurtmani Yuborish
-        </button>
+        <button type="submit" id="orderSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-xs transition shadow-lg">Buyurtmani Yuborish</button>
       </form>
     </div>
   </div>
 
   <!-- To'lov Modali -->
   <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card-dark w-full max-w-sm rounded-3xl p-6 relative border border-slate-700 max-h-[90vh] overflow-y-auto">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
       <h3 class="text-base font-bold text-white mb-1" id="modalTitle">Loyiha Nomi</h3>
       <p class="text-xs text-slate-400 mb-4">Kartaga pul o'tkazing va chek yuboring</p>
-      
       <div id="cardsContainer" class="space-y-2 mb-4"></div>
-
-      <div class="flex gap-2 mb-4">
-        <input type="text" id="promoInput" placeholder="Promo-kod (bo'lsa)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white uppercase focus:outline-none">
-        <button type="button" onclick="applyPromo()" class="bg-indigo-600 px-3 py-2 rounded-xl text-xs text-white font-bold">Qo'llash</button>
-      </div>
-
       <div class="bg-indigo-950/40 border border-indigo-500/20 p-3 rounded-2xl mb-4 text-center">
         <div class="text-[10px] text-slate-400 uppercase">To'lov Summasi:</div>
         <div class="text-indigo-400 font-extrabold text-lg" id="modalPrice">0 UZS</div>
       </div>
-
       <form onsubmit="submitPayment(event)" class="space-y-3">
         <input type="hidden" id="modalProjectId">
+        <input type="hidden" id="isAiSub" value="false">
         <input type="text" id="studentName" required placeholder="Ism Familiyangiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
         <input type="text" id="studentContact" required placeholder="Telegram / Telefon" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+        <input type="number" id="paidAmount" required placeholder="O'tkazilgan summa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
         <input type="file" id="receiptImg" accept="image/*" required onchange="encodeImageFileAsURL(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white">
         <button type="submit" id="submitBtn" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg">
           <i class="fa-solid fa-paper-plane"></i> Chekni Yuborish
@@ -193,51 +193,14 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
     let allProjects = [];
     let allPurchases = [];
     let allOrders = [];
-    let allReviews = [];
     let adminCards = [];
-    let promoCodes = {};
-    let botConfig = { token: '', chatId: '' };
+    let aiSubscriptionPrice = 25000;
     let selectedCategory = 'all';
     let base64Receipt = '';
-    let currentOriginalPrice = 0;
-    let currentCalculatedPrice = 0;
-    let currentTheme = localStorage.getItem('app_theme') || 'dark';
-
-    applyThemeUI();
-
-    function toggleTheme() {
-      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('app_theme', currentTheme);
-      applyThemeUI();
-    }
-
-    function applyThemeUI() {
-      const body = document.getElementById('bodyTheme');
-      const header = document.getElementById('headerTheme');
-      const icon = document.getElementById('themeIcon');
-      if (currentTheme === 'light') {
-        body.className = 'theme-light pb-24';
-        header.className = 'sticky top-0 z-40 px-4 py-4 flex justify-between items-center border-b border-slate-200 transition bg-white/80 backdrop-blur-md';
-        icon.className = 'fa-solid fa-moon text-indigo-600';
-      } else {
-        body.className = 'theme-dark pb-24';
-        header.className = 'sticky top-0 z-40 px-4 py-4 flex justify-between items-center border-b border-slate-800 transition glass-card-dark';
-        icon.className = 'fa-solid fa-sun text-amber-400';
-      }
-    }
-
-    function showToast(message, type = 'indigo') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast border-l-4 border-${type}-500`;
-      toast.innerHTML = `<i class="fa-solid fa-circle-check mr-2 text-${type}-400"></i> ${message}`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 4000);
-    }
+    let aiRequestCount = Number(localStorage.getItem('ai_count') || 0);
 
     function getDeviceId() {
       let devId = localStorage.getItem('app_device_id');
@@ -248,26 +211,9 @@
       return devId;
     }
 
-    // Referal havolasini sozlash
-    const urlParams = new URLSearchParams(window.location.search);
-    const refBy = urlParams.get('ref');
-    if (refBy && refBy !== getDeviceId()) {
-      let refs = JSON.parse(localStorage.getItem('my_refs') || '[]');
-      if (!refs.includes(refBy)) {
-        refs.push(refBy);
-        localStorage.setItem('my_refs', JSON.stringify(refs));
-        db.ref("referrals/" + refBy).set(refs.length);
-      }
-    }
-    document.getElementById('referralLink').value = window.location.origin + window.location.pathname + '?ref=' + getDeviceId();
-    db.ref("referrals/" + getDeviceId()).on("value", snap => {
-      document.getElementById('refCount').innerText = snap.val() || 0;
+    db.ref("settings/ai_price").on("value", snap => {
+      if(snap.val()) aiSubscriptionPrice = Number(snap.val());
     });
-
-    function copyRefLink() {
-      navigator.clipboard.writeText(document.getElementById('referralLink').value);
-      showToast("Referal havola nusxalandi!", "emerald");
-    }
 
     db.ref("projects").on("value", snapshot => {
       const data = snapshot.val();
@@ -281,6 +227,7 @@
       allPurchases = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
       renderProjects();
       renderCabinet();
+      checkAiSubscriptionStatus();
     });
 
     db.ref("orders").on("value", snapshot => {
@@ -289,124 +236,124 @@
       renderCabinet();
     });
 
-    db.ref("reviews").on("value", snapshot => {
-      const data = snapshot.val();
-      allReviews = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
-      renderProjects();
-    });
-
     db.ref("settings/cards").on("value", snapshot => {
       const data = snapshot.val();
       adminCards = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
     });
 
-    db.ref("promos").on("value", snapshot => {
-      promoCodes = snapshot.val() || {};
-    });
-
-    db.ref("settings/telegram").on("value", snapshot => {
-      botConfig = snapshot.val() || {};
-    });
-
-    async function sendTelegramNotification(text) {
-      if (!botConfig.token || !botConfig.chatId) return;
-      try {
-        await fetch(`https://api.telegram.org/bot${botConfig.token}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: botConfig.chatId, text: text, parse_mode: 'Markdown' })
-        });
-      } catch (e) { console.error(e); }
+    function toggleAiSection() {
+      document.getElementById('aiContainer').classList.toggle('hidden');
     }
 
-    // AI MAVZU GENERATORI (Oddiy aqlli algoritm)
-    function generateAiTopic() {
-      const fan = document.getElementById('aiFanInput').value.trim();
-      const box = document.getElementById('aiResultBox');
-      if (!fan) { showToast("Fan nomini kiriting!", "rose"); return; }
+    function checkAiSubscriptionStatus() {
+      const myId = getDeviceId();
+      const hasSub = allPurchases.some(p => p.deviceId === myId && p.isAiPremium && p.status === 'approved');
+      if (hasSub || aiRequestCount < 5) {
+        document.getElementById('aiPremiumBanner').classList.add('hidden');
+      } else {
+        document.getElementById('aiPremiumBanner').classList.remove('hidden');
+      }
+      const statBox = document.getElementById('aiStatusBadge');
+      if(hasSub) statBox.innerHTML = `Statut: <b class="text-amber-400">👑 AI PRO Premium Foydalanuvchi</b>`;
+    }
+
+    function sendAiMessage() {
+      const myId = getDeviceId();
+      const hasSub = allPurchases.some(p => p.deviceId === myId && p.isAiPremium && p.status === 'approved');
       
-      box.classList.remove('hidden');
-      box.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> AI mavzularni tuzmoqda...`;
-      
+      if (!hasSub && aiRequestCount >= 5) {
+        alert("Bepul limit tugadi! AI PRO ga obuna bo'ling.");
+        document.getElementById('aiPremiumBanner').classList.remove('hidden');
+        return;
+      }
+
+      const input = document.getElementById('aiPrompt');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('aiChatBox');
+      chatBox.innerHTML += `<div class="text-right text-indigo-200"><b>Siz:</b> ${text}</div>`;
+      input.value = '';
+
+      const mode = document.getElementById('aiMode').value;
+      const subject = document.getElementById('aiSubject').value;
+
       setTimeout(() => {
-        const topics = [
-          `1. ${fan} fanida zamonaviy texnologiyalardan foydalanish va tahlil qilish`,
-          `2. ${fan} jarayonlarini avtomatlashtirishning asosiy usullari`,
-          `3. ${fan} sohasidagi so'nggi muammolar va ularning yechimlari`
-        ];
-        box.innerHTML = `<b class="text-indigo-400">Sun'iy Intelekt tavsiya qilgan mavzular:</b><br>` + topics.join('<br>') + `<br><em class="text-[10px] text-amber-400">Reja: Kirish, Asosiy qism, Amaliy tahlil, Xulosa.</em>`;
+        let reply = (mode === 'fan') 
+          ? `🤖 [${subject} Mutaxassisi]: "${text}" savolingiz bo'yicha ilmiy yondashuv: ushbu fan sohasidagi eng maqbul yechim taklif etildi.` 
+          : `🤖 [Universal AI]: Buyuring! Siz so'ragan "${text}" vazifasi mukammal bajarildi.`;
+
+        chatBox.innerHTML += `<div class="bg-indigo-950/50 p-2.5 rounded-xl border border-indigo-500/20 text-indigo-300"><b>AI:</b> ${reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        if (!hasSub) {
+          aiRequestCount++;
+          localStorage.setItem('ai_count', aiRequestCount);
+        }
       }, 800);
     }
 
-    function setCategory(cat, btn) {
-      selectedCategory = cat;
-      document.querySelectorAll('.cat-pill').forEach(b => {
-        b.classList.remove('bg-indigo-600', 'text-white');
-        b.classList.add('bg-slate-900', 'text-slate-400');
+    function openAiPayment() {
+      document.getElementById('modalTitle').innerText = "🤖 AI PRO Premium Obuna";
+      document.getElementById('modalPrice').innerText = aiSubscriptionPrice.toLocaleString() + " UZS";
+      document.getElementById('paidAmount').value = aiSubscriptionPrice;
+      document.getElementById('isAiSub').value = "true";
+      
+      const cContainer = document.getElementById('cardsContainer');
+      cContainer.innerHTML = '';
+      adminCards.forEach(c => {
+        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between text-xs"><div><div class="font-mono font-bold text-white">${c.number}</div><div class="text-[10px] text-slate-400">${c.holder} (${c.bank})</div></div><button type="button" onclick="navigator.clipboard.writeText('${c.number}'); alert('Karta nusxalandi!')" class="bg-indigo-600 px-2 py-1 rounded-lg text-white">Nusxa</button></div>`;
       });
-      btn.classList.remove('bg-slate-900', 'text-slate-400');
-      btn.classList.add('bg-indigo-600', 'text-white');
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    function setCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white');
+        btn.classList.add('bg-slate-900', 'text-slate-400');
+      });
+      event.target.classList.remove('bg-slate-900', 'text-slate-400');
+      event.target.classList.add('bg-indigo-600', 'text-white');
       renderProjects();
     }
 
     function renderProjects() {
       const list = document.getElementById('projectsList');
       const search = document.getElementById('searchInput').value.toLowerCase();
-      const sortType = document.getElementById('sortSelect').value;
       const myDeviceId = getDeviceId();
       list.innerHTML = '';
-
-      let filtered = allProjects.filter(p => {
+      const filtered = allProjects.filter(p => {
         const matchesCat = selectedCategory === 'all' || p.category === selectedCategory;
         const matchesSearch = p.title.toLowerCase().includes(search) || (p.description && p.description.toLowerCase().includes(search));
         return matchesCat && matchesSearch;
       });
-
-      if (sortType === 'price_asc') filtered.sort((a, b) => Number(a.price) - Number(b.price));
-      else if (sortType === 'price_desc') filtered.sort((a, b) => Number(b.price) - Number(a.price));
-      else filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
       if (filtered.length === 0) {
-        list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Mos keladigan loyihalar topilmadi.</div>`;
+        list.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Hozircha mos loyihalar topilmadi.</div>`;
         return;
       }
-
       filtered.forEach(p => {
         const myPurchase = allPurchases.find(req => req.projectId === p.id && req.deviceId === myDeviceId);
         let statusTag = '', actionBtn = '';
-
-        const projReviews = allReviews.filter(r => r.projectId === p.id);
-        const avgRating = projReviews.length ? (projReviews.reduce((acc, curr) => acc + curr.stars, 0) / projReviews.length).toFixed(1) : 5.0;
-
         if (!myPurchase) {
-          actionBtn = `<button onclick="incrementViewAndPay('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${Number(p.price).toLocaleString()} UZS)</button>`;
+          actionBtn = `<button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${Number(p.price).toLocaleString()} UZS)</button>`;
         } else if (myPurchase.status === 'pending') {
           statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Kutilmoqda</span>`;
-          actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin tekshirmoqda...</button>`;
+          actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400/90 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin to'lovni tekshirmoqda...</button>`;
         } else if (myPurchase.status === 'approved') {
           statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
-          actionBtn = `
-            <a href="${p.fileData}" download="${p.fileName || 'loyiha'}" onclick="incrementDownload('${p.id}')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg mb-2"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>
-            <button onclick="addReview('${p.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 font-semibold py-1.5 rounded-xl text-[11px]"><i class="fa-solid fa-star"></i> Baholash</button>
-          `;
+          const downloadUrl = p.fileData || p.fileUrl;
+          actionBtn = `<a href="${downloadUrl}" download="${p.fileName || 'loyiha'}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
         }
-
         list.innerHTML += `
-          <div class="glass-card-dark p-5 rounded-2xl relative space-y-3">
-            <div class="flex justify-between items-center">
+          <div class="glass-card p-5 rounded-2xl relative">
+            <div class="flex justify-between items-center mb-2">
               <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
-              <div class="flex items-center gap-1">
-                <i class="fa-solid fa-star text-amber-400 text-xs"></i>
-                <span class="text-xs font-bold text-amber-400">${avgRating}</span>
-                <span class="text-[10px] text-slate-500">(${projReviews.length})</span>
-                ${statusTag}
-              </div>
+              ${statusTag}
             </div>
-            <h3 class="text-sm font-bold text-white">${p.title}</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">${p.description || ''}</p>
-            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-800">
-              <span><i class="fa-solid fa-eye text-indigo-400"></i> ${p.views || 0} ko'rish</span>
-              <span><i class="fa-solid fa-download text-emerald-400"></i> ${p.downloads || 0} yuklab olish</span>
+            <h3 class="text-sm font-bold text-white mb-1">${p.title}</h3>
+            <p class="text-xs text-slate-400 mb-4 leading-relaxed">${p.description || ''}</p>
+            <div class="flex items-center justify-between gap-2 mb-3">
               <span class="text-xs font-bold text-slate-200">${Number(p.price).toLocaleString()} UZS</span>
             </div>
             ${actionBtn}
@@ -415,60 +362,30 @@
       });
     }
 
-    function incrementViewAndPay(id, title, price) {
-      db.ref("projects/" + id + "/views").transaction(v => (v || 0) + 1);
-      openPayment(id, title, price);
-    }
-
-    function incrementDownload(id) {
-      db.ref("projects/" + id + "/downloads").transaction(d => (d || 0) + 1);
-    }
-
-    function applyPromo() {
-      const code = document.getElementById('promoInput').value.toUpperCase().trim();
-      if (promoCodes[code]) {
-        const percent = promoCodes[code].percent;
-        currentCalculatedPrice = currentOriginalPrice - (currentOriginalPrice * (percent / 100));
-        document.getElementById('modalPrice').innerHTML = `<span class="line-through text-slate-500 text-xs">${currentOriginalPrice.toLocaleString()} UZS</span> ${currentCalculatedPrice.toLocaleString()} UZS (-${percent}%)`;
-        showToast(`Chegirma qo'llandi: ${percent}%`, 'emerald');
-      } else { showToast("Noto'g'ri promo-kod!", "rose"); }
-    }
-
-    function addReview(projectId) {
-      const stars = prompt("Loyihaga 1 dan 5 gacha baho bering:");
-      if (!stars || isNaN(stars) || stars < 1 || stars > 5) return;
-      const comment = prompt("Fikringizni qoldiring:");
-      db.ref("reviews").push().set({
-        projectId, stars: Number(stars), comment: comment || '', deviceId: getDeviceId(), createdAt: Date.now()
-      }).then(() => showToast("Bahongiz uchun rahmat!", "emerald"));
-    }
-
     function toggleCabinet() { document.getElementById('cabinetModal').classList.toggle('hidden'); }
 
     function renderCabinet() {
       const myDeviceId = getDeviceId();
       const purchasesContainer = document.getElementById('myPurchasesList');
       const ordersContainer = document.getElementById('myOrdersList');
-      
       const myPurchases = allPurchases.filter(req => req.deviceId === myDeviceId);
       const myOrders = allOrders.filter(ord => ord.deviceId === myDeviceId);
 
-      purchasesContainer.innerHTML = myPurchases.length ? '' : `<div class="text-[11px] text-slate-500 italic">Xaridlar yo'q</div>`;
+      purchasesContainer.innerHTML = myPurchases.length ? '' : `<div class="text-[11px] text-slate-500 italic">Hali xaridlar yo'q</div>`;
       myPurchases.forEach(req => {
-        const p = allProjects.find(item => item.id === req.projectId) || { title: 'Loyiha' };
-        let badge = req.status === 'approved' ? `<a href="${p.fileData}" download="${p.fileName || 'loyiha'}" class="text-emerald-400 font-bold hover:underline">Yuklab olish</a>` : `<span class="text-amber-400">Kutilmoqda</span>`;
-        purchasesContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2 rounded-xl text-xs flex justify-between"><span class="truncate max-w-[170px]">${p.title}</span>${badge}</div>`;
+        const p = allProjects.find(item => item.id === req.projectId) || { title: req.isAiPremium ? '🤖 AI PRO Premium Obuna' : 'Loyiha' };
+        let badge = req.status === 'approved' ? `<span class="text-emerald-400 font-bold">Tasdiqlangan</span>` : `<span class="text-amber-400">Tekshirilmoqda</span>`;
+        purchasesContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-xs flex justify-between"><span class="truncate max-w-[170px]">${p.title}</span>${badge}</div>`;
       });
 
-      ordersContainer.innerHTML = myOrders.length ? '' : `<div class="text-[11px] text-slate-500 italic">Buyurtmalar yo'q</div>`;
+      ordersContainer.innerHTML = myOrders.length ? '' : `<div class="text-[11px] text-slate-500 italic">Hali zakazlar yo'q</div>`;
       myOrders.forEach(ord => {
-        ordersContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2 rounded-xl text-xs"><div class="text-slate-300 font-medium">${ord.topic}</div><div class="text-[10px] text-indigo-400">Status: Qabul qilindi</div></div>`;
+        ordersContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-xs"><div class="text-slate-300 font-medium">${ord.topic}</div><div class="text-[10px] text-indigo-400">Status: Qabul qilindi</div></div>`;
       });
     }
 
     function openOrderModal() { document.getElementById('orderModal').classList.remove('hidden'); }
     function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
-
     function submitOrder(e) {
       e.preventDefault();
       db.ref("orders").push().set({
@@ -479,31 +396,29 @@
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        showToast("Buyurtma yuborildi!", "emerald");
+        alert("Buyurtmangiz yuborildi!");
         closeOrderModal();
         e.target.reset();
-        sendTelegramNotification(`🆕 *Yangi buyurtma!*\\nIsm: ${document.getElementById('orderStudentName').value}\\nMavzu: ${document.getElementById('orderTopic').value}`);
       });
     }
 
     function encodeImageFileAsURL(element) {
-      let file = element.files[0];
       let reader = new FileReader();
-      reader.onloadend = function() { base64Receipt = reader.result; }
-      reader.readAsDataURL(file);
+      reader.onloadend = () => base64Receipt = reader.result;
+      reader.readAsDataURL(element.files[0]);
     }
 
     function openPayment(id, title, price) {
       document.getElementById('modalProjectId').value = id;
+      document.getElementById('isAiSub').value = "false";
       document.getElementById('modalTitle').innerText = title;
-      currentOriginalPrice = Number(price);
-      currentCalculatedPrice = Number(price);
       document.getElementById('modalPrice').innerText = Number(price).toLocaleString() + " UZS";
+      document.getElementById('paidAmount').value = price;
       
       const cContainer = document.getElementById('cardsContainer');
-      cContainer.innerHTML = adminCards.length ? '' : `<div class="text-xs text-rose-400 text-center">Karta topilmadi!</div>`;
+      cContainer.innerHTML = '';
       adminCards.forEach(c => {
-        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between text-xs"><div><div class="font-mono font-bold">${c.number}</div><div class="text-[10px] text-slate-400">${c.holder} (${c.bank})</div></div><button type="button" onclick="navigator.clipboard.writeText('${c.number}'); showToast('Nusxalandi!', 'indigo')" class="bg-indigo-600 px-2 py-1 rounded-lg text-white">Nusxa</button></div>`;
+        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between text-xs"><div><div class="font-mono font-bold text-white">${c.number}</div><div class="text-[10px] text-slate-400">${c.holder} (${c.bank})</div></div><button type="button" onclick="navigator.clipboard.writeText('${c.number}'); alert('Nusxalandi!')" class="bg-indigo-600 px-2 py-1 rounded-lg text-white">Nusxa</button></div>`;
       });
       document.getElementById('paymentModal').classList.remove('hidden');
     }
@@ -512,20 +427,20 @@
 
     function submitPayment(e) {
       e.preventDefault();
+      const isSub = document.getElementById('isAiSub').value === "true";
       db.ref("purchases").push().set({
-        projectId: document.getElementById('modalProjectId').value,
+        projectId: document.getElementById('modalProjectId').value || null,
         studentName: document.getElementById('studentName').value,
         studentContact: document.getElementById('studentContact').value,
+        paidAmount: Number(document.getElementById('paidAmount').value),
         receiptImage: base64Receipt,
-        finalPrice: currentCalculatedPrice,
+        isAiPremium: isSub,
         deviceId: getDeviceId(),
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        showToast("To'lov cheki yuborildi!", "emerald");
+        alert("To'lov cheki yuborildi!");
         closeModal();
-        e.target.reset();
-        sendTelegramNotification(`💸 *Yangi to'lov cheki!*\\nIsm: ${document.getElementById('studentName').value}\\nSumma: ${currentCalculatedPrice.toLocaleString()} UZS`);
       });
     }
   </script>
