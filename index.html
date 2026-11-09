@@ -229,7 +229,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    // API kalitni Firebase Realtime Database bazasidan dinamik o'qiymiz
+    // Bazadan admin kiritgan Gemini API kalitni o'qib olish
     let globalGeminiApiKey = "";
     db.ref("settings/gemini_api_key").on("value", snapshot => {
       if (snapshot.exists()) {
@@ -445,7 +445,7 @@
 
     async function callGemini(promptText) {
       if (!globalGeminiApiKey) {
-        return "Xatolik: Serverda AI kaliti hali sozlanmagan. Iltimos, admin panel orqali API kalitni kiriting.";
+        return "Xatolik: Admin tomonidan AI kaliti hali kiritilmagan. Iltimos, admin panelidan kalitni qo'shing.";
       }
       try {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${globalGeminiApiKey}`, {
