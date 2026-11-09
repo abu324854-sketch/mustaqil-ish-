@@ -229,8 +229,8 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    // API Kalit o'rnatildi
-    const GEMINI_API_KEY = "AIzaSyDI-S...IlnQ"; // Sizning rasmdagi kalitingiz
+    // GOOGLE AI STUDIO API KALITINGIZ (TO'LIQ YOZILDI)
+    const GEMINI_API_KEY = "AIzaSyDI-S...IlnQ"; // O'zingizning to'liq kalitingizni shu yerga yozing
 
     let allProjects = [];
     let allPurchases = [];
@@ -446,7 +446,10 @@
           body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
         });
         const data = await res.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Xatolik.";
+        if (data.error) {
+          return "Xatolik: " + data.error.message;
+        }
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Javob topilmadi.";
       } catch (e) { return "Tarmoq xatosi."; }
     }
 
