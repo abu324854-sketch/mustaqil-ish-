@@ -88,7 +88,7 @@
       </div>
     </div>
 
-    <!-- TAYYOR LOYIHALAR KATALOGI (ASLIY NARXLARI BILAN) -->
+    <!-- TAYYOR LOYIHALAR KATALOGI -->
     <div class="space-y-4">
       <h2 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
         <i class="fa-solid fa-folder-open text-indigo-400"></i> Tayyor Ishlar va Loyihalar
@@ -229,7 +229,8 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    const GEMINI_API_KEY = "BURAGA_GOOGLE_AI_STUDIO_API_KALITINGIZNI_QOYING";
+    // API Kalit o'rnatildi
+    const GEMINI_API_KEY = "AIzaSyDI-S...IlnQ"; // Sizning rasmdagi kalitingiz
 
     let allProjects = [];
     let allPurchases = [];
@@ -296,7 +297,6 @@
       recognition.start();
     }
 
-    // LOYIHALARNI RENDER QILISH (ASLIY NARXLAR VA SOTIB OLISH BILAN)
     function renderProjects() {
       const list = document.getElementById('projectsList');
       const search = document.getElementById('searchInput').value.toLowerCase();
