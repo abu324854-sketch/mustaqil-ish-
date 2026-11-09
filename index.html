@@ -40,76 +40,58 @@
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-6">
 
-    <!-- ASOSIY VOSITALAR GRID (BOSILGANDA TO'LIQ EKRANDA OCHILADI) -->
+    <!-- ASOSIY VOSITALAR GRID -->
     <div class="space-y-3">
       <h2 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
         <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> Akademik AI Vositalari
       </h2>
       
       <div class="grid grid-cols-2 gap-3">
-        <!-- 1. AI Chat & Vision -->
         <div onclick="openFullscreenTool('ai')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800">
-          <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-base">
-            <i class="fa-solid fa-brain"></i>
-          </div>
+          <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-base"><i class="fa-solid fa-brain"></i></div>
           <div class="text-xs font-bold text-white">AI Super Agent</div>
           <p class="text-[10px] text-slate-400">Matn, rasm va ovozli yordam</p>
         </div>
 
-        <!-- 2. Referat & Maqola (PULLIK) -->
         <div onclick="openFullscreenTool('writer')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-emerald-500/30 relative">
-          <span class="absolute top-3 right-3 bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO / Pullik</span>
-          <div class="w-9 h-9 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-base">
-            <i class="fa-solid fa-file-pen"></i>
-          </div>
+          <span class="absolute top-3 right-3 bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO</span>
+          <div class="w-9 h-9 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-base"><i class="fa-solid fa-file-pen"></i></div>
           <div class="text-xs font-bold text-white">Ilmiy Ish / Referat</div>
-          <p class="text-[10px] text-slate-400">To'liq strukturali matn tayyorlash</p>
+          <p class="text-[10px] text-slate-400">To'liq strukturali matn</p>
         </div>
 
-        <!-- 3. Test Markazi -->
         <div onclick="openFullscreenTool('quiz')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800">
-          <div class="w-9 h-9 rounded-xl bg-amber-600/20 text-amber-400 flex items-center justify-center text-base">
-            <i class="fa-solid fa-list-check"></i>
-          </div>
+          <div class="w-9 h-9 rounded-xl bg-amber-600/20 text-amber-400 flex items-center justify-center text-base"><i class="fa-solid fa-list-check"></i></div>
           <div class="text-xs font-bold text-white">Test Markazi</div>
-          <p class="text-[10px] text-slate-400">Fanlar bo'yicha interaktiv testlar</p>
+          <p class="text-[10px] text-slate-400">Interaktiv testlar</p>
         </div>
 
-        <!-- 4. Slayd Generator (PULLIK) -->
         <div onclick="openFullscreenTool('slides')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-purple-500/30 relative">
-          <span class="absolute top-3 right-3 bg-purple-500/20 text-purple-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO / Pullik</span>
-          <div class="w-9 h-9 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-base">
-            <i class="fa-solid fa-file-powerpoint"></i>
-          </div>
+          <span class="absolute top-3 right-3 bg-purple-500/20 text-purple-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO</span>
+          <div class="w-9 h-9 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-base"><i class="fa-solid fa-file-powerpoint"></i></div>
           <div class="text-xs font-bold text-white">Taqdimot Slaydlar</div>
-          <p class="text-[10px] text-slate-400">Mavzu uchun slayd matnlari</p>
+          <p class="text-[10px] text-slate-400">Slayd matnlari</p>
         </div>
 
-        <!-- 5. PDF Hujjat Tahlili (PULLIK) -->
         <div onclick="openFullscreenTool('pdfreader')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-rose-500/30 relative">
-          <span class="absolute top-3 right-3 bg-rose-500/20 text-rose-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO / Pullik</span>
-          <div class="w-9 h-9 rounded-xl bg-rose-600/20 text-rose-400 flex items-center justify-center text-base">
-            <i class="fa-solid fa-file-pdf"></i>
-          </div>
+          <span class="absolute top-3 right-3 bg-rose-500/20 text-rose-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO</span>
+          <div class="w-9 h-9 rounded-xl bg-rose-600/20 text-rose-400 flex items-center justify-center text-base"><i class="fa-solid fa-file-pdf"></i></div>
           <div class="text-xs font-bold text-white">PDF / Hujjat Q&A</div>
-          <p class="text-[10px] text-slate-400">Kitob va fayllardan javob topish</p>
+          <p class="text-[10px] text-slate-400">Kitobdan javob topish</p>
         </div>
 
-        <!-- 6. Code Runner -->
         <div onclick="openFullscreenTool('coder')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800">
-          <div class="w-9 h-9 rounded-xl bg-cyan-600/20 text-cyan-400 flex items-center justify-center text-base">
-            <i class="fa-solid fa-code"></i>
-          </div>
+          <div class="w-9 h-9 rounded-xl bg-cyan-600/20 text-cyan-400 flex items-center justify-center text-base"><i class="fa-solid fa-code"></i></div>
           <div class="text-xs font-bold text-white">Live Code Runner</div>
-          <p class="text-[10px] text-slate-400">HTML/CSS/JS kod muharriri</p>
+          <p class="text-[10px] text-slate-400">HTML/CSS/JS muharrir</p>
         </div>
       </div>
     </div>
 
-    <!-- TAYYOR LOYIHALAR KATALOGI -->
+    <!-- TAYYOR LOYIHALAR KATALOGI (ASLIY NARXLARI BILAN) -->
     <div class="space-y-4">
       <h2 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-        <i class="fa-solid fa-folder-open text-indigo-400"></i> Bepul Ishlar va Loyihalar
+        <i class="fa-solid fa-folder-open text-indigo-400"></i> Tayyor Ishlar va Loyihalar
       </h2>
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
@@ -124,9 +106,8 @@
 
   </main>
 
-  <!-- ================= FULLSCREEN MODAL (TANLANGAN OYNA TO'LIQ EKRANDA) ================= -->
+  <!-- FULLSCREEN MODAL -->
   <div id="fullscreenModal" class="fixed inset-0 bg-[#070a13] z-50 hidden flex flex-col">
-    <!-- Modal Header -->
     <div class="glass-card px-4 py-3.5 flex justify-between items-center border-b border-slate-800">
       <div class="flex items-center space-x-2">
         <button onclick="closeFullscreenTool()" class="text-slate-400 hover:text-white px-2 py-1 text-sm"><i class="fa-solid fa-arrow-left"></i> Orqaga</button>
@@ -135,10 +116,7 @@
       <button onclick="closeFullscreenTool()" class="text-slate-400 hover:text-white text-base px-2"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
-    <!-- Modal Body (Har bir vosita uchun alohida qism) -->
     <div class="flex-1 overflow-y-auto p-4 max-w-lg mx-auto w-full space-y-4">
-      
-      <!-- 1. AI AGENT VIEW -->
       <div id="tool-view-ai" class="tool-view space-y-3 hidden">
         <div class="grid grid-cols-2 gap-2">
           <select id="aiMode" class="bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white">
@@ -152,73 +130,65 @@
         </div>
         <div id="aiChatBox" class="bg-slate-950 h-[50vh] rounded-2xl p-3 border border-slate-800 overflow-y-auto space-y-3 text-xs text-slate-300">
           <div class="bg-indigo-950/50 p-2.5 rounded-xl border border-indigo-500/20 text-indigo-300">
-            🤖 Salom! To'laqonli AI agentingiz tayyor. Matn yozing, rasm yuklang yoki ovozli yordamchidan foydalaning!
+            🤖 Salom! AI agent tayyor.
           </div>
         </div>
-        <!-- Ovozli kiritish va matn -->
         <div class="flex gap-2">
-          <button onclick="startVoiceInput()" class="bg-slate-800 hover:bg-slate-700 text-indigo-400 px-3 py-2.5 rounded-xl text-xs border border-slate-700"><i class="fa-solid fa-microphone"></i></button>
+          <button onclick="startVoiceInput()" class="bg-slate-800 hover:bg-slate-700 text-indigo-400 px-3 py-2.5 rounded-xl text-xs"><i class="fa-solid fa-microphone"></i></button>
           <input type="text" id="aiPrompt" placeholder="Savol yozing..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none">
           <button onclick="sendAiMessage()" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 rounded-xl text-xs font-bold text-white">Yuborish</button>
         </div>
       </div>
 
-      <!-- 2. ILMIY ISH / REFERAT (PULLIK) -->
       <div id="tool-view-writer" class="tool-view space-y-3 hidden">
         <div class="bg-emerald-950/30 border border-emerald-500/30 p-3 rounded-xl text-[11px] text-emerald-300">
-          <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Bu pullik PRO xizmat! (Cheksiz foydalanish uchun AI PRO obuna talab qilinadi).
+          <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pullik PRO xizmat!
         </div>
-        <input type="text" id="writerTopic" placeholder="Referat mavzusini kiriting..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-        <button onclick="generatePaidTool('writer')" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-xl text-xs font-bold text-white">Referat Generatsiya qilish</button>
+        <input type="text" id="writerTopic" placeholder="Referat mavzusi..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
+        <button onclick="generatePaidTool('writer')" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-xl text-xs font-bold text-white">Generatsiya qilish</button>
         <div id="writerOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line hidden max-h-[50vh] overflow-y-auto"></div>
       </div>
 
-      <!-- 3. TEST MARKAZI -->
       <div id="tool-view-quiz" class="tool-view space-y-3 hidden">
-        <input type="text" id="quizSubject" placeholder="Fan yoki mavzu nomi..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        <input type="text" id="quizSubject" placeholder="Fan nomi..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
         <button onclick="generateQuiz()" class="w-full bg-amber-600 hover:bg-amber-500 py-2.5 rounded-xl text-xs font-bold text-white">Test Tuzish</button>
         <div id="quizContainer" class="space-y-3 pt-2"></div>
       </div>
 
-      <!-- 4. SLAYD / TAQDIMOT (PULLIK) -->
       <div id="tool-view-slides" class="tool-view space-y-3 hidden">
         <div class="bg-purple-950/30 border border-purple-500/30 p-3 rounded-xl text-[11px] text-purple-300">
-          <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pullik PRO xizmat: PowerPoint slayd matnlarini yaratish.
+          <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pullik PRO xizmat!
         </div>
         <input type="text" id="slideTopic" placeholder="Slayd mavzusi..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
         <button onclick="generatePaidTool('slides')" class="w-full bg-purple-600 hover:bg-purple-500 py-2.5 rounded-xl text-xs font-bold text-white">Slayd Matnlarini Tuzish</button>
         <div id="slideOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line hidden max-h-[50vh] overflow-y-auto"></div>
       </div>
 
-      <!-- 5. PDF HUJJAT TAHLILI (PULLIK) -->
       <div id="tool-view-pdfreader" class="tool-view space-y-3 hidden">
         <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-xl text-[11px] text-rose-300">
-          <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pullik PRO xizmat: PDF kitoblardan savollarga javob olish.
+          <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pullik PRO xizmat!
         </div>
-        <input type="file" id="pdfFile" accept=".pdf" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-rose-600 file:text-white">
-        <input type="text" id="pdfPrompt" placeholder="PDF kitob bo'yicha savolingiz..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-        <button onclick="generatePaidTool('pdf')" class="w-full bg-rose-600 hover:bg-rose-500 py-2.5 rounded-xl text-xs font-bold text-white">Hujjatdan Javob Topish</button>
+        <input type="text" id="pdfPrompt" placeholder="PDF kitob bo'yicha savol..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
+        <button onclick="generatePaidTool('pdf')" class="w-full bg-rose-600 hover:bg-rose-500 py-2.5 rounded-xl text-xs font-bold text-white">Javob Topish</button>
         <div id="pdfOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line hidden max-h-[50vh] overflow-y-auto"></div>
       </div>
 
-      <!-- 6. CODE RUNNER -->
       <div id="tool-view-coder" class="tool-view space-y-3 hidden">
         <textarea id="codeEditor" rows="8" placeholder="<html><body><h1>Salom!</h1></body></html>" class="w-full bg-slate-950 border border-slate-800 font-mono text-xs p-3 rounded-xl text-indigo-300 focus:outline-none"></textarea>
         <button onclick="runCode()" class="w-full bg-cyan-600 hover:bg-cyan-500 py-2.5 rounded-xl text-xs font-bold text-white">Kodni Ishga Tushirish</button>
         <iframe id="codePreview" class="w-full h-48 bg-white rounded-xl border border-slate-700"></iframe>
       </div>
-
     </div>
   </div>
 
-  <!-- KABINET MODALI -->
+  <!-- KABINET -->
   <div id="cabinetModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[85vh] overflow-y-auto">
       <button onclick="toggleCabinet()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
       <h3 class="text-base font-bold text-white mb-1">Mening Kabinetim</h3>
       <div id="aiStatusBadge" class="text-[11px] text-indigo-300 mb-4">Statut: Oddiy Foydalanuvchi</div>
-      <button onclick="openAiPayment()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs mb-4">👑 AI PRO Obuna Sotib Olish (25,000 UZS)</button>
-      <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase">Yuklab olingan fayllar</h4>
+      <button onclick="openAiPayment()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs mb-4">👑 AI PRO Obuna Sotib Olish</button>
+      <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase">Mening Xaridlarim</h4>
       <div id="myPurchasesList" class="space-y-2 text-xs"></div>
     </div>
   </div>
@@ -227,12 +197,19 @@
   <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
-      <h3 class="text-base font-bold text-white mb-1">🤖 AI PRO Cheksiz Obuna</h3>
+      <h3 class="text-base font-bold text-white mb-1" id="paymentModalTitle">To'lov qilish</h3>
       <p class="text-xs text-slate-400 mb-4">Kartaga pul o'tkazing va chek yuboring</p>
       <div id="cardsContainer" class="space-y-2 mb-4"></div>
+      <div class="bg-indigo-950/40 border border-indigo-500/20 p-3 rounded-2xl mb-4 text-center">
+        <div class="text-[10px] text-slate-400 uppercase">Summa:</div>
+        <div class="text-indigo-400 font-extrabold text-lg" id="modalPrice">0 UZS</div>
+      </div>
       <form onsubmit="submitPayment(event)" class="space-y-3">
+        <input type="hidden" id="modalProjectId">
+        <input type="hidden" id="isAiSub" value="false">
         <input type="text" id="studentName" required placeholder="Ism Familiyangiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
         <input type="text" id="studentContact" required placeholder="Telegram / Telefon" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        <input type="number" id="paidAmount" required placeholder="O'tkazilgan summa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
         <input type="file" id="receiptImg" accept="image/*" required onchange="encodeImageFileAsURL(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white">
         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs">Chekni Yuborish</button>
       </form>
@@ -259,7 +236,6 @@
     let adminCards = [];
     let aiSubscriptionPrice = 25000;
     let base64Receipt = '';
-    let downloadedFilesCount = Number(localStorage.getItem('downloaded_count') || 0);
 
     function getDeviceId() {
       let devId = localStorage.getItem('app_device_id');
@@ -270,15 +246,20 @@
       return devId;
     }
 
+    db.ref("settings/ai_price").on("value", snap => { if(snap.val()) aiSubscriptionPrice = Number(snap.val()); });
+
     db.ref("projects").on("value", snapshot => {
       const data = snapshot.val();
       allProjects = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
       renderProjects();
+      renderCabinet();
     });
 
     db.ref("purchases").on("value", snapshot => {
       const data = snapshot.val();
       allPurchases = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+      renderProjects();
+      renderCabinet();
       checkAiSubscriptionStatus();
     });
 
@@ -296,87 +277,177 @@
       if (hasSub) badge.innerHTML = `Statut: <b class="text-amber-400">👑 AI PRO Cheksiz Obuna Faol</b>`;
     }
 
-    // TO'LIQ EKRAN MODALINI OCHISH VA YOPISH
     function openFullscreenTool(toolName) {
       document.querySelectorAll('.tool-view').forEach(v => v.classList.add('hidden'));
       document.getElementById('tool-view-' + toolName).classList.remove('hidden');
-      
       const titles = { ai: 'AI Super Agent', writer: 'Ilmiy Maqola & Referat (PRO)', quiz: 'Interaktiv Test Markazi', slides: 'Taqdimot Slaydlari (PRO)', pdfreader: 'PDF Hujjat Tahlili (PRO)', coder: 'Live Web Code Runner' };
       document.getElementById('modalTitle').innerText = titles[toolName] || 'Vosita';
-      
       document.getElementById('fullscreenModal').classList.remove('hidden');
     }
 
-    function closeFullscreenTool() {
-      document.getElementById('fullscreenModal').classList.add('hidden');
-    }
+    function closeFullscreenTool() { document.getElementById('fullscreenModal').classList.add('hidden'); }
 
-    // OVOZLI YORDAMCHI (SPEECH-TO-TEXT)
     function startVoiceInput() {
-      if (!('webkitSpeechRecognition' in window)) {
-        alert("Brauzeringiz ovozli qidiruvni qo'llab-quvvatlamaydi.");
-        return;
-      }
+      if (!('webkitSpeechRecognition' in window)) { alert("Ovozli kiritish qo'llab-quvvatlanmaydi."); return; }
       const recognition = new webkitSpeechRecognition();
       recognition.lang = 'uz-UZ';
-      recognition.onstart = () => alert("Gapiring, eshitayapman...");
-      recognition.onresult = (event) => {
-        document.getElementById('aiPrompt').value = event.results[0][0].transcript;
-      };
+      recognition.onstart = () => alert("Gapiring...");
+      recognition.onresult = (event) => { document.getElementById('aiPrompt').value = event.results[0][0].transcript; };
       recognition.start();
     }
 
-    // PULLIK XIZMATLARNI TEKshirib ISHLATISH
+    // LOYIHALARNI RENDER QILISH (ASLIY NARXLAR VA SOTIB OLISH BILAN)
+    function renderProjects() {
+      const list = document.getElementById('projectsList');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const myDeviceId = getDeviceId();
+      list.innerHTML = '';
+      const filtered = allProjects.filter(p => p.title.toLowerCase().includes(search));
+      
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">Loyihalar topilmadi.</div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.deviceId === myDeviceId);
+        let statusTag = '', actionBtn = '';
+        const priceFormatted = Number(p.price || 0).toLocaleString();
+
+        if (!myPurchase) {
+          actionBtn = `<button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${priceFormatted} UZS)</button>`;
+        } else if (myPurchase.status === 'pending') {
+          statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Kutilmoqda</span>`;
+          actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin tekshirmoqda...</button>`;
+        } else if (myPurchase.status === 'approved') {
+          statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
+          actionBtn = `<a href="${p.fileData || p.fileUrl}" download="${p.fileName || 'loyiha'}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
+        }
+
+        list.innerHTML += `
+          <div class="glass-card p-4 rounded-2xl relative space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
+              ${statusTag}
+            </div>
+            <h3 class="text-xs font-bold text-white">${p.title}</h3>
+            <p class="text-[11px] text-slate-400">${p.description || ''}</p>
+            <div class="text-xs font-bold text-slate-200">${priceFormatted} UZS</div>
+            ${actionBtn}
+          </div>
+        `;
+      });
+    }
+
+    function renderCabinet() {
+      const myDeviceId = getDeviceId();
+      const container = document.getElementById('myPurchasesList');
+      const myPurchases = allPurchases.filter(req => req.deviceId === myDeviceId);
+      container.innerHTML = myPurchases.length ? '' : `<div class="text-[11px] text-slate-500 italic">Xaridlar yo'q</div>`;
+      myPurchases.forEach(req => {
+        const p = allProjects.find(item => item.id === req.projectId) || { title: req.isAiPremium ? '👑 AI PRO Obuna' : 'Loyiha' };
+        let badge = req.status === 'approved' ? `<span class="text-emerald-400 font-bold">Tasdiqlangan</span>` : `<span class="text-amber-400">Tekshirilmoqda</span>`;
+        container.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-xs flex justify-between"><span class="truncate max-w-[170px]">${p.title}</span>${badge}</div>`;
+      });
+    }
+
+    function openPayment(id, title, price) {
+      document.getElementById('modalProjectId').value = id;
+      document.getElementById('isAiSub').value = "false";
+      document.getElementById('paymentModalTitle').innerText = title;
+      document.getElementById('modalPrice').innerText = Number(price).toLocaleString() + " UZS";
+      document.getElementById('paidAmount').value = price;
+      showPaymentModal();
+    }
+
+    function openAiPayment() {
+      toggleCabinet();
+      document.getElementById('modalProjectId').value = "";
+      document.getElementById('isAiSub').value = "true";
+      document.getElementById('paymentModalTitle').innerText = "🤖 AI PRO Cheksiz Obuna";
+      document.getElementById('modalPrice').innerText = aiSubscriptionPrice.toLocaleString() + " UZS";
+      document.getElementById('paidAmount').value = aiSubscriptionPrice;
+      showPaymentModal();
+    }
+
+    function showPaymentModal() {
+      const cContainer = document.getElementById('cardsContainer');
+      cContainer.innerHTML = '';
+      adminCards.forEach(c => {
+        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-between text-xs font-mono mb-2"><span>${c.number}</span><span class="text-slate-400">(${c.holder})</span></div>`;
+      });
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
+    function encodeImageFileAsURL(e) {
+      let reader = new FileReader();
+      reader.onloadend = () => base64Receipt = reader.result;
+      reader.readAsDataURL(e.files[0]);
+    }
+
+    function submitPayment(e) {
+      e.preventDefault();
+      const isSub = document.getElementById('isAiSub').value === "true";
+      db.ref("purchases").push().set({
+        projectId: document.getElementById('modalProjectId').value || null,
+        studentName: document.getElementById('studentName').value,
+        studentContact: document.getElementById('studentContact').value,
+        paidAmount: Number(document.getElementById('paidAmount').value),
+        receiptImage: base64Receipt,
+        isAiPremium: isSub,
+        deviceId: getDeviceId(),
+        status: 'pending',
+        createdAt: Date.now()
+      }).then(() => {
+        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan ochiladi.");
+        closeModal();
+      });
+    }
+
     async function generatePaidTool(type) {
       const myId = getDeviceId();
       const hasSub = allPurchases.some(p => p.deviceId === myId && p.isAiPremium && p.status === 'approved');
-
       if (!hasSub) {
         alert("Bu pullik PRO xizmat! Foydalanish uchun AI PRO obuna sotib oling.");
         closeFullscreenTool();
         toggleCabinet();
         return;
       }
-
       if (type === 'writer') {
         const topic = document.getElementById('writerTopic').value.trim();
         if (!topic) return alert("Mavzu kiriting!");
         const out = document.getElementById('writerOutput');
         out.classList.remove('hidden');
-        out.innerText = "⏳ PRO Rejimda ilmiy ish yozilmoqda...";
-        const res = await callGemini(`"${topic}" bo'yicha mukammal referat yoz.`);
-        out.innerText = res;
+        out.innerText = "⏳ PRO Rejimda yozilmoqda...";
+        out.innerText = await callGemini(`"${topic}" bo'yicha mukammal referat yoz.`);
       } else if (type === 'slides') {
         const topic = document.getElementById('slideTopic').value.trim();
         if (!topic) return alert("Mavzu kiriting!");
         const out = document.getElementById('slideOutput');
         out.classList.remove('hidden');
         out.innerText = "⏳ Slayd matnlari tuzilmoqda...";
-        const res = await callGemini(`"${topic}" mavzusi uchun 5 ta slaydning matnini (Slayd 1, Slayd 2...) tuzib ber.`);
-        out.innerText = res;
+        out.innerText = await callGemini(`"${topic}" mavzusi uchun 5 ta slayd matnini tuzib ber.`);
       } else if (type === 'pdf') {
         const prompt = document.getElementById('pdfPrompt').value.trim();
         if (!prompt) return alert("Savol kiriting!");
         const out = document.getElementById('pdfOutput');
         out.classList.remove('hidden');
-        out.innerText = "⏳ Hujjat tahlil qilinmoqda...";
-        const res = await callGemini(`Hujjat bo'yicha savol: ${prompt}`);
-        out.innerText = res;
+        out.innerText = "⏳ Tahlil qilinmoqda...";
+        out.innerText = await callGemini(`Savol: ${prompt}`);
       }
     }
 
     async function callGemini(promptText) {
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
         });
-        const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Xatolik yuz berdi.";
-      } catch (e) {
-        return "Tarmoq xatosi.";
-      }
+        const data = await res.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Xatolik.";
+      } catch (e) { return "Tarmoq xatosi."; }
     }
 
     async function sendAiMessage() {
@@ -385,7 +456,6 @@
       const chatBox = document.getElementById('aiChatBox');
       chatBox.innerHTML += `<div class="text-right text-indigo-200"><b>Siz:</b> ${text}</div>`;
       document.getElementById('aiPrompt').value = '';
-      
       const reply = await callGemini(text);
       chatBox.innerHTML += `<div class="bg-indigo-950/60 p-3 rounded-2xl border border-indigo-500/30 text-indigo-200 whitespace-pre-line"><b>Gemini AI:</b> ${reply}</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -406,62 +476,6 @@
       iframe.contentWindow.document.open();
       iframe.contentWindow.document.write(code);
       iframe.contentWindow.document.close();
-    }
-
-    function renderProjects() {
-      const list = document.getElementById('projectsList');
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      list.innerHTML = '';
-      const filtered = allProjects.filter(p => p.title.toLowerCase().includes(search));
-      if (filtered.length === 0) {
-        list.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">Loyihalar topilmadi.</div>`;
-        return;
-      }
-      filtered.forEach(p => {
-        list.innerHTML += `
-          <div class="glass-card p-4 rounded-2xl space-y-2">
-            <h3 class="text-xs font-bold text-white">${p.title}</h3>
-            <p class="text-[11px] text-slate-400">${p.description || ''}</p>
-            <a href="${p.fileData || p.fileUrl}" download="${p.fileName || 'loyiha'}" class="block text-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition">
-              <i class="fa-solid fa-download"></i> Bepul Yuklab Olish (2 ta limit)
-            </a>
-          </div>
-        `;
-      });
-    }
-
-    function openAiPayment() {
-      document.getElementById('cabinetModal').classList.add('hidden');
-      const cContainer = document.getElementById('cardsContainer');
-      cContainer.innerHTML = '';
-      adminCards.forEach(c => {
-        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-between text-xs font-mono mb-2"><span>${c.number}</span><span class="text-slate-400">(${c.holder})</span></div>`;
-      });
-      document.getElementById('paymentModal').classList.remove('hidden');
-    }
-
-    function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
-    function encodeImageFileAsURL(e) {
-      let reader = new FileReader();
-      reader.onloadend = () => base64Receipt = reader.result;
-      reader.readAsDataURL(e.files[0]);
-    }
-
-    function submitPayment(e) {
-      e.preventDefault();
-      db.ref("purchases").push().set({
-        studentName: document.getElementById('studentName').value,
-        studentContact: document.getElementById('studentContact').value,
-        paidAmount: aiSubscriptionPrice,
-        receiptImage: base64Receipt,
-        isAiPremium: true,
-        deviceId: getDeviceId(),
-        status: 'pending',
-        createdAt: Date.now()
-      }).then(() => {
-        alert("Chek yuborildi! Admin tasdiqlashi bilan PRO ochiladi.");
-        closeModal();
-      });
     }
   </script>
 </body>
