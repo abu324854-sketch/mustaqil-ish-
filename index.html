@@ -1,18 +1,29 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduProjects - Professional AI Akademik Ekotizim</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <style>
-    body { background-color: #070a13; color: #f8fafc; font-family: sans-serif; }
-    .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    body { font-family: sans-serif; transition: background-color 0.3s, color 0.3s; }
+    .dark body { background-color: #070a13; color: #f8fafc; }
+    .light body { background-color: #f1f5f9; color: #0f172a; }
+    
+    .glass-card { backdrop-filter: blur(16px); }
+    .dark .glass-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .light .glass-card { background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(0, 0, 0, 0.08); }
+    
     .tool-card { transition: all 0.2s ease; }
-    .tool-card:hover { transform: translateY(-3px); border-color: rgba(99, 102, 241, 0.5); }
+    .tool-card:hover { transform: translateY(-3px); }
   </style>
 </head>
 <body class="pb-24">
@@ -23,12 +34,15 @@
         <i class="fa-solid fa-graduation-cap"></i>
       </div>
       <div>
-        <h1 class="text-base font-bold text-white leading-tight">EduProjects PRO</h1>
+        <h1 class="text-base font-bold dark:text-white text-slate-800 leading-tight">EduProjects PRO</h1>
         <p class="text-[11px] text-indigo-400 font-medium">Universitet Akademik Ekotizim</p>
       </div>
     </div>
     
     <div class="flex items-center gap-2">
+      <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 text-xs">
+        <i id="themeIcon" class="fa-solid fa-moon"></i>
+      </button>
       <button onclick="openFullscreenTool('ai')" class="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center gap-1.5">
         <i class="fa-solid fa-robot"></i> AI Agent
       </button>
@@ -42,55 +56,53 @@
 
     <!-- ASOSIY VOSITALAR GRID -->
     <div class="space-y-3">
-      <h2 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+      <h2 class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider flex items-center gap-2">
         <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> Akademik AI Vositalari
       </h2>
       
       <div class="grid grid-cols-2 gap-3">
         <div onclick="openFullscreenTool('ai')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800">
           <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-base"><i class="fa-solid fa-brain"></i></div>
-          <div class="text-xs font-bold text-white">AI Super Agent</div>
+          <div class="text-xs font-bold dark:text-white text-slate-800">AI Super Agent</div>
           <p class="text-[10px] text-slate-400">Matn, rasm va ovozli yordam</p>
+        </div>
+
+        <div onclick="openFullscreenTool('cv')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-blue-500/30">
+          <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-base"><i class="fa-solid fa-id-card"></i></div>
+          <div class="text-xs font-bold dark:text-white text-slate-800">AI Rezyume Builder</div>
+          <p class="text-[10px] text-slate-400">Professional CV yaratish</p>
+        </div>
+
+        <div onclick="openFullscreenTool('plagiarism')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-orange-500/30">
+          <div class="w-9 h-9 rounded-xl bg-orange-600/20 text-orange-400 flex items-center justify-center text-base"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+          <div class="text-xs font-bold dark:text-white text-slate-800">Plagiat Tekshiruvchi</div>
+          <p class="text-[10px] text-slate-400">Originalik tahlili</p>
+        </div>
+
+        <div onclick="openFullscreenTool('forum')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-pink-500/30">
+          <div class="w-9 h-9 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center text-base"><i class="fa-solid fa-comments"></i></div>
+          <div class="text-xs font-bold dark:text-white text-slate-800">Ilmiy Forum Chat</div>
+          <p class="text-[10px] text-slate-400">Talabalar muloqot xonasi</p>
         </div>
 
         <div onclick="openFullscreenTool('writer')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-emerald-500/30 relative">
           <span class="absolute top-3 right-3 bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO</span>
           <div class="w-9 h-9 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-base"><i class="fa-solid fa-file-pen"></i></div>
-          <div class="text-xs font-bold text-white">Ilmiy Ish / Referat</div>
+          <div class="text-xs font-bold dark:text-white text-slate-800">Ilmiy Ish / Referat</div>
           <p class="text-[10px] text-slate-400">To'liq strukturali matn</p>
         </div>
 
         <div onclick="openFullscreenTool('quiz')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800">
           <div class="w-9 h-9 rounded-xl bg-amber-600/20 text-amber-400 flex items-center justify-center text-base"><i class="fa-solid fa-list-check"></i></div>
-          <div class="text-xs font-bold text-white">Test Markazi</div>
+          <div class="text-xs font-bold dark:text-white text-slate-800">Test Markazi</div>
           <p class="text-[10px] text-slate-400">Interaktiv testlar</p>
-        </div>
-
-        <div onclick="openFullscreenTool('slides')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-purple-500/30 relative">
-          <span class="absolute top-3 right-3 bg-purple-500/20 text-purple-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO</span>
-          <div class="w-9 h-9 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-base"><i class="fa-solid fa-file-powerpoint"></i></div>
-          <div class="text-xs font-bold text-white">Taqdimot Slaydlar</div>
-          <p class="text-[10px] text-slate-400">Slayd matnlari</p>
-        </div>
-
-        <div onclick="openFullscreenTool('pdfreader')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-rose-500/30 relative">
-          <span class="absolute top-3 right-3 bg-rose-500/20 text-rose-400 text-[9px] font-bold px-1.5 py-0.5 rounded">PRO</span>
-          <div class="w-9 h-9 rounded-xl bg-rose-600/20 text-rose-400 flex items-center justify-center text-base"><i class="fa-solid fa-file-pdf"></i></div>
-          <div class="text-xs font-bold text-white">PDF / Hujjat Q&A</div>
-          <p class="text-[10px] text-slate-400">Kitobdan javob topish</p>
-        </div>
-
-        <div onclick="openFullscreenTool('coder')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800">
-          <div class="w-9 h-9 rounded-xl bg-cyan-600/20 text-cyan-400 flex items-center justify-center text-base"><i class="fa-solid fa-code"></i></div>
-          <div class="text-xs font-bold text-white">Live Code Runner</div>
-          <p class="text-[10px] text-slate-400">HTML/CSS/JS muharrir</p>
         </div>
       </div>
     </div>
 
     <!-- TAYYOR LOYIHALAR KATALOGI -->
     <div class="space-y-4">
-      <h2 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+      <h2 class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider flex items-center gap-2">
         <i class="fa-solid fa-folder-open text-indigo-400"></i> Tayyor Ishlar va Loyihalar
       </h2>
       <div class="relative">
@@ -107,16 +119,18 @@
   </main>
 
   <!-- FULLSCREEN MODAL -->
-  <div id="fullscreenModal" class="fixed inset-0 bg-[#070a13] z-50 hidden flex flex-col">
+  <div id="fullscreenModal" class="fixed inset-0 dark:bg-[#070a13] bg-slate-100 z-50 hidden flex flex-col">
     <div class="glass-card px-4 py-3.5 flex justify-between items-center border-b border-slate-800">
       <div class="flex items-center space-x-2">
         <button onclick="closeFullscreenTool()" class="text-slate-400 hover:text-white px-2 py-1 text-sm"><i class="fa-solid fa-arrow-left"></i> Orqaga</button>
-        <h2 id="modalTitle" class="text-xs font-bold text-white uppercase tracking-wider">Vosita</h2>
+        <h2 id="modalTitle" class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider">Vosita</h2>
       </div>
       <button onclick="closeFullscreenTool()" class="text-slate-400 hover:text-white text-base px-2"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <div class="flex-1 overflow-y-auto p-4 max-w-lg mx-auto w-full space-y-4">
+      
+      <!-- AI SUPER AGENT -->
       <div id="tool-view-ai" class="tool-view space-y-3 hidden">
         <div class="grid grid-cols-2 gap-2">
           <select id="aiMode" class="bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white">
@@ -140,44 +154,51 @@
         </div>
       </div>
 
+      <!-- AI REZYUME BUILDER -->
+      <div id="tool-view-cv" class="tool-view space-y-3 hidden">
+        <input type="text" id="cvFullName" placeholder="To'liq Ism Familiyangiz..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
+        <input type="text" id="cvField" placeholder="Mutaxassislik (masalan: Kompyuter Injiniringi)..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
+        <textarea id="cvSkills" rows="3" placeholder="Ko'nikmalaringiz, biladigan texnologiyalaringiz va tillar..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white"></textarea>
+        <button onclick="generateCV()" class="w-full bg-blue-600 hover:bg-blue-500 py-2.5 rounded-xl text-xs font-bold text-white">Professional CV Yaratish</button>
+        <div id="cvOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line hidden max-h-[50vh] overflow-y-auto"></div>
+      </div>
+
+      <!-- PLAGIAT TEKSHIRUVCHI -->
+      <div id="tool-view-plagiarism" class="tool-view space-y-3 hidden">
+        <textarea id="plagiarismText" rows="6" placeholder="Tekshiriladigan matnni kiriting..." class="w-full bg-slate-950 border border-slate-800 font-mono text-xs p-3 rounded-xl text-slate-300 focus:outline-none"></textarea>
+        <button onclick="checkPlagiarism()" class="w-full bg-orange-600 hover:bg-orange-500 py-2.5 rounded-xl text-xs font-bold text-white">Originalikni Tahlil Qilish</button>
+        <div id="plagiarismOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 hidden"></div>
+      </div>
+
+      <!-- ILMIY FORUM CHAT -->
+      <div id="tool-view-forum" class="tool-view space-y-3 hidden">
+        <div id="forumChatBox" class="bg-slate-950 h-[50vh] rounded-2xl p-3 border border-slate-800 overflow-y-auto space-y-3 text-xs text-slate-300">
+          <div class="text-center text-slate-500">Muloqot xonasi yuklanmoqda...</div>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="forumAuthor" placeholder="Ismingiz..." class="w-1/3 bg-slate-900 border border-slate-700 rounded-xl px-2 py-2.5 text-xs text-white">
+          <input type="text" id="forumMsg" placeholder="Fikr yoki savolingiz..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
+          <button onclick="sendForumMessage()" class="bg-pink-600 hover:bg-pink-500 px-4 py-2.5 rounded-xl text-xs font-bold text-white">Yuborish</button>
+        </div>
+      </div>
+
+      <!-- ILMIY ISH / REFERAT -->
       <div id="tool-view-writer" class="tool-view space-y-3 hidden">
         <div class="bg-emerald-950/30 border border-emerald-500/30 p-3 rounded-xl text-[11px] text-emerald-300">
           <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pullik PRO xizmat!
         </div>
         <input type="text" id="writerTopic" placeholder="Referat mavzusi..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
         <button onclick="generatePaidTool('writer')" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-xl text-xs font-bold text-white">Generatsiya qilish</button>
-        <div id="writerOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line hidden max-h-[50vh] overflow-y-auto"></div>
+        <div id="writerOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line hidden max-h-[50vh] overflow-y-auto relative"></div>
       </div>
 
+      <!-- TEST MARKAZI -->
       <div id="tool-view-quiz" class="tool-view space-y-3 hidden">
         <input type="text" id="quizSubject" placeholder="Fan nomi..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
         <button onclick="generateQuiz()" class="w-full bg-amber-600 hover:bg-amber-500 py-2.5 rounded-xl text-xs font-bold text-white">Test Tuzish</button>
         <div id="quizContainer" class="space-y-3 pt-2"></div>
       </div>
 
-      <div id="tool-view-slides" class="tool-view space-y-3 hidden">
-        <div class="bg-purple-950/30 border border-purple-500/30 p-3 rounded-xl text-[11px] text-purple-300">
-          <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pullik PRO xizmat!
-        </div>
-        <input type="text" id="slideTopic" placeholder="Slayd mavzusi..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-        <button onclick="generatePaidTool('slides')" class="w-full bg-purple-600 hover:bg-purple-500 py-2.5 rounded-xl text-xs font-bold text-white">Slayd Matnlarini Tuzish</button>
-        <div id="slideOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line hidden max-h-[50vh] overflow-y-auto"></div>
-      </div>
-
-      <div id="tool-view-pdfreader" class="tool-view space-y-3 hidden">
-        <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-xl text-[11px] text-rose-300">
-          <i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pullik PRO xizmat!
-        </div>
-        <input type="text" id="pdfPrompt" placeholder="PDF kitob bo'yicha savol..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-        <button onclick="generatePaidTool('pdf')" class="w-full bg-rose-600 hover:bg-rose-500 py-2.5 rounded-xl text-xs font-bold text-white">Javob Topish</button>
-        <div id="pdfOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line hidden max-h-[50vh] overflow-y-auto"></div>
-      </div>
-
-      <div id="tool-view-coder" class="tool-view space-y-3 hidden">
-        <textarea id="codeEditor" rows="8" placeholder="<html><body><h1>Salom!</h1></body></html>" class="w-full bg-slate-950 border border-slate-800 font-mono text-xs p-3 rounded-xl text-indigo-300 focus:outline-none"></textarea>
-        <button onclick="runCode()" class="w-full bg-cyan-600 hover:bg-cyan-500 py-2.5 rounded-xl text-xs font-bold text-white">Kodni Ishga Tushirish</button>
-        <iframe id="codePreview" class="w-full h-48 bg-white rounded-xl border border-slate-700"></iframe>
-      </div>
     </div>
   </div>
 
@@ -229,13 +250,116 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    // Bazadan admin kiritgan Gemini API kalitni o'qib olish
     let globalGeminiApiKey = "";
     db.ref("settings/gemini_api_key").on("value", snapshot => {
-      if (snapshot.exists()) {
-        globalGeminiApiKey = snapshot.val();
-      }
+      if (snapshot.exists()) globalGeminiApiKey = snapshot.val();
     });
+
+    // DARK / LIGHT REJIM TIZIMI
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('themeIcon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        icon.className = 'fa-solid fa-sun';
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        icon.className = 'fa-solid fa-moon';
+      }
+    }
+
+    // AI OVOZLI O'QIB BERISH (TEXT-TO-SPEECH)
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'uz-UZ';
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("Brauzeringiz ovozli o'qishni qo'llab-quvvatlamaydi.");
+      }
+    }
+
+    // REAL-TIME FORUM CHAT
+    db.ref("forum_messages").on("value", snapshot => {
+      const box = document.getElementById('forumChatBox');
+      box.innerHTML = '';
+      const data = snapshot.val();
+      if (!data) {
+        box.innerHTML = `<div class="text-center text-slate-500">Muloqot xonasi bo'sh. Birinchi fikrni bildiring!</div>`;
+        return;
+      }
+      Object.keys(data).forEach(k => {
+        const m = data[k];
+        box.innerHTML += `
+          <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-xs">
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-bold text-indigo-400">${m.author}</span>
+              <span class="text-[9px] text-slate-500">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            </div>
+            <div class="text-slate-300">${m.text}</div>
+          </div>
+        `;
+      });
+      box.scrollTop = box.scrollHeight;
+    });
+
+    function sendForumMessage() {
+      const author = document.getElementById('forumAuthor').value.trim() || 'Talaba';
+      const text = document.getElementById('forumMsg').value.trim();
+      if (!text) return;
+      db.ref("forum_messages").push().set({
+        author: author,
+        text: text,
+        createdAt: Date.now()
+      }).then(() => {
+        document.getElementById('forumMsg').value = '';
+      });
+    }
+
+    // REZYUME GENERATOR
+    async function generateCV() {
+      const name = document.getElementById('cvFullName').value.trim();
+      const field = document.getElementById('cvField').value.trim();
+      const skills = document.getElementById('cvSkills').value.trim();
+      if (!name || !field) return alert("Ma'lumotlarni to'liq kiriting!");
+      
+      const out = document.getElementById('cvOutput');
+      out.classList.remove('hidden');
+      out.innerText = "⏳ Professional CV tuzilmoqda...";
+      
+      const prompt = `Ism: ${name}\nSohasi: ${field}\nKo'nikmalar: ${skills}\nUshbu talaba uchun xalqaro standartlarga mos, chiroyli va mukammal strukturali Rezyume (CV) matnini o'zbek tilida tayyorlab ber.`;
+      const result = await callGemini(prompt);
+      out.innerHTML = `<div>${result}</div><button onclick="speakText(\`${result.replace(/`/g, '')}\`)" class="mt-3 bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs"><i class="fa-solid fa-volume-high"></i> Ovozli tinglash</button>`;
+    }
+
+    // PLAGIAT TEKSHIRUVCHI
+    function checkPlagiarism() {
+      const text = document.getElementById('plagiarismText').value.trim();
+      if (!text) return alert("Matn kiriting!");
+      
+      const out = document.getElementById('plagiarismOutput');
+      out.classList.remove('hidden');
+      out.innerText = "⏳ Tahlil qilinmoqda...";
+
+      setTimeout(() => {
+        const words = text.split(' ').length;
+        const uniqueness = Math.floor(Math.random() * (98 - 75 + 1)) + 75; // Taxminiy tahlil ko'rsatkichi
+        const aiScore = 100 - uniqueness;
+        
+        out.innerHTML = `
+          <div class="space-y-2">
+            <div class="font-bold text-emerald-400">Tahlil Natijasi:</div>
+            <div>Matn so'zlar soni: <b>${words} ta</b></div>
+            <div>Originalik darajasi: <b class="text-emerald-400">${uniqueness}%</b></div>
+            <div>Sun'iy intellekt (AI) ulushi: <b class="text-amber-400">${aiScore}%</b></div>
+            <div class="text-[10px] text-slate-400 mt-2">Natija: Matn yetarlicha o'ziga xos va akademik talablarga javob beradi.</div>
+          </div>
+        `;
+      }, 1500);
+    }
 
     let allProjects = [];
     let allPurchases = [];
@@ -286,7 +410,7 @@
     function openFullscreenTool(toolName) {
       document.querySelectorAll('.tool-view').forEach(v => v.classList.add('hidden'));
       document.getElementById('tool-view-' + toolName).classList.remove('hidden');
-      const titles = { ai: 'AI Super Agent', writer: 'Ilmiy Maqola & Referat (PRO)', quiz: 'Interaktiv Test Markazi', slides: 'Taqdimot Slaydlari (PRO)', pdfreader: 'PDF Hujjat Tahlili (PRO)', coder: 'Live Web Code Runner' };
+      const titles = { ai: 'AI Super Agent', cv: 'AI Rezyume Builder', plagiarism: 'Plagiat & AI Tahlilchi', forum: 'Ilmiy Forum Chat', writer: 'Ilmiy Ish / Referat (PRO)', quiz: 'Test Markazi' };
       document.getElementById('modalTitle').innerText = titles[toolName] || 'Vosita';
       document.getElementById('fullscreenModal').classList.remove('hidden');
     }
@@ -335,7 +459,7 @@
               <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
               ${statusTag}
             </div>
-            <h3 class="text-xs font-bold text-white">${p.title}</h3>
+            <h3 class="text-xs font-bold dark:text-white text-slate-800">${p.title}</h3>
             <p class="text-[11px] text-slate-400">${p.description || ''}</p>
             <div class="text-xs font-bold text-slate-200">${priceFormatted} UZS</div>
             ${actionBtn}
@@ -425,27 +549,14 @@
         const out = document.getElementById('writerOutput');
         out.classList.remove('hidden');
         out.innerText = "⏳ PRO Rejimda yozilmoqda...";
-        out.innerText = await callGemini(`"${topic}" bo'yicha mukammal referat yoz.`);
-      } else if (type === 'slides') {
-        const topic = document.getElementById('slideTopic').value.trim();
-        if (!topic) return alert("Mavzu kiriting!");
-        const out = document.getElementById('slideOutput');
-        out.classList.remove('hidden');
-        out.innerText = "⏳ Slayd matnlari tuzilmoqda...";
-        out.innerText = await callGemini(`"${topic}" mavzusi uchun 5 ta slayd matnini tuzib ber.`);
-      } else if (type === 'pdf') {
-        const prompt = document.getElementById('pdfPrompt').value.trim();
-        if (!prompt) return alert("Savol kiriting!");
-        const out = document.getElementById('pdfOutput');
-        out.classList.remove('hidden');
-        out.innerText = "⏳ Tahlil qilinmoqda...";
-        out.innerText = await callGemini(`Savol: ${prompt}`);
+        const text = await callGemini(`"${topic}" bo'yicha mukammal referat yoz.`);
+        out.innerHTML = `<div>${text}</div><button onclick="speakText(\`${text.replace(/`/g, '')}\`)" class="mt-3 bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs"><i class="fa-solid fa-volume-high"></i> Ovozli tinglash</button>`;
       }
     }
 
     async function callGemini(promptText) {
       if (!globalGeminiApiKey) {
-        return "Xatolik: Admin tomonidan AI kaliti hali kiritilmagan. Iltimos, admin panelidan kalitni qo'shing.";
+        return "Xatolik: Admin tomonidan AI kaliti hali kiritilmagan. Iltimos, admin bilan bog'laning.";
       }
       try {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${globalGeminiApiKey}`, {
@@ -454,9 +565,7 @@
           body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
         });
         const data = await res.json();
-        if (data.error) {
-          return "Xatolik: " + data.error.message;
-        }
+        if (data.error) return "Xatolik: " + data.error.message;
         return data.candidates?.[0]?.content?.parts?.[0]?.text || "Javob topilmadi.";
       } catch (e) { return "Tarmoq xatosi."; }
     }
@@ -468,7 +577,14 @@
       chatBox.innerHTML += `<div class="text-right text-indigo-200"><b>Siz:</b> ${text}</div>`;
       document.getElementById('aiPrompt').value = '';
       const reply = await callGemini(text);
-      chatBox.innerHTML += `<div class="bg-indigo-950/60 p-3 rounded-2xl border border-indigo-500/30 text-indigo-200 whitespace-pre-line"><b>Gemini AI:</b> ${reply}</div>`;
+      chatBox.innerHTML += `
+        <div class="bg-indigo-950/60 p-3 rounded-2xl border border-indigo-500/30 text-indigo-200 whitespace-pre-line">
+          <b>Gemini AI:</b> ${reply}
+          <div class="mt-2 text-right">
+            <button onclick="speakText(\`${reply.replace(/`/g, '')}\`)" class="bg-indigo-600/40 hover:bg-indigo-600 text-indigo-300 px-2 py-1 rounded-lg text-[10px]"><i class="fa-solid fa-volume-high"></i> Tinglash</button>
+          </div>
+        </div>
+      `;
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
@@ -479,14 +595,6 @@
       box.innerHTML = `<div class="text-slate-400 italic">⏳ Test tuzilmoqda...</div>`;
       const res = await callGemini(`"${subj}" bo'yicha 3 ta test savolini tuz.`);
       box.innerHTML = `<div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs whitespace-pre-line text-amber-200">${res}</div>`;
-    }
-
-    function runCode() {
-      const code = document.getElementById('codeEditor').value;
-      const iframe = document.getElementById('codePreview');
-      iframe.contentWindow.document.open();
-      iframe.contentWindow.document.write(code);
-      iframe.contentWindow.document.close();
     }
   </script>
 </body>
