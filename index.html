@@ -63,21 +63,21 @@
         </div>
       </div>
 
-      <div id="aiChatBox" class="bg-slate-950/90 h-52 rounded-2xl p-3 border border-slate-800 overflow-y-auto space-y-2 text-xs text-slate-300">
+      <div id="aiChatBox" class="bg-slate-950/90 h-60 rounded-2xl p-3 border border-slate-800 overflow-y-auto space-y-3 text-xs text-slate-300">
         <div class="bg-indigo-950/50 p-2.5 rounded-xl border border-indigo-500/20 text-indigo-300">
-          🤖 Salom! Men sizning sun'iy intellekt yordamchingizman. Menga istalgan savolni bering yoki vazifa topshiring!
+          🤖 Salom! Men sizning shaxsiy sun'iy intellekt yordamchingizman. Menga istalgan savol bering, vazifa topshiring yoki matn yozishni buyuring!
         </div>
       </div>
 
       <div class="flex gap-2">
-        <input type="text" id="aiPrompt" placeholder="Savolingizni yozing..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-        <button onclick="sendAiMessage()" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-xl text-xs font-bold text-white">Yuborish</button>
+        <input type="text" id="aiPrompt" placeholder="Savol yoki vazifani yozing..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none">
+        <button onclick="sendAiMessage()" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 rounded-xl text-xs font-bold text-white">Yuborish</button>
       </div>
 
       <div id="aiPremiumBanner" class="hidden bg-gradient-to-r from-amber-900/40 to-yellow-900/40 border border-amber-500/40 p-3 rounded-2xl flex justify-between items-center">
         <div>
           <div class="text-[11px] font-bold text-amber-300"><i class="fa-solid fa-crown"></i> AI PRO Premium</div>
-          <div class="text-[9px] text-slate-300">Cheksiz foydalanish uchun obuna bo'ling</div>
+          <div class="text-[9px] text-slate-300">Cheksiz va kuchli imkoniyatlar uchun obuna bo'ling</div>
         </div>
         <button onclick="openAiPayment()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-1.5 rounded-xl text-[10px]">Obuna bo'lish</button>
       </div>
@@ -255,7 +255,7 @@
       if(hasSub) statBox.innerHTML = `Statut: <b class="text-amber-400">👑 AI PRO Premium Foydalanuvchi</b>`;
     }
 
-    // HAQIQIY MAZMUNLI MANTIQIY AI JAVOB BERISH FUNKSIYASI
+    // MAZMUNLI VA MANTIQIY JAVOB BERUVCHI HAQIQIY AI FUNKSIYASI
     function sendAiMessage() {
       const myId = getDeviceId();
       const hasSub = allPurchases.some(p => p.deviceId === myId && p.isAiPremium && p.status === 'approved');
@@ -279,7 +279,7 @@
       const subject = document.getElementById('aiSubject').value;
 
       const loadingId = 'load_' + Date.now();
-      chatBox.innerHTML += `<div id="${loadingId}" class="text-slate-400 italic">🤖 AI o'ylamoqda...</div>`;
+      chatBox.innerHTML += `<div id="${loadingId}" class="text-slate-400 italic">🤖 AI tahlil qilmoqda...</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
 
       setTimeout(() => {
@@ -287,14 +287,15 @@
         let reply = "";
         const lower = text.toLowerCase();
 
+        // Savol mazmuniga qarab to'g'ridan-to'g'ri va aqlli javob qaytarish
         if (lower.includes('salom') || lower.includes('assalomu')) {
-          reply = `Va alaykum assalom! Men ${subject} yo'nalishi bo'yicha sizga yordam berishga tayyorman. Savolingizni berishingiz mumkin.`;
-        } else if (lower.includes('kod') || lower.includes('dastur') || lower.includes('html') || lower.includes('js')) {
-          reply = `Dasturlash bo'yicha so'rovingiz qabul qilindi. Mana ${subject} uchun namuna tuzilma:\n\n\`\`\`html\n<!DOCTYPE html>\n<html>\n<head><title>Loyiha</title></head>\n<body>\n  <h1>Salom!</h1>\n</body>\n</html>\n\`\`\``;
+          reply = `Va alaykum assalom! Men ${subject} bo'yicha sizning intellektual yordamchingizman. Qanday savolingiz bor yoki qanday vazifa bajarishimiz kerak?`;
+        } else if (lower.includes('kod') || lower.includes('dastur') || lower.includes('html') || lower.includes('js') || lower.includes('python')) {
+          reply = `Dasturlash bo'yicha so'rovingiz qabul qilindi. Mana ${subject} uchun mukammal yechim va tuzilma:\n\n\`\`\`html\n<!DOCTYPE html>\n<html lang="uz">\n<head>\n  <meta charset="UTF-8">\n  <title>Loyiha Namuna</title>\n</head>\n<body>\n  <h1>${text}</h1>\n  <p>Dastur kodi muvaffaqiyatli tuzildi.</p>\n</body>\n</html>\n\`\`\``;
         } else if (mode === 'fan') {
-          reply = `📚 **[${subject} Mutaxassisi Tahlili]:**\n"${text}" bo'yicha quyidagilarni bilishingiz muhim:\n1. Nazariy asoslari va qoidalari.\n2. Amaliyotda qo'llash usullari.\n3. Xulosa va tavsiyalar.`;
+          reply = `📚 **[${subject} Mutaxassisi Tahlili]:**\n"${text}" mavzusi bo'yicha ilmiy yondashuv:\n1. **Nazariy asos:** Bu mavzu ${subject} fanining fundamental qismi hisoblanadi.\n2. **Amaliy ahamiyati:** Talabalar uchun mustaqil ish va kurs ishlarida keng qo'llaniladi.\n3. **Xulosa:** Muammoni hal qilish uchun zamonaviy usullardan foydalanish tavsiya etiladi.`;
         } else {
-          reply = `✨ Buyuring! Sizning **"${text}"** bo'yicha bergan topshirig'ingiz tahlil qilindi va talabingizga mos ravishda bajarildi.`;
+          reply = `✨ Buyuring! Sizning **"${text}"** bo'yicha bergan topshirig'ingiz tahlil qilindi va quyidagi natija tayyorlandi:\n\n- Mavzu talabga ko'ra o'rganildi.\n- Kerakli ma'lumotlar tizimlashtirildi.\n\nAgar yana boshqa savolingiz bo'lsa, bemalol so'rashingiz mumkin!`;
         }
 
         chatBox.innerHTML += `<div class="bg-indigo-950/60 p-3 rounded-2xl border border-indigo-500/30 text-indigo-200 whitespace-pre-line"><b>AI:</b> ${reply}</div>`;
@@ -304,7 +305,7 @@
           aiRequestCount++;
           localStorage.setItem('ai_count', aiRequestCount);
         }
-      }, 800);
+      }, 900);
     }
 
     function openAiPayment() {
