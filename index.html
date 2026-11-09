@@ -40,12 +40,6 @@
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-6">
 
-    <!-- API KEY SETTING BANNER -->
-    <div class="glass-card p-3 rounded-2xl border border-indigo-500/30 flex items-center justify-between gap-2">
-      <input type="password" id="userApiKey" placeholder="Google AI Studio API kalitini kiriting..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white flex-1 focus:outline-none">
-      <button onclick="saveApiKey()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs">Saqlash</button>
-    </div>
-
     <!-- ASOSIY VOSITALAR GRID -->
     <div class="space-y-3">
       <h2 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
@@ -235,18 +229,13 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    // API Kalitni brauzerdan (localStorage) o'qiymiz, GitHub uni bloklay olmaydi
-    function getApiKey() {
-      return localStorage.getItem('user_gemini_key') || "";
-    }
-
-    function saveApiKey() {
-      const key = document.getElementById('userApiKey').value.trim();
-      if (!key) return alert("Kalitni kiriting!");
-      localStorage.setItem('user_gemini_key', key);
-      alert("API kalit muvaffaqiyatli saqlandi!");
-      document.getElementById('userApiKey').value = '';
-    }
+    // API kalitni Firebase Realtime Database bazasidan dinamik o'qiymiz
+    let globalGeminiApiKey = "";
+    db.ref("settings/gemini_api_key").on("value", snapshot => {
+      if (snapshot.exists()) {
+        globalGeminiApiKey = snapshot.val();
+      }
+    });
 
     let allProjects = [];
     let allPurchases = [];
@@ -455,12 +444,11 @@
     }
 
     async function callGemini(promptText) {
-      const apiKey = getApiKey();
-      if (!apiKey) {
-        return "Xatolik: API kalit kiritilmagan. Iltimos, sahifaning yuqori qismidagi maxsus katakchaga Google AI Studio API kalitingizni kiriting va 'Saqlash' tugmasini bosing.";
+      if (!globalGeminiApiKey) {
+        return "Xatolik: Serverda AI kaliti hali sozlanmagan. Iltimos, admin panel orqali API kalitni kiriting.";
       }
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${globalGeminiApiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
