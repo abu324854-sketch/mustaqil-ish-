@@ -26,32 +26,6 @@
 </head>
 <body class="pb-24">
 
-  <!-- TELEFON RAQAM BILAN KIRISH (LOGIN) MODALI -->
-  <div id="authModal" class="fixed inset-0 bg-[#070a13]/95 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden">
-    <div class="glass-card w-full max-w-sm rounded-3xl p-6 border border-indigo-500/30 shadow-2xl space-y-4">
-      <div class="text-center space-y-1">
-        <div class="w-12 h-12 bg-indigo-600/20 text-indigo-400 rounded-2xl mx-auto flex items-center justify-center text-xl font-bold border border-indigo-500/30">
-          <i class="fa-solid fa-shield-halved"></i>
-        </div>
-        <h2 class="text-base font-bold text-white">Shaxsiy Profilga Kirish</h2>
-        <p class="text-[11px] text-slate-400">Har bir talaba o'z telefon raqami bilan kirishi shart.</p>
-      </div>
-      <form onsubmit="handleAuth(event)" class="space-y-3">
-        <div>
-          <label class="block text-[11px] text-slate-400 mb-1">F.I.O (Ism Familiyangiz):</label>
-          <input type="text" id="authName" required placeholder="Masalan: Fattoxov Abdulloh" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
-        </div>
-        <div>
-          <label class="block text-[11px] text-slate-400 mb-1">Telefon Raqamingiz:</label>
-          <input type="tel" id="authPhone" required placeholder="+998 90 123 45 67" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
-        </div>
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg transition">
-          Tizimga Kirish va Saqlash
-        </button>
-      </form>
-    </div>
-  </div>
-
   <!-- HEADER -->
   <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
     <div class="flex items-center space-x-3">
@@ -60,7 +34,7 @@
       </div>
       <div>
         <h1 class="text-base font-bold dark:text-white text-slate-800 leading-tight">EduProjects PRO</h1>
-        <p id="headerUserPhone" class="text-[10px] text-indigo-400 font-medium">Profil yuklanmoqda...</p>
+        <p class="text-[10px] text-indigo-400 font-medium">Universitet Akademik Ekotizim</p>
       </div>
     </div>
     <div class="flex items-center gap-2">
@@ -75,11 +49,11 @@
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-6">
     
-    <!-- O'RNATISH (PWA) -->
+    <!-- PWA O'RNATISH TUGMASI -->
     <div id="installBox" class="hidden bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex items-center justify-between">
       <div>
         <h3 class="text-xs font-bold text-white"><i class="fa-solid fa-download text-indigo-400 mr-1"></i> Ilovani O'rnatish</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5">Telefoningizga to'g'ridan-to'g'ri dastur qilib o'rnating</p>
+        <p class="text-[10px] text-slate-300 mt-0.5">Telefon yoki kompyuterga dastur qilib o'rnating</p>
       </div>
       <button id="installBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-lg">O'rnatish</button>
     </div>
@@ -155,6 +129,7 @@
           <div class="text-center text-slate-500">Muloqot xonasi yuklanmoqda...</div>
         </div>
         <div class="flex gap-2">
+          <input type="text" id="forumAuthor" placeholder="Ismingiz..." class="w-1/3 bg-slate-900 border border-slate-700 rounded-xl px-2 py-2.5 text-xs text-white">
           <input type="text" id="forumMsg" placeholder="Fikr yoki savolingiz..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
           <button onclick="sendForumMessage()" class="bg-pink-600 hover:bg-pink-500 px-4 py-2.5 rounded-xl text-xs font-bold text-white">Yuborish</button>
         </div>
@@ -162,36 +137,25 @@
     </div>
   </div>
 
-  <!-- KABINET MODAL (PROFESSIONAL KORINISH) -->
+  <!-- KABINET MODAL (XARIDLAR VA STATUS) -->
   <div id="cabinetModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[85vh] overflow-y-auto space-y-4">
       <button onclick="toggleCabinet()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
       
       <div class="flex items-center space-x-3 border-b border-slate-800 pb-4">
         <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl font-bold border border-indigo-500/30">
-          <i class="fa-solid fa-user-shield"></i>
+          <i class="fa-solid fa-user-gear"></i>
         </div>
         <div>
-          <h3 id="cabUserName" class="text-sm font-bold text-white">Foydalanuvchi</h3>
-          <p id="cabUserPhone" class="text-xs text-indigo-400">+998 -- --- -- --</p>
-        </div>
-      </div>
-
-      <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl space-y-1">
-        <div class="text-[10px] uppercase text-slate-400 font-semibold">Tizimdagi Statusingiz</div>
-        <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-check"></i> Shaxsiy Akkaunt Himoyalangan
+          <h3 class="text-sm font-bold text-white">Mening Kabinetim</h3>
+          <p class="text-[10px] text-indigo-400">Shaxsiy xaridlar va yuklamalar</p>
         </div>
       </div>
 
       <div>
-        <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">Mening Xaridlarim & So'rovlarim</h4>
+        <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">Mening Xarid Qilingan Ishlarim</h4>
         <div id="myPurchasesList" class="space-y-2 text-xs"></div>
       </div>
-
-      <button onclick="logoutUser()" class="w-full bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 font-bold py-2.5 rounded-xl text-xs transition">
-        <i class="fa-solid fa-right-from-bracket mr-1"></i> Profildan Chiqish (Boshqa raqamga o'tish)
-      </button>
     </div>
   </div>
 
@@ -218,46 +182,14 @@
   </div>
 
   <script>
-    // --- TELEFON RAQAM VA PROFILNI BINDING QILISH ---
-    let currentUser = JSON.parse(localStorage.getItem('edu_user_profile')) || null;
-
-    window.addEventListener('DOMContentLoaded', () => {
-      checkAuthStatus();
-    });
-
-    function checkAuthStatus() {
-      if (!currentUser || !currentUser.phone) {
-        document.getElementById('authModal').classList.remove('hidden');
-      } else {
-        document.getElementById('authModal').classList.add('hidden');
-        document.getElementById('headerUserPhone').innerText = `${currentUser.name} (${currentUser.phone})`;
-        document.getElementById('cabUserName').innerText = currentUser.name;
-        document.getElementById('cabUserPhone').innerText = currentUser.phone;
-        document.getElementById('studentName').value = currentUser.name;
-        document.getElementById('studentContact').value = currentUser.phone;
+    // Qurilma ID orqali avtomatik shaxsiy kabinetni tanib olish
+    function getDeviceId() {
+      let devId = localStorage.getItem('app_device_id');
+      if (!devId) {
+        devId = 'dev_' + Math.random().toString(36).substring(2, 11);
+        localStorage.setItem('app_device_id', devId);
       }
-    }
-
-    function handleAuth(e) {
-      e.preventDefault();
-      const name = document.getElementById('authName').value.trim();
-      const phone = document.getElementById('authPhone').value.trim();
-      if (!name || !phone) return alert("Ma'lumotlarni to'liq kiriting!");
-      
-      currentUser = { name, phone };
-      // Ilova o'chirilmaguncha yoki profildan chiqilmaguncha saqlanib turadi
-      localStorage.setItem('edu_user_profile', JSON.stringify(currentUser));
-      checkAuthStatus();
-      renderProjects();
-      renderCabinet();
-      alert("Xush kelibsiz, " + name + "! Sizning shaxsiy profilingiz faollashdi.");
-    }
-
-    function logoutUser() {
-      if (confirm("Haqiqatan ham profildan chiqmoqchimisiz? Boshqa raqam bilan kirish uchun qaytadan ma'lumot kiritasiz.")) {
-        localStorage.removeItem('edu_user_profile');
-        location.reload();
-      }
+      return devId;
     }
 
     // PWA O'rnatish
@@ -333,10 +265,10 @@
     });
 
     function sendForumMessage() {
-      if (!currentUser) return;
+      const author = document.getElementById('forumAuthor').value.trim() || 'Talaba';
       const text = document.getElementById('forumMsg').value.trim();
       if (!text) return;
-      db.ref("forum_messages").push().set({ author: currentUser.name, text, createdAt: Date.now() }).then(() => {
+      db.ref("forum_messages").push().set({ author, text, createdAt: Date.now() }).then(() => {
         document.getElementById('forumMsg').value = '';
       });
     }
@@ -395,12 +327,13 @@
     }
     function closeFullscreenTool() { document.getElementById('fullscreenModal').classList.add('hidden'); }
 
-    // PROFESSIONAL RENDER PROJECTS (Faqat shu foydalanuvchining telefoniga bog'langan holda ko'rsatish)
+    // LOYIHALARNI NARXI BILAN TO'G'RIDAN-TO'G'RI CHIQARISH
     function renderProjects() {
       const list = document.getElementById('projectsList');
-      if (!list || !currentUser) return;
+      if (!list) return;
       const searchInput = document.getElementById('searchInput');
       const search = searchInput ? searchInput.value.toLowerCase() : '';
+      const myDeviceId = getDeviceId();
       list.innerHTML = '';
       
       if (!allProjects || allProjects.length === 0) {
@@ -415,8 +348,7 @@
       }
 
       filtered.forEach(p => {
-        // Faqat shu foydalanuvchining telefon raqami yoki ismi bo'yicha qilingan xaridlarni tekshiramiz
-        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.studentContact === currentUser.phone);
+        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.deviceId === myDeviceId);
         let statusTag = '', actionBtn = '';
         const priceFormatted = Number(p.price || 0).toLocaleString();
         const fileSource = p.fileData || p.fileUrl || '#';
@@ -439,19 +371,19 @@
             </div>
             <h3 class="text-xs font-bold dark:text-white text-slate-800">${p.title}</h3>
             <p class="text-[11px] text-slate-400">${p.description || ''}</p>
-            <div class="text-xs font-bold text-slate-200">${priceFormatted} UZS</div>
+            <div class="text-xs font-bold text-slate-200">Narxi: <span class="text-indigo-400">${priceFormatted} UZS</span></div>
             ${actionBtn}
           </div>
         `;
       });
     }
 
+    // KABINETDA FAQAT SHU QURILMANING XARidlARINI KO'RSATISH
     function renderCabinet() {
-      if (!currentUser) return;
+      const myDeviceId = getDeviceId();
       const container = document.getElementById('myPurchasesList');
       if (!container) return;
-      // Faqat shu talabaning telefon raqamiga tegishli xaridlar
-      const myPurchases = allPurchases.filter(req => req.studentContact === currentUser.phone);
+      const myPurchases = allPurchases.filter(req => req.deviceId === myDeviceId);
       container.innerHTML = myPurchases.length ? '' : `<div class="text-[11px] text-slate-500 italic py-2">Sizda hozircha xaridlar yo'q</div>`;
       myPurchases.forEach(req => {
         const p = allProjects.find(item => item.id === req.projectId) || { title: 'Loyiha' };
@@ -486,17 +418,17 @@
 
     function submitPayment(e) {
       e.preventDefault();
-      if (!currentUser) return;
       db.ref("purchases").push().set({
         projectId: document.getElementById('modalProjectId').value || null,
-        studentName: currentUser.name,
-        studentContact: currentUser.phone,
+        studentName: document.getElementById('studentName').value,
+        studentContact: document.getElementById('studentContact').value,
         paidAmount: Number(document.getElementById('paidAmount').value),
         receiptImage: base64Receipt,
+        deviceId: getDeviceId(),
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan profilingizda ochiladi.");
+        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan kabinetingizda ochiladi.");
         closeModal();
       });
     }
