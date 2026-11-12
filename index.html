@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduProjects - Professional AI Akademik Ekotizim</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#070a13">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { darkMode: 'class' }
@@ -35,11 +37,8 @@
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 text-xs">
+      <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 text-xs" title="Rejimni o'zgartirish">
         <i id="themeIcon" class="fa-solid fa-moon"></i>
-      </button>
-      <button onclick="showMaintenanceAlert()" class="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md flex items-center gap-1.5">
-        <i class="fa-solid fa-robot"></i> AI Agent
       </button>
       <button onclick="toggleCabinet()" class="bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
         <i class="fa-solid fa-user text-indigo-400"></i> Kabinetim
@@ -48,20 +47,28 @@
   </header>
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-6">
+    
+    <!-- ILOVANI TELEFON/KOMPYUTERGA O'RNATISH TUGMASI -->
+    <div id="installBox" class="hidden bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex items-center justify-between">
+      <div>
+        <h3 class="text-xs font-bold text-white"><i class="fa-solid fa-download text-indigo-400 mr-1"></i> Ilovani O'rnatish</h3>
+        <p class="text-[10px] text-slate-300 mt-0.5">Telefon yoki kompyuterga dastur qilib o'rnating</p>
+      </div>
+      <button id="installBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-lg">O'rnatish</button>
+    </div>
+
     <div class="space-y-3">
       <h2 class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider flex items-center gap-2">
         <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> Akademik AI Vositalari
       </h2>
       <div class="grid grid-cols-2 gap-3">
-        <!-- AI Super Agent (Amaliyotda) -->
         <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800 relative">
           <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
           <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-base"><i class="fa-solid fa-brain"></i></div>
           <div class="text-xs font-bold dark:text-white text-slate-800">AI Super Agent</div>
-          <p class="text-[10px] text-slate-400">Matn, rasm va ovozli yordam</p>
+          <p class="text-[10px] text-slate-400">Matn va ovozli yordam</p>
         </div>
 
-        <!-- AI Rezyume Builder (Amaliyotda) -->
         <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-blue-500/30 relative">
           <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
           <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-base"><i class="fa-solid fa-id-card"></i></div>
@@ -69,21 +76,18 @@
           <p class="text-[10px] text-slate-400">Professional CV yaratish</p>
         </div>
 
-        <!-- Plagiat Tekshiruvchi (Faol) -->
         <div onclick="openFullscreenTool('plagiarism')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-orange-500/30">
           <div class="w-9 h-9 rounded-xl bg-orange-600/20 text-orange-400 flex items-center justify-center text-base"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
           <div class="text-xs font-bold dark:text-white text-slate-800">Plagiat Tekshiruvchi</div>
           <p class="text-[10px] text-slate-400">Originalik tahlili</p>
         </div>
 
-        <!-- Ilmiy Forum Chat (Faol) -->
         <div onclick="openFullscreenTool('forum')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-pink-500/30">
           <div class="w-9 h-9 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center text-base"><i class="fa-solid fa-comments"></i></div>
           <div class="text-xs font-bold dark:text-white text-slate-800">Ilmiy Forum Chat</div>
           <p class="text-[10px] text-slate-400">Talabalar muloqot xonasi</p>
         </div>
 
-        <!-- Ilmiy Ish / Referat (Amaliyotda) -->
         <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-emerald-500/30 relative">
           <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
           <div class="w-9 h-9 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-base"><i class="fa-solid fa-file-pen"></i></div>
@@ -91,7 +95,6 @@
           <p class="text-[10px] text-slate-400">To'liq strukturali matn</p>
         </div>
 
-        <!-- Test Markazi (Amaliyotda) -->
         <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800 relative">
           <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
           <div class="w-9 h-9 rounded-xl bg-amber-600/20 text-amber-400 flex items-center justify-center text-base"><i class="fa-solid fa-list-check"></i></div>
@@ -117,7 +120,7 @@
     </div>
   </main>
 
-  <!-- MODAL WINDOW (FULLSCREEN TOOLS) -->
+  <!-- MODAL WINDOW -->
   <div id="fullscreenModal" class="fixed inset-0 dark:bg-[#070a13] bg-slate-100 z-50 hidden flex flex-col">
     <div class="glass-card px-4 py-3.5 flex justify-between items-center border-b border-slate-800">
       <div class="flex items-center space-x-2">
@@ -128,14 +131,12 @@
     </div>
     <div class="flex-1 overflow-y-auto p-4 max-w-lg mx-auto w-full space-y-4">
       
-      <!-- Plagiat Tahlilchisi -->
       <div id="tool-view-plagiarism" class="tool-view space-y-3 hidden">
         <textarea id="plagiarismText" rows="6" placeholder="Tekshiriladigan matnni kiriting..." class="w-full bg-slate-950 border border-slate-800 font-mono text-xs p-3 rounded-xl text-slate-300 focus:outline-none"></textarea>
         <button onclick="checkPlagiarism()" class="w-full bg-orange-600 hover:bg-orange-500 py-2.5 rounded-xl text-xs font-bold text-white">Originalikni Tahlil Qilish</button>
         <div id="plagiarismOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 hidden"></div>
       </div>
 
-      <!-- Ilmiy Forum Chat -->
       <div id="tool-view-forum" class="tool-view space-y-3 hidden">
         <div id="forumChatBox" class="bg-slate-950 h-[50vh] rounded-2xl p-3 border border-slate-800 overflow-y-auto space-y-3 text-xs text-slate-300">
           <div class="text-center text-slate-500">Muloqot xonasi yuklanmoqda...</div>
@@ -185,6 +186,25 @@
   </div>
 
   <script>
+    // PWA O'rnatish logikasi
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installBox').classList.remove('hidden');
+    });
+
+    document.getElementById('installBtn').addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          document.getElementById('installBox').classList.add('hidden');
+        }
+        deferredPrompt = null;
+      }
+    });
+
     const firebaseConfig = {
       apiKey: "AIzaSyDMmB0tW-JGizWSOdlFJJd68p6sksrlS_8",
       authDomain: "mustaqil-ish-63c2c.firebaseapp.com",
