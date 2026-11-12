@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduProjects - Professional Akademik Ekotizim</title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#070a13">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -97,11 +97,22 @@
       <h2 class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider flex items-center gap-2">
         <i class="fa-solid fa-folder-open text-indigo-400"></i> Tayyor Ishlar va Loyihalar
       </h2>
-      <div class="relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-        <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha nomini kiriting..." 
-               class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
+      
+      <!-- QIDIRUV VA KATEGORIYA FILTERLARI -->
+      <div class="space-y-2">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+          <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha nomini kiriting..." 
+                 class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
+        </div>
+        <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
+          <button onclick="filterCategory('Barchasi')" id="cat_Barchasi" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition">Barchasi</button>
+          <button onclick="filterCategory('Mustaqil ish')" id="cat_Mustaqil_ish" class="bg-slate-900 border border-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition">Mustaqil ish</button>
+          <button onclick="filterCategory('Veb-sayt')" id="cat_Veb_sayt" class="bg-slate-900 border border-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition">Veb-sayt</button>
+          <button onclick="filterCategory('Kurs ishi')" id="cat_Kurs_ishi" class="bg-slate-900 border border-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition">Kurs ishi</button>
+        </div>
       </div>
+
       <div id="projectsList" class="space-y-3">
         <div class="text-center py-8 text-slate-500 text-xs">Loyihalar yuklanmoqda...</div>
       </div>
@@ -137,7 +148,7 @@
     </div>
   </div>
 
-  <!-- KABINET MODAL (XARIDLAR VA STATUS) -->
+  <!-- KABINET MODAL -->
   <div id="cabinetModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[85vh] overflow-y-auto space-y-4">
       <button onclick="toggleCabinet()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -182,7 +193,6 @@
   </div>
 
   <script>
-    // Qurilma ID orqali avtomatik shaxsiy kabinetni tanib olish
     function getDeviceId() {
       let devId = localStorage.getItem('app_device_id');
       if (!devId) {
@@ -298,6 +308,24 @@
     let allPurchases = [];
     let adminCards = [];
     let base64Receipt = '';
+    let currentCategory = 'Barchasi';
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      // Tugmalar rangini o'zgartirish
+      ['Barchasi', 'Mustaqil ish', 'Veb-sayt', 'Kurs ishi'].forEach(c => {
+        const btnId = 'cat_' + c.replace(/\s+/g, '_');
+        const btn = document.getElementById(btnId);
+        if (btn) {
+          if (c === cat) {
+            btn.className = "bg-indigo-600 text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition";
+          } else {
+            btn.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition";
+          }
+        }
+      });
+      renderProjects();
+    }
 
     db.ref("projects").on("value", snapshot => {
       const data = snapshot.val();
@@ -327,7 +355,6 @@
     }
     function closeFullscreenTool() { document.getElementById('fullscreenModal').classList.add('hidden'); }
 
-    // LOYIHALARNI NARXI BILAN TO'G'RIDAN-TO'G'RI CHIQARISH
     function renderProjects() {
       const list = document.getElementById('projectsList');
       if (!list) return;
@@ -341,7 +368,12 @@
         return;
       }
 
-      const filtered = allProjects.filter(p => p.title && p.title.toLowerCase().includes(search));
+      const filtered = allProjects.filter(p => {
+        const matchesSearch = p.title && p.title.toLowerCase().includes(search);
+        const matchesCat = (currentCategory === 'Barchasi' || p.category === currentCategory);
+        return matchesSearch && matchesCat;
+      });
+
       if (filtered.length === 0) {
         list.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">Qidiruv bo'yicha loyihalar topilmadi.</div>`;
         return;
@@ -378,7 +410,6 @@
       });
     }
 
-    // KABINETDA FAQAT SHU QURILMANING XARidlARINI KO'RSATISH
     function renderCabinet() {
       const myDeviceId = getDeviceId();
       const container = document.getElementById('myPurchasesList');
