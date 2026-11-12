@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduProjects - Professional AI Akademik Ekotizim</title>
+  <title>EduProjects - Professional Akademik Ekotizim</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#070a13">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -25,6 +25,33 @@
   </style>
 </head>
 <body class="pb-24">
+
+  <!-- TELEFON RAQAM BILAN KIRISH (LOGIN) MODALI -->
+  <div id="authModal" class="fixed inset-0 bg-[#070a13]/95 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 border border-indigo-500/30 shadow-2xl space-y-4">
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 bg-indigo-600/20 text-indigo-400 rounded-2xl mx-auto flex items-center justify-center text-xl font-bold border border-indigo-500/30">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2 class="text-base font-bold text-white">Shaxsiy Profilga Kirish</h2>
+        <p class="text-[11px] text-slate-400">Har bir talaba o'z telefon raqami bilan kirishi shart.</p>
+      </div>
+      <form onsubmit="handleAuth(event)" class="space-y-3">
+        <div>
+          <label class="block text-[11px] text-slate-400 mb-1">F.I.O (Ism Familiyangiz):</label>
+          <input type="text" id="authName" required placeholder="Masalan: Fattoxov Abdulloh" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-[11px] text-slate-400 mb-1">Telefon Raqamingiz:</label>
+          <input type="tel" id="authPhone" required placeholder="+998 90 123 45 67" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg transition">
+          Tizimga Kirish va Saqlash
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- HEADER -->
   <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
     <div class="flex items-center space-x-3">
@@ -33,7 +60,7 @@
       </div>
       <div>
         <h1 class="text-base font-bold dark:text-white text-slate-800 leading-tight">EduProjects PRO</h1>
-        <p class="text-[11px] text-indigo-400 font-medium">Universitet Akademik Ekotizim</p>
+        <p id="headerUserPhone" class="text-[10px] text-indigo-400 font-medium">Profil yuklanmoqda...</p>
       </div>
     </div>
     <div class="flex items-center gap-2">
@@ -48,15 +75,16 @@
 
   <main class="max-w-md mx-auto px-4 mt-6 space-y-6">
     
-    <!-- ILOVANI TELEFON/KOMPYUTERGA O'RNATISH TUGMASI -->
+    <!-- O'RNATISH (PWA) -->
     <div id="installBox" class="hidden bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex items-center justify-between">
       <div>
         <h3 class="text-xs font-bold text-white"><i class="fa-solid fa-download text-indigo-400 mr-1"></i> Ilovani O'rnatish</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5">Telefon yoki kompyuterga dastur qilib o'rnating</p>
+        <p class="text-[10px] text-slate-300 mt-0.5">Telefoningizga to'g'ridan-to'g'ri dastur qilib o'rnating</p>
       </div>
       <button id="installBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-lg">O'rnatish</button>
     </div>
 
+    <!-- AI VOSITALARI -->
     <div class="space-y-3">
       <h2 class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider flex items-center gap-2">
         <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> Akademik AI Vositalari
@@ -87,20 +115,6 @@
           <div class="text-xs font-bold dark:text-white text-slate-800">Ilmiy Forum Chat</div>
           <p class="text-[10px] text-slate-400">Talabalar muloqot xonasi</p>
         </div>
-
-        <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-emerald-500/30 relative">
-          <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
-          <div class="w-9 h-9 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-base"><i class="fa-solid fa-file-pen"></i></div>
-          <div class="text-xs font-bold dark:text-white text-slate-800">Ilmiy Ish / Referat</div>
-          <p class="text-[10px] text-slate-400">To'liq strukturali matn</p>
-        </div>
-
-        <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800 relative">
-          <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
-          <div class="w-9 h-9 rounded-xl bg-amber-600/20 text-amber-400 flex items-center justify-center text-base"><i class="fa-solid fa-list-check"></i></div>
-          <div class="text-xs font-bold dark:text-white text-slate-800">Test Markazi</div>
-          <p class="text-[10px] text-slate-400">Interaktiv testlar</p>
-        </div>
       </div>
     </div>
 
@@ -120,7 +134,7 @@
     </div>
   </main>
 
-  <!-- MODAL WINDOW -->
+  <!-- MODAL WINDOW (TOOLS) -->
   <div id="fullscreenModal" class="fixed inset-0 dark:bg-[#070a13] bg-slate-100 z-50 hidden flex flex-col">
     <div class="glass-card px-4 py-3.5 flex justify-between items-center border-b border-slate-800">
       <div class="flex items-center space-x-2">
@@ -130,7 +144,6 @@
       <button onclick="closeFullscreenTool()" class="text-slate-400 hover:text-white text-base px-2"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="flex-1 overflow-y-auto p-4 max-w-lg mx-auto w-full space-y-4">
-      
       <div id="tool-view-plagiarism" class="tool-view space-y-3 hidden">
         <textarea id="plagiarismText" rows="6" placeholder="Tekshiriladigan matnni kiriting..." class="w-full bg-slate-950 border border-slate-800 font-mono text-xs p-3 rounded-xl text-slate-300 focus:outline-none"></textarea>
         <button onclick="checkPlagiarism()" class="w-full bg-orange-600 hover:bg-orange-500 py-2.5 rounded-xl text-xs font-bold text-white">Originalikni Tahlil Qilish</button>
@@ -142,24 +155,43 @@
           <div class="text-center text-slate-500">Muloqot xonasi yuklanmoqda...</div>
         </div>
         <div class="flex gap-2">
-          <input type="text" id="forumAuthor" placeholder="Ismingiz..." class="w-1/3 bg-slate-900 border border-slate-700 rounded-xl px-2 py-2.5 text-xs text-white">
           <input type="text" id="forumMsg" placeholder="Fikr yoki savolingiz..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
           <button onclick="sendForumMessage()" class="bg-pink-600 hover:bg-pink-500 px-4 py-2.5 rounded-xl text-xs font-bold text-white">Yuborish</button>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- KABINET MODAL -->
+  <!-- KABINET MODAL (PROFESSIONAL KORINISH) -->
   <div id="cabinetModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[85vh] overflow-y-auto">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[85vh] overflow-y-auto space-y-4">
       <button onclick="toggleCabinet()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
-      <h3 class="text-base font-bold text-white mb-1">Mening Kabinetim</h3>
-      <div id="aiStatusBadge" class="text-[11px] text-indigo-300 mb-4">Statut: Oddiy Foydalanuvchi</div>
-      <button onclick="showMaintenanceAlert()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs mb-4">👑 AI PRO Obuna Sotib Olish</button>
-      <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase">Mening Xaridlarim</h4>
-      <div id="myPurchasesList" class="space-y-2 text-xs"></div>
+      
+      <div class="flex items-center space-x-3 border-b border-slate-800 pb-4">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl font-bold border border-indigo-500/30">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <div>
+          <h3 id="cabUserName" class="text-sm font-bold text-white">Foydalanuvchi</h3>
+          <p id="cabUserPhone" class="text-xs text-indigo-400">+998 -- --- -- --</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl space-y-1">
+        <div class="text-[10px] uppercase text-slate-400 font-semibold">Tizimdagi Statusingiz</div>
+        <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-check"></i> Shaxsiy Akkaunt Himoyalangan
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">Mening Xaridlarim & So'rovlarim</h4>
+        <div id="myPurchasesList" class="space-y-2 text-xs"></div>
+      </div>
+
+      <button onclick="logoutUser()" class="w-full bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 font-bold py-2.5 rounded-xl text-xs transition">
+        <i class="fa-solid fa-right-from-bracket mr-1"></i> Profildan Chiqish (Boshqa raqamga o'tish)
+      </button>
     </div>
   </div>
 
@@ -177,7 +209,7 @@
       <form onsubmit="submitPayment(event)" class="space-y-3">
         <input type="hidden" id="modalProjectId">
         <input type="text" id="studentName" required placeholder="Ism Familiyangiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        <input type="text" id="studentContact" required placeholder="Telegram / Telefon" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        <input type="text" id="studentContact" required placeholder="Telefon raqamingiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
         <input type="number" id="paidAmount" required placeholder="O'tkazilgan summa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
         <input type="file" id="receiptImg" accept="image/*" required onchange="encodeImageFileAsURL(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white">
         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs">Chekni Yuborish</button>
@@ -186,7 +218,49 @@
   </div>
 
   <script>
-    // PWA O'rnatish logikasi
+    // --- TELEFON RAQAM VA PROFILNI BINDING QILISH ---
+    let currentUser = JSON.parse(localStorage.getItem('edu_user_profile')) || null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAuthStatus();
+    });
+
+    function checkAuthStatus() {
+      if (!currentUser || !currentUser.phone) {
+        document.getElementById('authModal').classList.remove('hidden');
+      } else {
+        document.getElementById('authModal').classList.add('hidden');
+        document.getElementById('headerUserPhone').innerText = `${currentUser.name} (${currentUser.phone})`;
+        document.getElementById('cabUserName').innerText = currentUser.name;
+        document.getElementById('cabUserPhone').innerText = currentUser.phone;
+        document.getElementById('studentName').value = currentUser.name;
+        document.getElementById('studentContact').value = currentUser.phone;
+      }
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      const name = document.getElementById('authName').value.trim();
+      const phone = document.getElementById('authPhone').value.trim();
+      if (!name || !phone) return alert("Ma'lumotlarni to'liq kiriting!");
+      
+      currentUser = { name, phone };
+      // Ilova o'chirilmaguncha yoki profildan chiqilmaguncha saqlanib turadi
+      localStorage.setItem('edu_user_profile', JSON.stringify(currentUser));
+      checkAuthStatus();
+      renderProjects();
+      renderCabinet();
+      alert("Xush kelibsiz, " + name + "! Sizning shaxsiy profilingiz faollashdi.");
+    }
+
+    function logoutUser() {
+      if (confirm("Haqiqatan ham profildan chiqmoqchimisiz? Boshqa raqam bilan kirish uchun qaytadan ma'lumot kiritasiz.")) {
+        localStorage.removeItem('edu_user_profile');
+        location.reload();
+      }
+    }
+
+    // PWA O'rnatish
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -233,6 +307,7 @@
       }
     }
 
+    // FORUM
     db.ref("forum_messages").on("value", snapshot => {
       const box = document.getElementById('forumChatBox');
       if (!box) return;
@@ -258,10 +333,10 @@
     });
 
     function sendForumMessage() {
-      const author = document.getElementById('forumAuthor').value.trim() || 'Talaba';
+      if (!currentUser) return;
       const text = document.getElementById('forumMsg').value.trim();
       if (!text) return;
-      db.ref("forum_messages").push().set({ author, text, createdAt: Date.now() }).then(() => {
+      db.ref("forum_messages").push().set({ author: currentUser.name, text, createdAt: Date.now() }).then(() => {
         document.getElementById('forumMsg').value = '';
       });
     }
@@ -292,25 +367,18 @@
     let adminCards = [];
     let base64Receipt = '';
 
-    function getDeviceId() {
-      let devId = localStorage.getItem('app_device_id');
-      if (!devId) {
-        devId = 'dev_' + Math.random().toString(36).substring(2, 11);
-        localStorage.setItem('app_device_id', devId);
-      }
-      return devId;
-    }
-
     db.ref("projects").on("value", snapshot => {
       const data = snapshot.val();
       allProjects = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
       renderProjects(); renderCabinet();
     });
+
     db.ref("purchases").on("value", snapshot => {
       const data = snapshot.val();
       allPurchases = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
       renderProjects(); renderCabinet();
     });
+
     db.ref("settings/cards").on("value", snapshot => {
       const data = snapshot.val();
       adminCards = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
@@ -327,16 +395,16 @@
     }
     function closeFullscreenTool() { document.getElementById('fullscreenModal').classList.add('hidden'); }
 
+    // PROFESSIONAL RENDER PROJECTS (Faqat shu foydalanuvchining telefoniga bog'langan holda ko'rsatish)
     function renderProjects() {
       const list = document.getElementById('projectsList');
-      if (!list) return;
+      if (!list || !currentUser) return;
       const searchInput = document.getElementById('searchInput');
       const search = searchInput ? searchInput.value.toLowerCase() : '';
-      const myDeviceId = getDeviceId();
       list.innerHTML = '';
       
       if (!allProjects || allProjects.length === 0) {
-        list.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">Hozircha loyihalar mavjud emas. Admin tomonidan yuklanishi kutilmoqda.</div>`;
+        list.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">Hozircha loyihalar mavjud emas.</div>`;
         return;
       }
 
@@ -347,7 +415,8 @@
       }
 
       filtered.forEach(p => {
-        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.deviceId === myDeviceId);
+        // Faqat shu foydalanuvchining telefon raqami yoki ismi bo'yicha qilingan xaridlarni tekshiramiz
+        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.studentContact === currentUser.phone);
         let statusTag = '', actionBtn = '';
         const priceFormatted = Number(p.price || 0).toLocaleString();
         const fileSource = p.fileData || p.fileUrl || '#';
@@ -363,7 +432,7 @@
         }
 
         list.innerHTML += `
-          <div class="glass-card p-4 rounded-2xl relative space-y-2">
+          <div class="glass-card p-4 rounded-2xl relative space-y-2 border border-slate-800">
             <div class="flex justify-between items-center">
               <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
               ${statusTag}
@@ -378,15 +447,16 @@
     }
 
     function renderCabinet() {
-      const myDeviceId = getDeviceId();
+      if (!currentUser) return;
       const container = document.getElementById('myPurchasesList');
       if (!container) return;
-      const myPurchases = allPurchases.filter(req => req.deviceId === myDeviceId);
-      container.innerHTML = myPurchases.length ? '' : `<div class="text-[11px] text-slate-500 italic">Xaridlar yo'q</div>`;
+      // Faqat shu talabaning telefon raqamiga tegishli xaridlar
+      const myPurchases = allPurchases.filter(req => req.studentContact === currentUser.phone);
+      container.innerHTML = myPurchases.length ? '' : `<div class="text-[11px] text-slate-500 italic py-2">Sizda hozircha xaridlar yo'q</div>`;
       myPurchases.forEach(req => {
         const p = allProjects.find(item => item.id === req.projectId) || { title: 'Loyiha' };
         let badge = req.status === 'approved' ? `<span class="text-emerald-400 font-bold">Tasdiqlangan</span>` : `<span class="text-amber-400">Tekshirilmoqda</span>`;
-        container.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-xs flex justify-between"><span class="truncate max-w-[170px]">${p.title}</span>${badge}</div>`;
+        container.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-xs flex justify-between items-center"><span class="truncate max-w-[170px] text-white font-medium">${p.title}</span>${badge}</div>`;
       });
     }
 
@@ -402,7 +472,7 @@
       const cContainer = document.getElementById('cardsContainer');
       cContainer.innerHTML = '';
       adminCards.forEach(c => {
-        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-between text-xs font-mono mb-2"><span>${c.number}</span><span class="text-slate-400">(${c.holder})</span></div>`;
+        cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-between text-xs font-mono mb-2 text-white"><span>${c.number}</span><span class="text-slate-400">(${c.holder})</span></div>`;
       });
       document.getElementById('paymentModal').classList.remove('hidden');
     }
@@ -416,17 +486,17 @@
 
     function submitPayment(e) {
       e.preventDefault();
+      if (!currentUser) return;
       db.ref("purchases").push().set({
         projectId: document.getElementById('modalProjectId').value || null,
-        studentName: document.getElementById('studentName').value,
-        studentContact: document.getElementById('studentContact').value,
+        studentName: currentUser.name,
+        studentContact: currentUser.phone,
         paidAmount: Number(document.getElementById('paidAmount').value),
         receiptImage: base64Receipt,
-        deviceId: getDeviceId(),
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan ochiladi.");
+        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan profilingizda ochiladi.");
         closeModal();
       });
     }
