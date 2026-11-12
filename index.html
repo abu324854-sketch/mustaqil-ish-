@@ -14,20 +14,20 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <style>
-    body { font-family: sans-serif; transition: background-color 0.3s, color 0.3s; }
+    body { font-family: sans-serif; transition: background-color 0.2s, color 0.2s; }
     .dark body { background-color: #070a13; color: #f8fafc; }
     .light body { background-color: #f1f5f9; color: #0f172a; }
-    .glass-card { backdrop-filter: blur(16px); }
-    .dark .glass-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.08); }
-    .light .glass-card { background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(0, 0, 0, 0.08); }
-    .tool-card { transition: all 0.2s ease; }
-    .tool-card:hover { transform: translateY(-3px); }
+    .glass-card { backdrop-filter: blur(12px); }
+    .dark .glass-card { background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .light .glass-card { background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(0, 0, 0, 0.08); }
+    .tool-card { transition: transform 0.15s ease; }
+    .tool-card:active { transform: scale(0.97); }
   </style>
 </head>
 <body class="pb-24">
 
   <!-- HEADER -->
-  <header class="sticky top-0 z-40 glass-card px-4 py-4 flex justify-between items-center border-b border-slate-800">
+  <header class="sticky top-0 z-40 glass-card px-4 py-3.5 flex justify-between items-center border-b border-slate-800">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">
         <i class="fa-solid fa-graduation-cap"></i>
@@ -47,10 +47,10 @@
     </div>
   </header>
 
-  <main class="max-w-md mx-auto px-4 mt-6 space-y-6">
+  <main class="max-w-md mx-auto px-4 mt-5 space-y-6">
     
     <!-- PWA O'RNATISH TUGMASI -->
-    <div id="installBox" class="hidden bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-4 rounded-2xl flex items-center justify-between">
+    <div id="installBox" class="hidden bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-3.5 rounded-2xl flex items-center justify-between">
       <div>
         <h3 class="text-xs font-bold text-white"><i class="fa-solid fa-download text-indigo-400 mr-1"></i> Ilovani O'rnatish</h3>
         <p class="text-[10px] text-slate-300 mt-0.5">Telefon yoki kompyuterga dastur qilib o'rnating</p>
@@ -64,28 +64,28 @@
         <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> Akademik AI Vositalari
       </h2>
       <div class="grid grid-cols-2 gap-3">
-        <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-slate-800 relative">
+        <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-3.5 rounded-2xl cursor-pointer space-y-1.5 border border-slate-800 relative">
           <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
-          <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-base"><i class="fa-solid fa-brain"></i></div>
+          <div class="w-8 h-8 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-sm"><i class="fa-solid fa-brain"></i></div>
           <div class="text-xs font-bold dark:text-white text-slate-800">AI Super Agent</div>
           <p class="text-[10px] text-slate-400">Matn va ovozli yordam</p>
         </div>
 
-        <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-blue-500/30 relative">
+        <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-3.5 rounded-2xl cursor-pointer space-y-1.5 border border-blue-500/30 relative">
           <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
-          <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-base"><i class="fa-solid fa-id-card"></i></div>
+          <div class="w-8 h-8 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-sm"><i class="fa-solid fa-id-card"></i></div>
           <div class="text-xs font-bold dark:text-white text-slate-800">AI Rezyume Builder</div>
           <p class="text-[10px] text-slate-400">Professional CV yaratish</p>
         </div>
 
-        <div onclick="openFullscreenTool('plagiarism')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-orange-500/30">
-          <div class="w-9 h-9 rounded-xl bg-orange-600/20 text-orange-400 flex items-center justify-center text-base"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+        <div onclick="openFullscreenTool('plagiarism')" class="tool-card glass-card p-3.5 rounded-2xl cursor-pointer space-y-1.5 border border-orange-500/30">
+          <div class="w-8 h-8 rounded-xl bg-orange-600/20 text-orange-400 flex items-center justify-center text-sm"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
           <div class="text-xs font-bold dark:text-white text-slate-800">Plagiat Tekshiruvchi</div>
           <p class="text-[10px] text-slate-400">Originalik tahlili</p>
         </div>
 
-        <div onclick="openFullscreenTool('forum')" class="tool-card glass-card p-4 rounded-2xl cursor-pointer space-y-2 border border-pink-500/30">
-          <div class="w-9 h-9 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center text-base"><i class="fa-solid fa-comments"></i></div>
+        <div onclick="openFullscreenTool('forum')" class="tool-card glass-card p-3.5 rounded-2xl cursor-pointer space-y-1.5 border border-pink-500/30">
+          <div class="w-8 h-8 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center text-sm"><i class="fa-solid fa-comments"></i></div>
           <div class="text-xs font-bold dark:text-white text-slate-800">Ilmiy Forum Chat</div>
           <p class="text-[10px] text-slate-400">Talabalar muloqot xonasi</p>
         </div>
@@ -102,7 +102,7 @@
       <div class="space-y-2">
         <div class="relative">
           <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-          <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha nomini kiriting..." 
+          <input type="text" id="searchInput" oninput="debouncedSearch()" placeholder="Loyiha nomini kiriting..." 
                  class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
         </div>
         <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
@@ -114,7 +114,13 @@
       </div>
 
       <div id="projectsList" class="space-y-3">
-        <div class="text-center py-8 text-slate-500 text-xs">Loyihalar yuklanmoqda...</div>
+        <!-- Skeleton Loader (Tezkor ko'rinish uchun) -->
+        <div class="glass-card p-4 rounded-2xl border border-slate-800 animate-pulse space-y-2">
+          <div class="h-3 bg-slate-800 rounded w-1/4"></div>
+          <div class="h-4 bg-slate-800 rounded w-3/4"></div>
+          <div class="h-3 bg-slate-800 rounded w-1/2"></div>
+          <div class="h-8 bg-slate-800 rounded-xl w-full mt-2"></div>
+        </div>
       </div>
     </div>
   </main>
@@ -186,8 +192,8 @@
         <input type="text" id="studentName" required placeholder="Ism Familiyangiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
         <input type="text" id="studentContact" required placeholder="Telefon raqamingiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
         <input type="number" id="paidAmount" required placeholder="O'tkazilgan summa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        <input type="file" id="receiptImg" accept="image/*" required onchange="encodeImageFileAsURL(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white">
-        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs">Chekni Yuborish</button>
+        <input type="file" id="receiptImg" accept="image/*" required onchange="compressAndEncodeReceipt(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white">
+        <button type="submit" id="paySubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs">Chekni Yuborish</button>
       </form>
     </div>
   </div>
@@ -249,30 +255,35 @@
       }
     }
 
-    // FORUM
-    db.ref("forum_messages").on("value", snapshot => {
-      const box = document.getElementById('forumChatBox');
-      if (!box) return;
-      box.innerHTML = '';
-      const data = snapshot.val();
-      if (!data) {
-        box.innerHTML = `<div class="text-center text-slate-500">Muloqot xonasi bo'sh. Birinchi fikrni bildiring!</div>`;
-        return;
-      }
-      Object.keys(data).forEach(k => {
-        const m = data[k];
-        box.innerHTML += `
-          <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-xs">
-            <div class="flex justify-between items-center mb-1">
-              <span class="font-bold text-indigo-400">${m.author}</span>
-              <span class="text-[9px] text-slate-500">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+    // FORUM (Faqat ochilganda yuklanadi - sahifa tezligini oshirish uchun)
+    let forumLoaded = false;
+    function loadForumMessages() {
+      if (forumLoaded) return;
+      forumLoaded = true;
+      db.ref("forum_messages").limitToLast(40).on("value", snapshot => {
+        const box = document.getElementById('forumChatBox');
+        if (!box) return;
+        box.innerHTML = '';
+        const data = snapshot.val();
+        if (!data) {
+          box.innerHTML = `<div class="text-center text-slate-500">Muloqot xonasi bo'sh. Birinchi fikrni bildiring!</div>`;
+          return;
+        }
+        Object.keys(data).forEach(k => {
+          const m = data[k];
+          box.innerHTML += `
+            <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-xs">
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-indigo-400">${m.author}</span>
+                <span class="text-[9px] text-slate-500">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+              </div>
+              <div class="text-slate-300">${m.text}</div>
             </div>
-            <div class="text-slate-300">${m.text}</div>
-          </div>
-        `;
+          `;
+        });
+        box.scrollTop = box.scrollHeight;
       });
-      box.scrollTop = box.scrollHeight;
-    });
+    }
 
     function sendForumMessage() {
       const author = document.getElementById('forumAuthor').value.trim() || 'Talaba';
@@ -301,50 +312,82 @@
             <div>Sun'iy intellekt (AI) ulushi: <b class="text-amber-400">${aiScore}%</b></div>
           </div>
         `;
-      }, 1500);
+      }, 600);
     }
 
-    let allProjects = [];
-    let allPurchases = [];
+    // TEZKOR KESH VA MA'LUMOTLAR
+    let allProjects = JSON.parse(localStorage.getItem('cached_projects_meta') || '[]');
+    let myPurchases = [];
     let adminCards = [];
     let base64Receipt = '';
     let currentCategory = 'Barchasi';
 
+    // Ilova ochilishi bilan keshdagi loyihalarni 0.01 soniyada ko'rsatamiz
+    if (allProjects.length > 0) {
+      renderProjects();
+    }
+
+    let searchTimeout;
+    function debouncedSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(renderProjects, 150);
+    }
+
     function filterCategory(cat) {
       currentCategory = cat;
-      // Tugmalar rangini o'zgartirish
       ['Barchasi', 'Mustaqil ish', 'Veb-sayt', 'Kurs ishi'].forEach(c => {
         const btnId = 'cat_' + c.replace(/\s+/g, '_');
         const btn = document.getElementById(btnId);
         if (btn) {
-          if (c === cat) {
-            btn.className = "bg-indigo-600 text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition";
-          } else {
-            btn.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition";
-          }
+          btn.className = (c === cat)
+            ? "bg-indigo-600 text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition"
+            : "bg-slate-900 border border-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition";
         }
       });
       renderProjects();
     }
 
+    // Bazadan loyihalarni yuklash (Keshda faqat yengil ma'lumotlarni saqlaymiz)
     db.ref("projects").on("value", snapshot => {
       const data = snapshot.val();
-      allProjects = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
-      renderProjects(); renderCabinet();
+      if (data) {
+        allProjects = Object.keys(data).map(k => ({
+          id: k,
+          title: data[k].title,
+          category: data[k].category,
+          price: data[k].price,
+          description: data[k].description,
+          fileName: data[k].fileName,
+          fileUrl: data[k].fileUrl || null,
+          hasFileData: !!data[k].fileData
+        }));
+        try {
+          localStorage.setItem('cached_projects_meta', JSON.stringify(allProjects));
+        } catch (e) {}
+      } else {
+        allProjects = [];
+        localStorage.removeItem('cached_projects_meta');
+      }
+      renderProjects();
+      renderCabinet();
     });
 
-    db.ref("purchases").on("value", snapshot => {
+    // FAQAT SHU QURILMANING XARIDLARINI YUKLASH (Tezlik uchun)
+    const myDeviceId = getDeviceId();
+    db.ref("purchases").orderByChild("deviceId").equalTo(myDeviceId).on("value", snapshot => {
       const data = snapshot.val();
-      allPurchases = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
-      renderProjects(); renderCabinet();
+      myPurchases = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+      renderProjects();
+      renderCabinet();
     });
 
-    db.ref("settings/cards").on("value", snapshot => {
+    db.ref("settings/cards").once("value", snapshot => {
       const data = snapshot.val();
       adminCards = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
     });
 
     function toggleCabinet() { document.getElementById('cabinetModal').classList.toggle('hidden'); }
+    
     function openFullscreenTool(toolName) {
       document.querySelectorAll('.tool-view').forEach(v => v.classList.add('hidden'));
       const target = document.getElementById('tool-view-' + toolName);
@@ -352,16 +395,49 @@
       const titles = { plagiarism: 'Plagiat & AI Tahlilchi', forum: 'Ilmiy Forum Chat' };
       document.getElementById('modalTitle').innerText = titles[toolName] || 'Vosita';
       document.getElementById('fullscreenModal').classList.remove('hidden');
+      if (toolName === 'forum') loadForumMessages();
     }
+    
     function closeFullscreenTool() { document.getElementById('fullscreenModal').classList.add('hidden'); }
+
+    // FAYLNI FAQAT YUKLAB OLISH BOSILGANDA BAZADAN OLISH (LAZY DOWNLOAD)
+    async function downloadProjectFile(projectId, fileName, btnElement) {
+      const originalHtml = btnElement.innerHTML;
+      btnElement.disabled = true;
+      btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Tayyorlanmoqda...`;
+
+      try {
+        const snap = await db.ref("projects/" + projectId).once("value");
+        const proj = snap.val();
+        if (!proj) {
+          alert("Fayl topilmadi!");
+          return;
+        }
+        const fileSource = proj.fileData || proj.fileUrl;
+        if (!fileSource) {
+          alert("Ushbu loyihaga fayl biriktirilmagan.");
+          return;
+        }
+        const a = document.createElement('a');
+        a.href = fileSource;
+        a.download = proj.fileName || fileName || 'loyiha';
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (err) {
+        alert("Yuklab olishda xatolik: " + err.message);
+      } finally {
+        btnElement.disabled = false;
+        btnElement.innerHTML = originalHtml;
+      }
+    }
 
     function renderProjects() {
       const list = document.getElementById('projectsList');
       if (!list) return;
       const searchInput = document.getElementById('searchInput');
       const search = searchInput ? searchInput.value.toLowerCase() : '';
-      const myDeviceId = getDeviceId();
-      list.innerHTML = '';
       
       if (!allProjects || allProjects.length === 0) {
         list.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">Hozircha loyihalar mavjud emas.</div>`;
@@ -379,23 +455,25 @@
         return;
       }
 
+      let html = '';
       filtered.forEach(p => {
-        const myPurchase = allPurchases.find(req => req.projectId === p.id && req.deviceId === myDeviceId);
+        const myPurchase = myPurchases.find(req => req.projectId === p.id);
         let statusTag = '', actionBtn = '';
         const priceFormatted = Number(p.price || 0).toLocaleString();
-        const fileSource = p.fileData || p.fileUrl || '#';
+        const safeTitle = p.title.replace(/'/g, "\\'");
+        const safeFileName = (p.fileName || 'loyiha').replace(/'/g, "\\'");
 
         if (!myPurchase) {
-          actionBtn = `<button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${priceFormatted} UZS)</button>`;
+          actionBtn = `<button onclick="openPayment('${p.id}', '${safeTitle}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${priceFormatted} UZS)</button>`;
         } else if (myPurchase.status === 'pending') {
           statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Kutilmoqda</span>`;
           actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin tekshirmoqda...</button>`;
         } else if (myPurchase.status === 'approved') {
           statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
-          actionBtn = `<a href="${fileSource}" download="${p.fileName || 'loyiha'}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
+          actionBtn = `<button onclick="downloadProjectFile('${p.id}', '${safeFileName}', this)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</button>`;
         }
 
-        list.innerHTML += `
+        html += `
           <div class="glass-card p-4 rounded-2xl relative space-y-2 border border-slate-800">
             <div class="flex justify-between items-center">
               <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-md">${p.category || 'Loyiha'}</span>
@@ -408,13 +486,12 @@
           </div>
         `;
       });
+      list.innerHTML = html;
     }
 
     function renderCabinet() {
-      const myDeviceId = getDeviceId();
       const container = document.getElementById('myPurchasesList');
       if (!container) return;
-      const myPurchases = allPurchases.filter(req => req.deviceId === myDeviceId);
       container.innerHTML = myPurchases.length ? '' : `<div class="text-[11px] text-slate-500 italic py-2">Sizda hozircha xaridlar yo'q</div>`;
       myPurchases.forEach(req => {
         const p = allProjects.find(item => item.id === req.projectId) || { title: 'Loyiha' };
@@ -441,14 +518,35 @@
     }
 
     function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
-    function encodeImageFileAsURL(e) {
-      let reader = new FileReader();
-      reader.onloadend = () => base64Receipt = reader.result;
-      reader.readAsDataURL(e.files[0]);
+    
+    // CHEK RASMINI AVTOMATIK SIQISH (TEZ YUKLASH UCHUN)
+    function compressAndEncodeReceipt(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = img.width > MAX_WIDTH ? MAX_WIDTH : img.width;
+          canvas.height = img.width > MAX_WIDTH ? img.height * scaleSize : img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          base64Receipt = canvas.toDataURL('image/jpeg', 0.7);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     function submitPayment(e) {
       e.preventDefault();
+      const btn = document.getElementById('paySubmitBtn');
+      btn.disabled = true;
+      btn.innerText = "Yuborilmoqda...";
+
       db.ref("purchases").push().set({
         projectId: document.getElementById('modalProjectId').value || null,
         studentName: document.getElementById('studentName').value,
@@ -461,6 +559,9 @@
       }).then(() => {
         alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan kabinetingizda ochiladi.");
         closeModal();
+      }).finally(() => {
+        btn.disabled = false;
+        btn.innerText = "Chekni Yuborish";
       });
     }
   </script>
