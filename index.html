@@ -114,12 +114,7 @@
       </div>
 
       <div id="projectsList" class="space-y-3">
-        <div class="glass-card p-4 rounded-2xl border border-slate-800 animate-pulse space-y-2">
-          <div class="h-3 bg-slate-800 rounded w-1/4"></div>
-          <div class="h-4 bg-slate-800 rounded w-3/4"></div>
-          <div class="h-3 bg-slate-800 rounded w-1/2"></div>
-          <div class="h-8 bg-slate-800 rounded-xl w-full mt-2"></div>
-        </div>
+        <div class="text-center py-8 text-slate-500 text-xs">Loyihalar yuklanmoqda...</div>
       </div>
     </div>
   </main>
@@ -220,7 +215,6 @@
       return devId;
     }
 
-    // Ism va telefonni eslab qolish uchun
     window.addEventListener('DOMContentLoaded', () => {
       const savedName = localStorage.getItem('saved_student_name');
       const savedContact = localStorage.getItem('saved_student_contact');
@@ -333,15 +327,11 @@
       }, 600);
     }
 
-    let allProjects = JSON.parse(localStorage.getItem('cached_projects_meta') || '[]');
+    let allProjects = [];
     let myPurchases = [];
     let adminCards = [];
     let base64Receipt = '';
     let currentCategory = 'Barchasi';
-
-    if (allProjects.length > 0) {
-      renderProjects();
-    }
 
     let searchTimeout;
     function debouncedSearch() {
@@ -363,26 +353,10 @@
       renderProjects();
     }
 
+    // BARCHA LOYIHALARNI TO'LIQ YUKLASH
     db.ref("projects").on("value", snapshot => {
       const data = snapshot.val();
-      if (data) {
-        allProjects = Object.keys(data).map(k => ({
-          id: k,
-          title: data[k].title,
-          category: data[k].category,
-          price: data[k].price,
-          description: data[k].description,
-          fileName: data[k].fileName,
-          fileUrl: data[k].fileUrl || null,
-          hasFileData: !!data[k].fileData
-        }));
-        try {
-          localStorage.setItem('cached_projects_meta', JSON.stringify(allProjects));
-        } catch (e) {}
-      } else {
-        allProjects = [];
-        localStorage.removeItem('cached_projects_meta');
-      }
+      allProjects = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
       renderProjects();
       renderCabinet();
     });
@@ -395,7 +369,7 @@
       renderCabinet();
     });
 
-    db.ref("settings/cards").once("value", snapshot => {
+    db.ref("settings/cards").on("value", snapshot => {
       const data = snapshot.val();
       adminCards = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
     });
@@ -413,38 +387,6 @@
     }
     
     function closeFullscreenTool() { document.getElementById('fullscreenModal').classList.add('hidden'); }
-
-    async function downloadProjectFile(projectId, fileName, btnElement) {
-      const originalHtml = btnElement.innerHTML;
-      btnElement.disabled = true;
-      btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Tayyorlanmoqda...`;
-
-      try {
-        const snap = await db.ref("projects/" + projectId).once("value");
-        const proj = snap.val();
-        if (!proj) {
-          alert("Fayl topilmadi!");
-          return;
-        }
-        const fileSource = proj.fileData || proj.fileUrl;
-        if (!fileSource) {
-          alert("Ushbu loyihaga fayl biriktirilmagan.");
-          return;
-        }
-        const a = document.createElement('a');
-        a.href = fileSource;
-        a.download = proj.fileName || fileName || 'loyiha';
-        a.target = '_blank';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      } catch (err) {
-        alert("Yuklab olishda xatolik: " + err.message);
-      } finally {
-        btnElement.disabled = false;
-        btnElement.innerHTML = originalHtml;
-      }
-    }
 
     function renderProjects() {
       const list = document.getElementById('projectsList');
@@ -473,17 +415,16 @@
         const myPurchase = myPurchases.find(req => req.projectId === p.id);
         let statusTag = '', actionBtn = '';
         const priceFormatted = Number(p.price || 0).toLocaleString();
-        const safeTitle = p.title.replace(/'/g, "\\'");
-        const safeFileName = (p.fileName || 'loyiha').replace(/'/g, "\\'");
+        const fileSource = p.fileData || p.fileUrl || '#';
 
         if (!myPurchase) {
-          actionBtn = `<button onclick="openPayment('${p.id}', '${safeTitle}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${priceFormatted} UZS)</button>`;
+          actionBtn = `<button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${priceFormatted} UZS)</button>`;
         } else if (myPurchase.status === 'pending') {
           statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Kutilmoqda</span>`;
           actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin tekshirmoqda...</button>`;
         } else if (myPurchase.status === 'approved') {
           statusTag = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Tasdiqlangan</span>`;
-          actionBtn = `<button onclick="downloadProjectFile('${p.id}', '${safeFileName}', this)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</button>`;
+          actionBtn = `<a href="${fileSource}" download="${p.fileName || 'loyiha'}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-download"></i> Faylni Yuklab Olish</a>`;
         }
 
         html += `
@@ -535,7 +476,6 @@
 
     function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
     
-    // RASMNI AVTOMATIK SIQISH VA OPTIMALLASHTIRISH (Xatolarni oldini olish uchun)
     function compressAndEncodeReceipt(input) {
       const file = input.files[0];
       if (!file) return;
@@ -572,7 +512,6 @@
       const sContact = document.getElementById('studentContact').value.trim();
       const paidAmt = Number(document.getElementById('paidAmount').value);
 
-      // Malumotlarni saqlab qo'yish
       localStorage.setItem('saved_student_name', sName);
       localStorage.setItem('saved_student_contact', sContact);
 
