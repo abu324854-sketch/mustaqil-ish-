@@ -114,7 +114,6 @@
       </div>
 
       <div id="projectsList" class="space-y-3">
-        <!-- Skeleton Loader (Tezkor ko'rinish uchun) -->
         <div class="glass-card p-4 rounded-2xl border border-slate-800 animate-pulse space-y-2">
           <div class="h-3 bg-slate-800 rounded w-1/4"></div>
           <div class="h-4 bg-slate-800 rounded w-3/4"></div>
@@ -181,7 +180,7 @@
     <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
       <h3 class="text-base font-bold text-white mb-1" id="paymentModalTitle">To'lov qilish</h3>
-      <p class="text-xs text-slate-400 mb-4">Kartaga pul o'tkazing va chek yuboring</p>
+      <p class="text-xs text-slate-400 mb-4">Kartaga pul o'tkazing va chek rasmini yuklang</p>
       <div id="cardsContainer" class="space-y-2 mb-4"></div>
       <div class="bg-indigo-950/40 border border-indigo-500/20 p-3 rounded-2xl mb-4 text-center">
         <div class="text-[10px] text-slate-400 uppercase">Summa:</div>
@@ -189,11 +188,24 @@
       </div>
       <form onsubmit="submitPayment(event)" class="space-y-3">
         <input type="hidden" id="modalProjectId">
-        <input type="text" id="studentName" required placeholder="Ism Familiyangiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        <input type="text" id="studentContact" required placeholder="Telefon raqamingiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        <input type="number" id="paidAmount" required placeholder="O'tkazilgan summa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        <input type="file" id="receiptImg" accept="image/*" required onchange="compressAndEncodeReceipt(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white">
-        <button type="submit" id="paySubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs">Chekni Yuborish</button>
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">Ism Familiyangiz:</label>
+          <input type="text" id="studentName" required placeholder="Falonchiyev Pistonchi" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        </div>
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">Telefon raqamingiz:</label>
+          <input type="text" id="studentContact" required placeholder="+998 90 123 45 67" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        </div>
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">O'tkazilgan summa (UZS):</label>
+          <input type="number" id="paidAmount" required placeholder="Summa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        </div>
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">To'lov cheki (Rasm):</label>
+          <input type="file" id="receiptImg" accept="image/*" required onchange="compressAndEncodeReceipt(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white cursor-pointer">
+          <div id="receiptStatus" class="text-[10px] text-slate-400 mt-1"></div>
+        </div>
+        <button type="submit" id="paySubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition">Chekni Yuborish</button>
       </form>
     </div>
   </div>
@@ -208,7 +220,14 @@
       return devId;
     }
 
-    // PWA O'rnatish
+    // Ism va telefonni eslab qolish uchun
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedName = localStorage.getItem('saved_student_name');
+      const savedContact = localStorage.getItem('saved_student_contact');
+      if (savedName) document.getElementById('studentName').value = savedName;
+      if (savedContact) document.getElementById('studentContact').value = savedContact;
+    });
+
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -255,7 +274,6 @@
       }
     }
 
-    // FORUM (Faqat ochilganda yuklanadi - sahifa tezligini oshirish uchun)
     let forumLoaded = false;
     function loadForumMessages() {
       if (forumLoaded) return;
@@ -315,14 +333,12 @@
       }, 600);
     }
 
-    // TEZKOR KESH VA MA'LUMOTLAR
     let allProjects = JSON.parse(localStorage.getItem('cached_projects_meta') || '[]');
     let myPurchases = [];
     let adminCards = [];
     let base64Receipt = '';
     let currentCategory = 'Barchasi';
 
-    // Ilova ochilishi bilan keshdagi loyihalarni 0.01 soniyada ko'rsatamiz
     if (allProjects.length > 0) {
       renderProjects();
     }
@@ -347,7 +363,6 @@
       renderProjects();
     }
 
-    // Bazadan loyihalarni yuklash (Keshda faqat yengil ma'lumotlarni saqlaymiz)
     db.ref("projects").on("value", snapshot => {
       const data = snapshot.val();
       if (data) {
@@ -372,7 +387,6 @@
       renderCabinet();
     });
 
-    // FAQAT SHU QURILMANING XARIDLARINI YUKLASH (Tezlik uchun)
     const myDeviceId = getDeviceId();
     db.ref("purchases").orderByChild("deviceId").equalTo(myDeviceId).on("value", snapshot => {
       const data = snapshot.val();
@@ -400,7 +414,6 @@
     
     function closeFullscreenTool() { document.getElementById('fullscreenModal').classList.add('hidden'); }
 
-    // FAYLNI FAQAT YUKLAB OLISH BOSILGANDA BAZADAN OLISH (LAZY DOWNLOAD)
     async function downloadProjectFile(projectId, fileName, btnElement) {
       const originalHtml = btnElement.innerHTML;
       btnElement.disabled = true;
@@ -511,6 +524,9 @@
     function showPaymentModal() {
       const cContainer = document.getElementById('cardsContainer');
       cContainer.innerHTML = '';
+      if (adminCards.length === 0) {
+        cContainer.innerHTML = `<div class="text-xs text-amber-400 text-center py-2">Hozircha admin karta qo'shmagan</div>`;
+      }
       adminCards.forEach(c => {
         cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-between text-xs font-mono mb-2 text-white"><span>${c.number}</span><span class="text-slate-400">(${c.holder})</span></div>`;
       });
@@ -519,10 +535,13 @@
 
     function closeModal() { document.getElementById('paymentModal').classList.add('hidden'); }
     
-    // CHEK RASMINI AVTOMATIK SIQISH (TEZ YUKLASH UCHUN)
+    // RASMNI AVTOMATIK SIQISH VA OPTIMALLASHTIRISH (Xatolarni oldini olish uchun)
     function compressAndEncodeReceipt(input) {
       const file = input.files[0];
       if (!file) return;
+      const statusEl = document.getElementById('receiptStatus');
+      statusEl.innerHTML = `<span class="text-indigo-400">Rasm o'qilmoqda...</span>`;
+
       const reader = new FileReader();
       reader.onload = function(event) {
         const img = new Image();
@@ -534,7 +553,8 @@
           canvas.height = img.width > MAX_WIDTH ? img.height * scaleSize : img.height;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          base64Receipt = canvas.toDataURL('image/jpeg', 0.7);
+          base64Receipt = canvas.toDataURL('image/jpeg', 0.65);
+          statusEl.innerHTML = `<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Rasm tayyor!</span>`;
         };
         img.src = event.target.result;
       };
@@ -543,22 +563,40 @@
 
     function submitPayment(e) {
       e.preventDefault();
+      if (!base64Receipt) {
+        alert("Iltimos, to'lov cheki rasmini yuklang!");
+        return;
+      }
+
+      const sName = document.getElementById('studentName').value.trim();
+      const sContact = document.getElementById('studentContact').value.trim();
+      const paidAmt = Number(document.getElementById('paidAmount').value);
+
+      // Malumotlarni saqlab qo'yish
+      localStorage.setItem('saved_student_name', sName);
+      localStorage.setItem('saved_student_contact', sContact);
+
       const btn = document.getElementById('paySubmitBtn');
       btn.disabled = true;
       btn.innerText = "Yuborilmoqda...";
 
       db.ref("purchases").push().set({
         projectId: document.getElementById('modalProjectId').value || null,
-        studentName: document.getElementById('studentName').value,
-        studentContact: document.getElementById('studentContact').value,
-        paidAmount: Number(document.getElementById('paidAmount').value),
+        studentName: sName,
+        studentContact: sContact,
+        paidAmount: paidAmt,
         receiptImage: base64Receipt,
         deviceId: getDeviceId(),
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("To'lov cheki yuborildi! Admin tasdiqlashi bilan kabinetingizda ochiladi.");
+        alert("To'lov cheki muvaffaqiyatli yuborildi! Admin tasdiqlashi bilan kabinetingizda ochiladi.");
         closeModal();
+        base64Receipt = '';
+        document.getElementById('receiptImg').value = '';
+        document.getElementById('receiptStatus').innerText = '';
+      }).catch(err => {
+        alert("Yuborishda xatolik yuz berdi: " + err.message);
       }).finally(() => {
         btn.disabled = false;
         btn.innerText = "Chekni Yuborish";
