@@ -20,11 +20,15 @@
     .glass-card { backdrop-filter: blur(12px); }
     .dark .glass-card { background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(255, 255, 255, 0.08); }
     .light .glass-card { background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(0, 0, 0, 0.08); }
-    .tool-card { transition: transform 0.15s ease; }
-    .tool-card:active { transform: scale(0.97); }
   </style>
 </head>
 <body class="pb-24">
+
+  <!-- GLOBAL E'LON -->
+  <div id="globalAnnouncement" class="hidden bg-gradient-to-r from-amber-600 to-orange-600 text-white px-4 py-2.5 text-xs font-semibold text-center shadow-lg relative z-50 flex items-center justify-center gap-2">
+    <i class="fa-solid fa-bullhorn"></i>
+    <span id="announcementTextContent"></span>
+  </div>
 
   <!-- HEADER -->
   <header class="sticky top-0 z-40 glass-card px-4 py-3.5 flex justify-between items-center border-b border-slate-800">
@@ -38,9 +42,7 @@
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 text-xs" title="Rejimni o'zgartirish">
-        <i id="themeIcon" class="fa-solid fa-moon"></i>
-      </button>
+      <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 text-xs"><i id="themeIcon" class="fa-solid fa-moon"></i></button>
       <button onclick="toggleCabinet()" class="bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
         <i class="fa-solid fa-user text-indigo-400"></i> Kabinetim
       </button>
@@ -49,60 +51,16 @@
 
   <main class="max-w-md mx-auto px-4 mt-5 space-y-6">
     
-    <!-- PWA O'RNATISH TUGMASI -->
-    <div id="installBox" class="hidden bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-3.5 rounded-2xl flex items-center justify-between">
-      <div>
-        <h3 class="text-xs font-bold text-white"><i class="fa-solid fa-download text-indigo-400 mr-1"></i> Ilovani O'rnatish</h3>
-        <p class="text-[10px] text-slate-300 mt-0.5">Telefon yoki kompyuterga dastur qilib o'rnating</p>
-      </div>
-      <button id="installBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-lg">O'rnatish</button>
-    </div>
-
-    <!-- AI VOSITALARI -->
-    <div class="space-y-3">
-      <h2 class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider flex items-center gap-2">
-        <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> Akademik AI Vositalari
-      </h2>
-      <div class="grid grid-cols-2 gap-3">
-        <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-3.5 rounded-2xl cursor-pointer space-y-1.5 border border-slate-800 relative">
-          <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
-          <div class="w-8 h-8 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-sm"><i class="fa-solid fa-brain"></i></div>
-          <div class="text-xs font-bold dark:text-white text-slate-800">AI Super Agent</div>
-          <p class="text-[10px] text-slate-400">Matn va ovozli yordam</p>
-        </div>
-
-        <div onclick="showMaintenanceAlert()" class="tool-card glass-card p-3.5 rounded-2xl cursor-pointer space-y-1.5 border border-blue-500/30 relative">
-          <span class="absolute top-2 right-2 bg-amber-500/20 text-amber-400 text-[8px] font-bold px-1.5 py-0.5 rounded">AMALIYOTDA</span>
-          <div class="w-8 h-8 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-sm"><i class="fa-solid fa-id-card"></i></div>
-          <div class="text-xs font-bold dark:text-white text-slate-800">AI Rezyume Builder</div>
-          <p class="text-[10px] text-slate-400">Professional CV yaratish</p>
-        </div>
-
-        <div onclick="openFullscreenTool('plagiarism')" class="tool-card glass-card p-3.5 rounded-2xl cursor-pointer space-y-1.5 border border-orange-500/30">
-          <div class="w-8 h-8 rounded-xl bg-orange-600/20 text-orange-400 flex items-center justify-center text-sm"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
-          <div class="text-xs font-bold dark:text-white text-slate-800">Plagiat Tekshiruvchi</div>
-          <p class="text-[10px] text-slate-400">Originalik tahlili</p>
-        </div>
-
-        <div onclick="openFullscreenTool('forum')" class="tool-card glass-card p-3.5 rounded-2xl cursor-pointer space-y-1.5 border border-pink-500/30">
-          <div class="w-8 h-8 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center text-sm"><i class="fa-solid fa-comments"></i></div>
-          <div class="text-xs font-bold dark:text-white text-slate-800">Ilmiy Forum Chat</div>
-          <p class="text-[10px] text-slate-400">Talabalar muloqot xonasi</p>
-        </div>
-      </div>
-    </div>
-
     <!-- TAYYOR ISHLAR VA LOYIHALAR -->
     <div class="space-y-4">
       <h2 class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider flex items-center gap-2">
-        <i class="fa-solid fa-folder-open text-indigo-400"></i> Tayyor Ishlar va Loyihalar
+        <i class="fa-solid fa-folder-open text-indigo-400"></i> Barcha Tayyor Ishlar va Loyihalar
       </h2>
       
-      <!-- QIDIRUV VA KATEGORIYA FILTERLARI -->
       <div class="space-y-2">
         <div class="relative">
           <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-          <input type="text" id="searchInput" oninput="debouncedSearch()" placeholder="Loyiha nomini kiriting..." 
+          <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Loyiha nomini kiriting..." 
                  class="w-full bg-slate-900/80 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500">
         </div>
         <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
@@ -114,45 +72,15 @@
       </div>
 
       <div id="projectsList" class="space-y-3">
-        <div class="text-center py-8 text-slate-500 text-xs">Loyihalar yuklanmoqda...</div>
+        <div class="text-center py-8 text-slate-500 text-xs">Barcha loyihalar yuklanmoqda...</div>
       </div>
     </div>
   </main>
-
-  <!-- MODAL WINDOW (TOOLS) -->
-  <div id="fullscreenModal" class="fixed inset-0 dark:bg-[#070a13] bg-slate-100 z-50 hidden flex flex-col">
-    <div class="glass-card px-4 py-3.5 flex justify-between items-center border-b border-slate-800">
-      <div class="flex items-center space-x-2">
-        <button onclick="closeFullscreenTool()" class="text-slate-400 hover:text-white px-2 py-1 text-sm"><i class="fa-solid fa-arrow-left"></i> Orqaga</button>
-        <h2 id="modalTitle" class="text-xs font-bold dark:text-white text-slate-800 uppercase tracking-wider">Vosita</h2>
-      </div>
-      <button onclick="closeFullscreenTool()" class="text-slate-400 hover:text-white text-base px-2"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="flex-1 overflow-y-auto p-4 max-w-lg mx-auto w-full space-y-4">
-      <div id="tool-view-plagiarism" class="tool-view space-y-3 hidden">
-        <textarea id="plagiarismText" rows="6" placeholder="Tekshiriladigan matnni kiriting..." class="w-full bg-slate-950 border border-slate-800 font-mono text-xs p-3 rounded-xl text-slate-300 focus:outline-none"></textarea>
-        <button onclick="checkPlagiarism()" class="w-full bg-orange-600 hover:bg-orange-500 py-2.5 rounded-xl text-xs font-bold text-white">Originalikni Tahlil Qilish</button>
-        <div id="plagiarismOutput" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 hidden"></div>
-      </div>
-
-      <div id="tool-view-forum" class="tool-view space-y-3 hidden">
-        <div id="forumChatBox" class="bg-slate-950 h-[50vh] rounded-2xl p-3 border border-slate-800 overflow-y-auto space-y-3 text-xs text-slate-300">
-          <div class="text-center text-slate-500">Muloqot xonasi yuklanmoqda...</div>
-        </div>
-        <div class="flex gap-2">
-          <input type="text" id="forumAuthor" placeholder="Ismingiz..." class="w-1/3 bg-slate-900 border border-slate-700 rounded-xl px-2 py-2.5 text-xs text-white">
-          <input type="text" id="forumMsg" placeholder="Fikr yoki savolingiz..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-          <button onclick="sendForumMessage()" class="bg-pink-600 hover:bg-pink-500 px-4 py-2.5 rounded-xl text-xs font-bold text-white">Yuborish</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- KABINET MODAL -->
   <div id="cabinetModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative border border-slate-700/60 max-h-[85vh] overflow-y-auto space-y-4">
       <button onclick="toggleCabinet()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
-      
       <div class="flex items-center space-x-3 border-b border-slate-800 pb-4">
         <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl font-bold border border-indigo-500/30">
           <i class="fa-solid fa-user-gear"></i>
@@ -162,9 +90,8 @@
           <p class="text-[10px] text-indigo-400">Shaxsiy xaridlar va yuklamalar</p>
         </div>
       </div>
-
       <div>
-        <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">Mening Xarid Qilingan Ishlarim</h4>
+        <h4 class="text-xs font-bold text-indigo-300 mb-2 uppercase tracking-wider">Tasdiqlangan va Kutilayotgan Ishlarim</h4>
         <div id="myPurchasesList" class="space-y-2 text-xs"></div>
       </div>
     </div>
@@ -183,23 +110,11 @@
       </div>
       <form onsubmit="submitPayment(event)" class="space-y-3">
         <input type="hidden" id="modalProjectId">
-        <div>
-          <label class="block text-[10px] text-slate-400 mb-1">Ism Familiyangiz:</label>
-          <input type="text" id="studentName" required placeholder="Falonchiyev Pistonchi" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-        <div>
-          <label class="block text-[10px] text-slate-400 mb-1">Telefon raqamingiz:</label>
-          <input type="text" id="studentContact" required placeholder="+998 90 123 45 67" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-        <div>
-          <label class="block text-[10px] text-slate-400 mb-1">O'tkazilgan summa (UZS):</label>
-          <input type="number" id="paidAmount" required placeholder="Summa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-        <div>
-          <label class="block text-[10px] text-slate-400 mb-1">To'lov cheki (Rasm):</label>
-          <input type="file" id="receiptImg" accept="image/*" required onchange="compressAndEncodeReceipt(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white cursor-pointer">
-          <div id="receiptStatus" class="text-[10px] text-slate-400 mt-1"></div>
-        </div>
+        <input type="text" id="studentName" required placeholder="Ism Familiyangiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        <input type="text" id="studentContact" required placeholder="Telefon raqamingiz" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        <input type="number" id="paidAmount" required placeholder="O'tkazilgan summa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+        <input type="file" id="receiptImg" accept="image/*" required onchange="compressAndEncodeReceipt(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white cursor-pointer">
+        <div id="receiptStatus" class="text-[10px] text-slate-400 mt-1"></div>
         <button type="submit" id="paySubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition">Chekni Yuborish</button>
       </form>
     </div>
@@ -216,28 +131,8 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      const savedName = localStorage.getItem('saved_student_name');
-      const savedContact = localStorage.getItem('saved_student_contact');
-      if (savedName) document.getElementById('studentName').value = savedName;
-      if (savedContact) document.getElementById('studentContact').value = savedContact;
-    });
-
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('installBox').classList.remove('hidden');
-    });
-
-    document.getElementById('installBtn').addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          document.getElementById('installBox').classList.add('hidden');
-        }
-        deferredPrompt = null;
-      }
+      if (localStorage.getItem('saved_student_name')) document.getElementById('studentName').value = localStorage.getItem('saved_student_name');
+      if (localStorage.getItem('saved_student_contact')) document.getElementById('studentContact').value = localStorage.getItem('saved_student_contact');
     });
 
     const firebaseConfig = {
@@ -252,79 +147,23 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function showMaintenanceAlert() {
-      alert("⏳ Ushbu vosita hozirda amaliyotda va sozlanish jarayonida! Tez kunda ishga tushadi.");
-    }
+    db.ref("settings/announcement").on("value", snap => {
+      const banner = document.getElementById('globalAnnouncement');
+      if (snap.val()) {
+        document.getElementById('announcementTextContent').innerText = snap.val();
+        banner.classList.remove('hidden');
+      } else { banner.classList.add('hidden'); }
+    });
 
     function toggleTheme() {
       const html = document.documentElement;
-      const icon = document.getElementById('themeIcon');
       if (html.classList.contains('dark')) {
         html.classList.remove('dark'); html.classList.add('light');
-        icon.className = 'fa-solid fa-sun';
+        document.getElementById('themeIcon').className = 'fa-solid fa-sun';
       } else {
         html.classList.remove('light'); html.classList.add('dark');
-        icon.className = 'fa-solid fa-moon';
+        document.getElementById('themeIcon').className = 'fa-solid fa-moon';
       }
-    }
-
-    let forumLoaded = false;
-    function loadForumMessages() {
-      if (forumLoaded) return;
-      forumLoaded = true;
-      db.ref("forum_messages").limitToLast(40).on("value", snapshot => {
-        const box = document.getElementById('forumChatBox');
-        if (!box) return;
-        box.innerHTML = '';
-        const data = snapshot.val();
-        if (!data) {
-          box.innerHTML = `<div class="text-center text-slate-500">Muloqot xonasi bo'sh. Birinchi fikrni bildiring!</div>`;
-          return;
-        }
-        Object.keys(data).forEach(k => {
-          const m = data[k];
-          box.innerHTML += `
-            <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-xs">
-              <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-indigo-400">${m.author}</span>
-                <span class="text-[9px] text-slate-500">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-              </div>
-              <div class="text-slate-300">${m.text}</div>
-            </div>
-          `;
-        });
-        box.scrollTop = box.scrollHeight;
-      });
-    }
-
-    function sendForumMessage() {
-      const author = document.getElementById('forumAuthor').value.trim() || 'Talaba';
-      const text = document.getElementById('forumMsg').value.trim();
-      if (!text) return;
-      db.ref("forum_messages").push().set({ author, text, createdAt: Date.now() }).then(() => {
-        document.getElementById('forumMsg').value = '';
-      });
-    }
-
-    function checkPlagiarism() {
-      const text = document.getElementById('plagiarismText').value.trim();
-      if (!text) return alert("Matn kiriting!");
-      const out = document.getElementById('plagiarismOutput');
-      out.classList.remove('hidden');
-      out.innerText = "⏳ Tahlil qilinmoqda...";
-      setTimeout(() => {
-        const words = text.split(' ').length;
-        const uniqueness = Math.floor(Math.random() * (98 - 75 + 1)) + 75;
-        const aiScore = 100 - uniqueness;
-        out.innerHTML = `
-          <div class="space-y-2">
-            <div class="font-bold text-emerald-400">Tahlil Natijasi:</div>
-            <div>Matn so'zlar soni: <b>${words} ta</b></div>
-            <div>Originalik darajasi: <b class="text-emerald-400">${uniqueness}%</b></div>
-            <div>Sun'iy intellekt (AI) ulushi: <b class="text-amber-400">${aiScore}%</b></div>
-          </div>
-        `;
-      }, 600);
     }
 
     let allProjects = [];
@@ -333,27 +172,16 @@
     let base64Receipt = '';
     let currentCategory = 'Barchasi';
 
-    let searchTimeout;
-    function debouncedSearch() {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(renderProjects, 150);
-    }
-
     function filterCategory(cat) {
       currentCategory = cat;
       ['Barchasi', 'Mustaqil ish', 'Veb-sayt', 'Kurs ishi'].forEach(c => {
-        const btnId = 'cat_' + c.replace(/\s+/g, '_');
-        const btn = document.getElementById(btnId);
-        if (btn) {
-          btn.className = (c === cat)
-            ? "bg-indigo-600 text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition"
-            : "bg-slate-900 border border-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition";
-        }
+        const btn = document.getElementById('cat_' + c.replace(/\s+/g, '_'));
+        if (btn) btn.className = (c === cat) ? "bg-indigo-600 text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition" : "bg-slate-900 border border-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition";
       });
       renderProjects();
     }
 
-    // BARCHA LOYIHALARNI TO'LIQ YUKLASH
+    // BARCHA LOYIHALARNI BAZADAN TO'LIQ TORTIB OLISH
     db.ref("projects").on("value", snapshot => {
       const data = snapshot.val();
       allProjects = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
@@ -375,32 +203,19 @@
     });
 
     function toggleCabinet() { document.getElementById('cabinetModal').classList.toggle('hidden'); }
-    
-    function openFullscreenTool(toolName) {
-      document.querySelectorAll('.tool-view').forEach(v => v.classList.add('hidden'));
-      const target = document.getElementById('tool-view-' + toolName);
-      if (target) target.classList.remove('hidden');
-      const titles = { plagiarism: 'Plagiat & AI Tahlilchi', forum: 'Ilmiy Forum Chat' };
-      document.getElementById('modalTitle').innerText = titles[toolName] || 'Vosita';
-      document.getElementById('fullscreenModal').classList.remove('hidden');
-      if (toolName === 'forum') loadForumMessages();
-    }
-    
-    function closeFullscreenTool() { document.getElementById('fullscreenModal').classList.add('hidden'); }
 
     function renderProjects() {
       const list = document.getElementById('projectsList');
       if (!list) return;
-      const searchInput = document.getElementById('searchInput');
-      const search = searchInput ? searchInput.value.toLowerCase() : '';
+      const search = (document.getElementById('searchInput').value || '').toLowerCase();
       
-      if (!allProjects || allProjects.length === 0) {
-        list.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">Hozircha loyihalar mavjud emas.</div>`;
+      if (allProjects.length === 0) {
+        list.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">Hozircha loyihalar mavjud emas. Admin panelga loyiha qo'shing.</div>`;
         return;
       }
 
       const filtered = allProjects.filter(p => {
-        const matchesSearch = p.title && p.title.toLowerCase().includes(search);
+        const matchesSearch = (p.title || '').toLowerCase().includes(search);
         const matchesCat = (currentCategory === 'Barchasi' || p.category === currentCategory);
         return matchesSearch && matchesCat;
       });
@@ -418,7 +233,7 @@
         const fileSource = p.fileData || p.fileUrl || '#';
 
         if (!myPurchase) {
-          actionBtn = `<button onclick="openPayment('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${priceFormatted} UZS)</button>`;
+          actionBtn = `<button onclick="openPayment('${p.id}', '${(p.title || '').replace(/'/g, "\\'")}', ${p.price})" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i> Sotib olish (${priceFormatted} UZS)</button>`;
         } else if (myPurchase.status === 'pending') {
           statusTag = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-md text-[10px] font-semibold">Kutilmoqda</span>`;
           actionBtn = `<button disabled class="w-full bg-slate-800 text-amber-400 font-medium py-2.5 rounded-xl text-xs border border-amber-500/20">⏳ Admin tekshirmoqda...</button>`;
@@ -459,15 +274,10 @@
       document.getElementById('paymentModalTitle').innerText = title;
       document.getElementById('modalPrice').innerText = Number(price).toLocaleString() + " UZS";
       document.getElementById('paidAmount').value = price;
-      showPaymentModal();
-    }
-
-    function showPaymentModal() {
+      
       const cContainer = document.getElementById('cardsContainer');
       cContainer.innerHTML = '';
-      if (adminCards.length === 0) {
-        cContainer.innerHTML = `<div class="text-xs text-amber-400 text-center py-2">Hozircha admin karta qo'shmagan</div>`;
-      }
+      if (adminCards.length === 0) cContainer.innerHTML = `<div class="text-xs text-amber-400 text-center py-1">Admin karta qo'shmagan</div>`;
       adminCards.forEach(c => {
         cContainer.innerHTML += `<div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl flex justify-between text-xs font-mono mb-2 text-white"><span>${c.number}</span><span class="text-slate-400">(${c.holder})</span></div>`;
       });
@@ -479,67 +289,50 @@
     function compressAndEncodeReceipt(input) {
       const file = input.files[0];
       if (!file) return;
-      const statusEl = document.getElementById('receiptStatus');
-      statusEl.innerHTML = `<span class="text-indigo-400">Rasm o'qilmoqda...</span>`;
-
       const reader = new FileReader();
-      reader.onload = function(event) {
+      reader.onload = e => {
         const img = new Image();
-        img.onload = function() {
+        img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800;
-          const scaleSize = MAX_WIDTH / img.width;
-          canvas.width = img.width > MAX_WIDTH ? MAX_WIDTH : img.width;
-          canvas.height = img.width > MAX_WIDTH ? img.height * scaleSize : img.height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          base64Receipt = canvas.toDataURL('image/jpeg', 0.65);
-          statusEl.innerHTML = `<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Rasm tayyor!</span>`;
+          const MAX = 700;
+          canvas.width = img.width > MAX ? MAX : img.width;
+          canvas.height = img.width > MAX ? img.height * (MAX / img.width) : img.height;
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          base64Receipt = canvas.toDataURL('image/jpeg', 0.6);
+          document.getElementById('receiptStatus').innerHTML = `<span class="text-emerald-400 font-bold">Rasm tayyor!</span>`;
         };
-        img.src = event.target.result;
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
     function submitPayment(e) {
       e.preventDefault();
-      if (!base64Receipt) {
-        alert("Iltimos, to'lov cheki rasmini yuklang!");
-        return;
-      }
-
+      if (!base64Receipt) { alert("Chek rasmini yuklang!"); return; }
       const sName = document.getElementById('studentName').value.trim();
       const sContact = document.getElementById('studentContact').value.trim();
-      const paidAmt = Number(document.getElementById('paidAmount').value);
-
       localStorage.setItem('saved_student_name', sName);
       localStorage.setItem('saved_student_contact', sContact);
 
       const btn = document.getElementById('paySubmitBtn');
-      btn.disabled = true;
-      btn.innerText = "Yuborilmoqda...";
+      btn.disabled = true; btn.innerText = "Yuborilmoqda...";
 
       db.ref("purchases").push().set({
-        projectId: document.getElementById('modalProjectId').value || null,
+        projectId: document.getElementById('modalProjectId').value,
         studentName: sName,
         studentContact: sContact,
-        paidAmount: paidAmt,
+        paidAmount: Number(document.getElementById('paidAmount').value),
         receiptImage: base64Receipt,
         deviceId: getDeviceId(),
         status: 'pending',
         createdAt: Date.now()
       }).then(() => {
-        alert("To'lov cheki muvaffaqiyatli yuborildi! Admin tasdiqlashi bilan kabinetingizda ochiladi.");
+        alert("Chek yuborildi!");
         closeModal();
         base64Receipt = '';
         document.getElementById('receiptImg').value = '';
         document.getElementById('receiptStatus').innerText = '';
-      }).catch(err => {
-        alert("Yuborishda xatolik yuz berdi: " + err.message);
-      }).finally(() => {
-        btn.disabled = false;
-        btn.innerText = "Chekni Yuborish";
-      });
+      }).finally(() => { btn.disabled = false; btn.innerText = "Chekni Yuborish"; });
     }
   </script>
 </body>
